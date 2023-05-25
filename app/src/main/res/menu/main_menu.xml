@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/profil"
+            android:icon="@drawable/baseline_account_circle_24"
+            android:title="Profil"/>
+        <item android:id="@+id/setari"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="Setari"/>
+    </group>
+    <item android:title="Facultate">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:id="@+id/carnet"
+                    android:icon="@drawable/baseline_class_24"
+                    android:title="Carnet"/>
+                <item android:id="@+id/orar"
+                    android:icon="@drawable/baseline_dataset_24"
+                    android:title="Orar"/>
+                <item android:id="@+id/calendar"
+                    android:icon="@drawable/baseline_school_24"
+                    android:title="Calendar academic"/>
+            </group>
+        </menu>
+    </item>
+    <item android:title="Extracurriculare">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:id="@+id/internship"
+                    android:icon="@drawable/baseline_assignment_ind_24"
+                    android:title="Internship"/>
+                <item android:id="@+id/voluntariat"
+                    android:icon="@drawable/baseline_supervisor_account_24"
+                    android:title="Voluntariat"/>
+            </group>
+        </menu>
+    </item>
+    <item android:title="Altele">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:id="@+id/cantina"
+                    android:icon="@drawable/baseline_restaurant_24"
+                    android:title="Cantina"/>
+                <item android:id="@+id/informatii"
+                    android:icon="@drawable/baseline_perm_device_information_24"
+                    android:title="Informatii generale"/>
+            </group>
+        </menu>
+    </item>
+</menu>
