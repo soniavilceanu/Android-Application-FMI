@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/cautare"
+        android:title="Căutare"
+        android:icon="@drawable/baseline_search_24"
+        android:contentDescription="Cautare"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/profil"
+        android:title="Profil"
+        android:icon="@drawable/baseline_account_circle_24"
+        android:contentDescription="Profil"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/setari"
+        android:title="Setări"
+        android:icon="@drawable/baseline_settings_24"
+        android:contentDescription="Setari"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/deconectare"
+        android:title="Deconectare"
+        android:icon="@drawable/baseline_logout_24"
+        android:contentDescription="Deconectare"
+        app:showAsAction="always"
+        />
+</menu>

@@ -11,9 +11,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -21,6 +23,7 @@ public class DashboardActivity extends AppCompatActivity {
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
     Button LogOUT;
+    MaterialToolbar materialToolbar;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -33,22 +36,25 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+        //getSupportActionBar().hide();
         drawerLayout = findViewById(R.id.activity_dashboard);
+        materialToolbar = findViewById(R.id.topAppBar);
         navigationView = findViewById(R.id.nav_view);
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, materialToolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
-                if (itemId == R.id.profil) {
-                    Toast.makeText(DashboardActivity.this, "Profil selected", Toast.LENGTH_SHORT).show();
-                } else if (itemId == R.id.setari) {
-                    Toast.makeText(DashboardActivity.this, "Setari selected", Toast.LENGTH_SHORT).show();
-                } else if (itemId == R.id.carnet) {
+//                if (itemId == R.id.profil) {
+//                    Toast.makeText(DashboardActivity.this, "Profil selected", Toast.LENGTH_SHORT).show();
+//                } else if (itemId == R.id.setari) {
+//                    Toast.makeText(DashboardActivity.this, "Setari selected", Toast.LENGTH_SHORT).show();
+//                } else
+                if (itemId == R.id.carnet) {
                     Toast.makeText(DashboardActivity.this, "Carnet selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.orar) {
                     Toast.makeText(DashboardActivity.this, "Orar selected", Toast.LENGTH_SHORT).show();
@@ -67,6 +73,26 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
+        materialToolbar.setOnMenuItemClickListener(new MaterialToolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId() == R.id.cautare){
+                    Toast.makeText(DashboardActivity.this, "Search selected", Toast.LENGTH_SHORT).show();
+                }
+                if(item.getItemId() == R.id.profil){
+                    Toast.makeText(DashboardActivity.this, "Profile selected", Toast.LENGTH_SHORT).show();
+                }
+                if(item.getItemId() == R.id.setari){
+                    Toast.makeText(DashboardActivity.this, "Settings selected", Toast.LENGTH_SHORT).show();
+                }
+                if(item.getItemId() == R.id.deconectare){
+                    Toast.makeText(DashboardActivity.this, "Log out selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+                return false;
+            }
+        });
 
         // Adding click listener to Log Out button.
 //        LogOUT.setOnClickListener(new View.OnClickListener() {

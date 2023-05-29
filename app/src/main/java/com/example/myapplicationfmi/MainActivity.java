@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //getSupportActionBar().hide();
         LogInButton = (Button)findViewById(R.id.buttonLogin);
         //RegisterButton = (Button)findViewById(R.id.buttonRegister);
         Email = (EditText)findViewById(R.id.editEmail);
@@ -59,12 +60,12 @@ public class MainActivity extends AppCompatActivity {
             // Opening SQLite database write permission.
             sqLiteDatabaseObj = sqLiteHelper.getWritableDatabase();
             // Adding search email query to cursor.
-            cursor = sqLiteDatabaseObj.query(SQLiteHelper.TABLE_NAME, null, " " + SQLiteHelper.Table_Column_2_Email + "=?", new String[]{EmailHolder}, null, null, null);
+            cursor = sqLiteDatabaseObj.query(SQLiteHelper.TABLE_NAME, null, " " + SQLiteHelper.Table_Column_3_Email + "=?", new String[]{EmailHolder}, null, null, null);
             while (cursor.moveToNext()) {
                 if (cursor.isFirst()) {
                     cursor.moveToFirst();
                     // Storing Password associated with entered email.
-                    TempPassword = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.Table_Column_3_Password));
+                    TempPassword = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.Table_Column_4_Password));
                     // Closing cursor.
                     cursor.close();
                 }
