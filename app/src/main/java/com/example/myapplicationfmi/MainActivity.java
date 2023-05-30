@@ -2,12 +2,14 @@ package com.example.myapplicationfmi;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     Cursor cursor;
     String TempPassword = "NOT_FOUND" ;
     public static final String UserEmail = "";
+    public static final String SHARED_PREFS = "sharedPrefs";
+    CheckBox checkBox;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         Email = (EditText)findViewById(R.id.editEmail);
         Password = (EditText)findViewById(R.id.editPassword);
         sqLiteHelper = new SQLiteHelper(this);
+
+        checkBox = findViewById(R.id.rememberLogin);
+        checkbox();
         //Adding click listener to log in button.
         LogInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +61,19 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
     }
+
+    private void checkbox() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String check = sharedPreferences.getString("name", "");
+        if(check.equals("true")){
+            Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+            // Sending Email to Dashboard Activity using intent.
+            intent.putExtra(UserEmail, EmailHolder);
+            startActivity(intent);
+            finish();
+        }
+    }
+
     // Login function starts from here.
     public void LoginFunction(){
         if(EditTextEmptyHolder) {
@@ -95,6 +115,13 @@ public class MainActivity extends AppCompatActivity {
     public void CheckFinalResult(){
         if(TempPassword.equalsIgnoreCase(PasswordHolder))
         {
+            if(checkBox.isChecked()) {
+                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("name", "true");
+                editor.apply();
+            }
+
             Toast.makeText(MainActivity.this,"Login Successful",Toast.LENGTH_LONG).show();
             // Going to Dashboard activity after login success message.
             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
