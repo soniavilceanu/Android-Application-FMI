@@ -122,6 +122,8 @@ public class DashboardActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if(item.getItemId() == R.id.cautare){
                     Toast.makeText(DashboardActivity.this, "Search selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(DashboardActivity.this, AdminCreateDashboard.class);
+                    startActivity(intent);
                 }
                 if(item.getItemId() == R.id.profil){
                     Toast.makeText(DashboardActivity.this, "Profile selected", Toast.LENGTH_SHORT).show();

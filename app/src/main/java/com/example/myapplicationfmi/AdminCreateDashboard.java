@@ -1,56 +1,59 @@
 package com.example.myapplicationfmi;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
+
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.constraintlayout.widget.Guideline;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import org.xmlpull.v1.XmlPullParser;
 
-import org.w3c.dom.Text;
+public class AdminCreateDashboard extends AppCompatActivity {
 
-import java.util.ArrayList;
-
-public class activities_fragment extends Fragment {
-
-    FloatingActionButton buttonCreateDashboardTab;
+    Button buttonCreateDashboardTab;
 
     // Generate dynamic view IDs
     int previousDashboardTabDateId;
     int previousDashboardTabTitleId;
     int previousDashboardTabBodyId;
     int previousDashboardTabId;
-    private RelativeLayout activitiesRelativeLayout;
-
-    ArrayList <Integer> verticalChain = new ArrayList();
+    RelativeLayout activitiesRelativeLayout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_admin_create_dashboard);
 
+//        View inflatedView = getLayoutInflater().inflate(R.layout.fragment_activities_fragment, null);
+//        activitiesRelativeLayout = (RelativeLayout) inflatedView.findViewById(R.id.activitiesRelativeLayout);
 
+//        // Get the FrameLayout container from the activity's layout
+//        FrameLayout frameLayout = findViewById(R.id.frameLayoutContainer);
+//        // Replace the content of the FrameLayout with the inflated view
+//        frameLayout.addView(inflatedView);
 
-        View rootView = inflater.inflate(R.layout.fragment_activities_fragment, container, false);
-        activitiesRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.activitiesRelativeLayout);
-//        placeholderLayout = rootView.findViewById(R.id.placeholderLayout);
+        Button buttonVeziActiv = findViewById(R.id.buttonVeziActiv);
+        buttonVeziActiv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminCreateDashboard.this, DashboardActivity.class));
+            }
+        });
 
-
-        buttonCreateDashboardTab = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
+        buttonCreateDashboardTab = findViewById(R.id.buttonCreateDashboardTab);
         buttonCreateDashboardTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,13 +64,12 @@ public class activities_fragment extends Fragment {
                     previousDashboardTabDateId = R.id.dashboardTabDate;
                     previousDashboardTabBodyId = R.id.dashboardTabBody;
 
-                    //View inflatedView = getLayoutInflater().inflate(R.layout.fragment_activities_fragment, null);
-//                    previousDashboardTabId = ((ConstraintLayout)rootView.findViewById(R.id.dashboardTab)).getId();
-//                    previousDashboardTabTitleId = ((TextView)rootView.findViewById(R.id.dashboardTabTitle)).getId();
-//                    previousDashboardTabDateId = ((TextView)rootView.findViewById(R.id.dashboardTabDate)).getId();
-//                    previousDashboardTabBodyId = ((TextView)rootView.findViewById(R.id.dashboardTabBody)).getId();
 
-                    verticalChain.add(previousDashboardTabId);
+//                    View inflatedView = getLayoutInflater().inflate(R.layout.fragment_activities_fragment, null);
+//                    previousDashboardTabId = inflatedView.findViewById(R.id.dashboardTab).getId();
+//                    previousDashboardTabTitleId = inflatedView.findViewById(R.id.dashboardTabTitle).getId();
+//                    previousDashboardTabDateId = inflatedView.findViewById(R.id.dashboardTabDate).getId();
+//                    previousDashboardTabBodyId = inflatedView.findViewById(R.id.dashboardTabBody).getId();
                 }
 
                 // Generate dynamic view IDs
@@ -75,6 +77,13 @@ public class activities_fragment extends Fragment {
                 int newDashboardTabTitleId = View.generateViewId();
                 int newDashboardTabBodyId = View.generateViewId();
                 int newDashboardTabId = View.generateViewId();
+
+                // Inflate the parent layout from the desired layout file
+                LayoutInflater inflater = LayoutInflater.from(v.getContext());
+                //   ?
+                View parentLayout = inflater.inflate(R.layout.fragment_activities_fragment, null);
+
+               // ConstraintLayout container = parentLayout.findViewById(R.id.activitiesRelativeLayout);
 
                 // Create a new ConstraintLayout
                 ConstraintLayout constraintLayout = new ConstraintLayout(v.getContext());
@@ -85,14 +94,23 @@ public class activities_fragment extends Fragment {
                 constraintLayout.setBackgroundResource(R.drawable.dashboard_article_background);
                 constraintLayout.setPadding(10, 10, 10, 10);
                 ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) constraintLayout.getLayoutParams();
-                //layoutParams.setMarginStart(30);
-                //layoutParams.setMarginEnd(30);
-                layoutParams.setMargins(30,30,30,0);
-
+                layoutParams.setMarginStart(30);
+                layoutParams.setMarginEnd(30);
                 layoutParams.topMargin = 30;
-                //layoutParams.setMargins(0, 30, 0, 0);
-
                 constraintLayout.setLayoutParams(layoutParams);
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+                constraintSet.connect(constraintLayout.getId(), ConstraintSet.TOP,
+                        previousDashboardTabId, ConstraintSet.BOTTOM);
+                constraintSet.applyTo(constraintLayout);
+
+                /*
+                layoutParams.bottomToTop = R.id.dashboardTab;
+                // Add the ConstraintLayout to its parent view
+                ConstraintLayout parentLayout = findViewById(R.id.parentLayout); // Replace with the ID of the parent layout
+                parentLayout.addView(constraintLayout);
+                 */
 
                 // Create the TextView for dashboardTabDate
                 TextView dashboardTabDate = new TextView(v.getContext());
@@ -109,11 +127,14 @@ public class activities_fragment extends Fragment {
                 dashboardTabDate.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
                 dashboardTabDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
 
-                ConstraintLayout.LayoutParams dateParams = (ConstraintLayout.LayoutParams) dashboardTabDate.getLayoutParams();
-                //layoutParams.setMarginEnd(dpToPx(0));
-                dateParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-                dateParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-                dashboardTabDate.setLayoutParams(dateParams);
+                layoutParams = (ConstraintLayout.LayoutParams) dashboardTabDate.getLayoutParams();
+                layoutParams.setMarginEnd(dpToPx(0));
+                layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+                layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+                dashboardTabDate.setLayoutParams(layoutParams);
+                constraintLayout.addView(dashboardTabDate);
+
+
 
                 // Create the ImageView
                 ImageView imageView = new ImageView(v.getContext());
@@ -123,10 +144,12 @@ public class activities_fragment extends Fragment {
                 imageView.setImageResource(R.drawable.baseline_open_in_new_24);
                 imageView.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.black));
 
-                ConstraintLayout.LayoutParams imageParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
-                imageParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-                imageParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-                imageView.setLayoutParams(imageParams);
+                layoutParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
+                layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+                layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+                imageView.setLayoutParams(layoutParams);
+                constraintLayout.addView(imageView);
+
 
                 // Create the TextView for dashboardTabTitle
                 TextView dashboardTabTitle = new TextView(v.getContext());
@@ -138,10 +161,15 @@ public class activities_fragment extends Fragment {
                 dashboardTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
                 dashboardTabTitle.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
 
-                ConstraintLayout.LayoutParams titleParams = (ConstraintLayout.LayoutParams) dashboardTabTitle.getLayoutParams();
-                titleParams.topToBottom = newDashboardTabDateId;
+                constraintSet = new ConstraintSet();         //?
+                constraintSet.clone(constraintLayout);
+                constraintSet.connect(dashboardTabTitle.getId(), ConstraintSet.TOP,
+                        newDashboardTabDateId, ConstraintSet.BOTTOM);
+                constraintSet.applyTo(constraintLayout);
 
-                dashboardTabTitle.setLayoutParams(titleParams);
+                constraintLayout.addView(dashboardTabTitle);
+
+
 
                 // Create the TextView for dashboardTabBody
                 TextView dashboardTabBody = new TextView(v.getContext());
@@ -158,77 +186,52 @@ public class activities_fragment extends Fragment {
                 dashboardTabBody.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
                 dashboardTabBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 
-                ConstraintLayout.LayoutParams bodyParams = (ConstraintLayout.LayoutParams) dashboardTabBody.getLayoutParams();
-                bodyParams.topToBottom = newDashboardTabTitleId;
 
-                dashboardTabBody.setLayoutParams(bodyParams);
-
-
-//                Guideline guideline = new Guideline(v.getContext());
-//                guideline.setId(View.generateViewId());
-//                constraintLayout.addView(guideline, new ConstraintLayout.LayoutParams(
-//                        ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.MATCH_CONSTRAINT));
-//
-
-
-               verticalChain.add(newDashboardTabId);
-
-
-                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet = new ConstraintSet();       //?
                 constraintSet.clone(constraintLayout);
-
-                constraintSet.connect(newDashboardTabId, ConstraintSet.TOP, previousDashboardTabId, ConstraintSet.BOTTOM, 0);
-
-                //constraintSet.createVerticalChain(activitiesRelativeLayout.getId(), ConstraintSet.TOP, activitiesRelativeLayout.getId(), ConstraintSet.BOTTOM, toIntArray(verticalChain), null, ConstraintSet.CHAIN_PACKED);
-
-                constraintSet.connect(newDashboardTabDateId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-                constraintSet.connect(newDashboardTabDateId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-
-                constraintSet.connect(imageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-                constraintSet.connect(imageView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-
-                constraintSet.connect(newDashboardTabTitleId, ConstraintSet.TOP, newDashboardTabDateId, ConstraintSet.BOTTOM);
-
-                constraintSet.connect(newDashboardTabBodyId, ConstraintSet.TOP, newDashboardTabTitleId, ConstraintSet.BOTTOM);
-
-
-//                constraintSet.connect(guideline.getId(), ConstraintSet.TOP, previousDashboardTabId, ConstraintSet.BOTTOM);
-//                constraintSet.connect(guideline.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-//                constraintSet.connect(guideline.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-//                constraintSet.connect(newDashboardTabId, ConstraintSet.TOP, guideline.getId(), ConstraintSet.BOTTOM);
-
+                constraintSet.connect(dashboardTabBody.getId(), ConstraintSet.TOP,
+                        newDashboardTabTitleId, ConstraintSet.BOTTOM);
                 constraintSet.applyTo(constraintLayout);
 
-
-                constraintLayout.addView(dashboardTabDate);
-                constraintLayout.addView(imageView);
-                constraintLayout.addView(dashboardTabTitle);
                 constraintLayout.addView(dashboardTabBody);
 
-                activitiesRelativeLayout.addView(constraintLayout);
+
 
                 previousDashboardTabBodyId = newDashboardTabBodyId;
                 previousDashboardTabDateId = newDashboardTabDateId;
                 previousDashboardTabId = newDashboardTabId;
                 previousDashboardTabTitleId = newDashboardTabTitleId;
 
+                //setContentView(parentLayout);
+                //ViewGroup layout = (ViewGroup) findViewById(R.id.activitiesRelativeLayout);
+
+//                ViewGroup parentLayout2 = (ViewGroup) inflater.inflate(R.layout.fragment_activities_fragment, null);
+//                parentLayout2.addView(constraintLayout);
+
+
+                //activitiesRelativeLayout.addView(constraintLayout);
+
+                activities_fragment fragment = (activities_fragment) getSupportFragmentManager().findFragmentByTag("fragment_activities_fragment");
+                View fragmentView = fragment.getView();
+                if (fragmentView != null) {
+                    RelativeLayout fragmentActivitiesRelativeLayout = fragmentView.findViewById(R.id.activitiesRelativeLayout);
+                    activitiesRelativeLayout.addView(fragmentActivitiesRelativeLayout);
+                }
+                Intent intent = new Intent(AdminCreateDashboard.this, DashboardActivity.class);
+                startActivity(intent);
             }
         });
-
-        return rootView;
     }
-
 
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
     }
 
-    int[] toIntArray(ArrayList<Integer> list)  {
-        int[] ret = new int[list.size()];
-        int i = 0;
-        for (Integer e : list)
-            ret[i++] = e;
-        return ret;
-    }
+    /*
+    private int dpToPx(Context context, int dp) {
+    float density = context.getResources().getDisplayMetrics().density;
+    return Math.round(dp * density);
+}
+     */
 }
