@@ -1,5 +1,6 @@
 package com.example.myapplicationfmi;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -37,18 +38,12 @@ public class activities_fragment extends Fragment {
     int previousDashboardTabId;
     private RelativeLayout activitiesRelativeLayout;
 
-    ArrayList <Integer> verticalChain = new ArrayList();
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
         View rootView = inflater.inflate(R.layout.fragment_activities_fragment, container, false);
         activitiesRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.activitiesRelativeLayout);
-//        placeholderLayout = rootView.findViewById(R.id.placeholderLayout);
-
 
         buttonCreateDashboardTab = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
         buttonCreateDashboardTab.setOnClickListener(new View.OnClickListener() {
@@ -60,14 +55,6 @@ public class activities_fragment extends Fragment {
                     previousDashboardTabTitleId = R.id.dashboardTabTitle;
                     previousDashboardTabDateId = R.id.dashboardTabDate;
                     previousDashboardTabBodyId = R.id.dashboardTabBody;
-
-                    //View inflatedView = getLayoutInflater().inflate(R.layout.fragment_activities_fragment, null);
-//                    previousDashboardTabId = ((ConstraintLayout)rootView.findViewById(R.id.dashboardTab)).getId();
-//                    previousDashboardTabTitleId = ((TextView)rootView.findViewById(R.id.dashboardTabTitle)).getId();
-//                    previousDashboardTabDateId = ((TextView)rootView.findViewById(R.id.dashboardTabDate)).getId();
-//                    previousDashboardTabBodyId = ((TextView)rootView.findViewById(R.id.dashboardTabBody)).getId();
-
-                    verticalChain.add(previousDashboardTabId);
                 }
 
                 // Generate dynamic view IDs
@@ -76,136 +63,71 @@ public class activities_fragment extends Fragment {
                 int newDashboardTabBodyId = View.generateViewId();
                 int newDashboardTabId = View.generateViewId();
 
-                // Create a new ConstraintLayout
-                ConstraintLayout constraintLayout = new ConstraintLayout(v.getContext());
-                constraintLayout.setLayoutParams(new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT));
-                constraintLayout.setId(newDashboardTabId);
-                constraintLayout.setBackgroundResource(R.drawable.dashboard_article_background);
-                constraintLayout.setPadding(10, 10, 10, 10);
-                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) constraintLayout.getLayoutParams();
-                //layoutParams.setMarginStart(30);
-                //layoutParams.setMarginEnd(30);
-                layoutParams.setMargins(30,30,30,0);
+                RelativeLayout dashboardTab = new RelativeLayout(v.getContext());
+                dashboardTab.setId(newDashboardTabId);
+                RelativeLayout.LayoutParams dashboardTabParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dashboardTabParams.setMargins(dpToPx(30), dpToPx(30), dpToPx(30), 0);
+                dashboardTab.setPadding(10, 10, 10, 10);
+                dashboardTab.setLayoutParams(dashboardTabParams);
+                dashboardTab.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.dashboard_article_background));
 
-                layoutParams.topMargin = 30;
-                //layoutParams.setMargins(0, 30, 0, 0);
-
-                constraintLayout.setLayoutParams(layoutParams);
-
-                // Create the TextView for dashboardTabDate
                 TextView dashboardTabDate = new TextView(v.getContext());
-                dashboardTabDate.setLayoutParams(new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT));
                 dashboardTabDate.setId(newDashboardTabDateId);
+                RelativeLayout.LayoutParams dashboardTabDateParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dashboardTabDateParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+                dashboardTabDateParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                dashboardTabDate.setLayoutParams(dashboardTabDateParams);
                 dashboardTabDate.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.lavender_border));
-                //dashboardTabDate.setBackgroundResource(R.drawable.lavender_border);
-                dashboardTabDate.setPadding(8, 4, 8, 4);
-                //dashboardTabDate2.setPadding(dpToPx(8), dpToPx(4), dpToPx(8), dpToPx(4));
-                dashboardTabDate.setText("11.11.1999");
-                dashboardTabDate.setTypeface(null, Typeface.BOLD);
+                dashboardTabDate.setPadding(dpToPx(8), dpToPx(4), dpToPx(8), dpToPx(4));
+                dashboardTabDate.setText(R.string.dashboard_date);
                 dashboardTabDate.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
                 dashboardTabDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                dashboardTab.addView(dashboardTabDate);
 
-                ConstraintLayout.LayoutParams dateParams = (ConstraintLayout.LayoutParams) dashboardTabDate.getLayoutParams();
-                //layoutParams.setMarginEnd(dpToPx(0));
-                dateParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-                dateParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-                dashboardTabDate.setLayoutParams(dateParams);
 
-                // Create the ImageView
-                ImageView imageView = new ImageView(v.getContext());
-                imageView.setLayoutParams(new ConstraintLayout.LayoutParams(
-                        dpToPx(30), dpToPx(30)));
-                imageView.setId(View.generateViewId());
-                imageView.setImageResource(R.drawable.baseline_open_in_new_24);
-                imageView.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.black));
+                ImageView dashboardTabImage = new ImageView(v.getContext());
+                dashboardTabImage.setLayoutParams(new RelativeLayout.LayoutParams(dpToPx(30), dpToPx(30)));
+                dashboardTabImage.setImageResource(R.drawable.baseline_open_in_new_24);
+                dashboardTabImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                dashboardTabImage.setId(View.generateViewId());
+                RelativeLayout.LayoutParams dashboardTabImageParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dashboardTabImageParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+                dashboardTabImageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                dashboardTabImage.setLayoutParams(dashboardTabImageParams);
+                dashboardTabImage.setColorFilter(ContextCompat.getColor(v.getContext(), android.R.color.black));
+                dashboardTab.addView(dashboardTabImage);
 
-                ConstraintLayout.LayoutParams imageParams = (ConstraintLayout.LayoutParams) imageView.getLayoutParams();
-                imageParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-                imageParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-                imageView.setLayoutParams(imageParams);
 
-                // Create the TextView for dashboardTabTitle
                 TextView dashboardTabTitle = new TextView(v.getContext());
-                dashboardTabTitle.setLayoutParams(new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT));
                 dashboardTabTitle.setId(newDashboardTabTitleId);
-                dashboardTabTitle.setText("TITLU NOU");
-                dashboardTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+                RelativeLayout.LayoutParams dashboardTabTitleParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dashboardTabTitleParams.addRule(RelativeLayout.BELOW, newDashboardTabDateId);
+                dashboardTabTitle.setLayoutParams(dashboardTabTitleParams);
+                dashboardTabTitle.setText("Dap, alt titlu");
                 dashboardTabTitle.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
+                dashboardTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+                dashboardTab.addView(dashboardTabTitle);
 
-                ConstraintLayout.LayoutParams titleParams = (ConstraintLayout.LayoutParams) dashboardTabTitle.getLayoutParams();
-                titleParams.topToBottom = newDashboardTabDateId;
 
-                dashboardTabTitle.setLayoutParams(titleParams);
-
-                // Create the TextView for dashboardTabBody
                 TextView dashboardTabBody = new TextView(v.getContext());
-                dashboardTabBody.setLayoutParams(new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT));
                 dashboardTabBody.setId(newDashboardTabBodyId);
-                //dashboardTabBody2.setPadding(0, getResources().getDimensionPixelSize(R.dimen.margin_top), 0, 0);
+                RelativeLayout.LayoutParams dashboardTabBody2Params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dashboardTabBody2Params.addRule(RelativeLayout.BELOW, newDashboardTabTitleId);
+                dashboardTabBody.setLayoutParams(dashboardTabBody2Params);
                 dashboardTabBody.setPadding(0, dpToPx(5), 0, 0);
                 dashboardTabBody.setEllipsize(TextUtils.TruncateAt.END);
                 dashboardTabBody.setMaxLines(3);
-                dashboardTabBody.setText("LOREM lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem");
-                //dashboardTabBody2.setTextColor(getResources().getColor(R.color.black));
+                dashboardTabBody.setText("Mai mult lorem ipsum, dar mai putin, draci, laci, etc.");
                 dashboardTabBody.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
                 dashboardTabBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                dashboardTab.addView(dashboardTabBody);
 
-                ConstraintLayout.LayoutParams bodyParams = (ConstraintLayout.LayoutParams) dashboardTabBody.getLayoutParams();
-                bodyParams.topToBottom = newDashboardTabTitleId;
-
-                dashboardTabBody.setLayoutParams(bodyParams);
-
-
-//                Guideline guideline = new Guideline(v.getContext());
-//                guideline.setId(View.generateViewId());
-//                constraintLayout.addView(guideline, new ConstraintLayout.LayoutParams(
-//                        ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.MATCH_CONSTRAINT));
-//
+                RelativeLayout.LayoutParams dashboardTabParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dashboardTabParams2.addRule(RelativeLayout.BELOW, previousDashboardTabId);
+                dashboardTab.setLayoutParams(dashboardTabParams2);
 
 
-               verticalChain.add(newDashboardTabId);
-
-
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(constraintLayout);
-
-                constraintSet.connect(newDashboardTabId, ConstraintSet.TOP, previousDashboardTabId, ConstraintSet.BOTTOM, 0);
-
-                //constraintSet.createVerticalChain(activitiesRelativeLayout.getId(), ConstraintSet.TOP, activitiesRelativeLayout.getId(), ConstraintSet.BOTTOM, toIntArray(verticalChain), null, ConstraintSet.CHAIN_PACKED);
-
-                constraintSet.connect(newDashboardTabDateId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-                constraintSet.connect(newDashboardTabDateId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-
-                constraintSet.connect(imageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-                constraintSet.connect(imageView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-
-                constraintSet.connect(newDashboardTabTitleId, ConstraintSet.TOP, newDashboardTabDateId, ConstraintSet.BOTTOM);
-
-                constraintSet.connect(newDashboardTabBodyId, ConstraintSet.TOP, newDashboardTabTitleId, ConstraintSet.BOTTOM);
-
-
-//                constraintSet.connect(guideline.getId(), ConstraintSet.TOP, previousDashboardTabId, ConstraintSet.BOTTOM);
-//                constraintSet.connect(guideline.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-//                constraintSet.connect(guideline.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-//                constraintSet.connect(newDashboardTabId, ConstraintSet.TOP, guideline.getId(), ConstraintSet.BOTTOM);
-
-                constraintSet.applyTo(constraintLayout);
-
-
-                constraintLayout.addView(dashboardTabDate);
-                constraintLayout.addView(imageView);
-                constraintLayout.addView(dashboardTabTitle);
-                constraintLayout.addView(dashboardTabBody);
-
-                activitiesRelativeLayout.addView(constraintLayout);
+                activitiesRelativeLayout.addView(dashboardTab);
 
                 previousDashboardTabBodyId = newDashboardTabBodyId;
                 previousDashboardTabDateId = newDashboardTabDateId;
@@ -223,6 +145,11 @@ public class activities_fragment extends Fragment {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
     }
+
+//    public static int dpToPx(Context context, float dp) {
+//        float density = context.getResources().getDisplayMetrics().density;
+//        return Math.round(dp * density);
+//    }
 
     int[] toIntArray(ArrayList<Integer> list)  {
         int[] ret = new int[list.size()];

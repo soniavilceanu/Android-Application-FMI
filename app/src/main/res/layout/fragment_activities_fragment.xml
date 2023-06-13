@@ -2,15 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/activitiesRelativeLayout"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities_fragment">
+    android:id="@+id/activitiesRelativeLayout">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
+        android:id="@+id/dashboardTab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/dashboardTab"
         android:background="@drawable/dashboard_article_background"
         android:padding="10dp"
         android:layout_marginLeft="30dp"
@@ -30,57 +29,46 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true" />
 
         <ImageView
+            android:id="@+id/dashboardTabImage"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:id="@+id/dashboardTabImage"
             android:src="@drawable/baseline_open_in_new_24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/black" />
+            app:tint="@android:color/black"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
 
         <TextView
+            android:id="@+id/dashboardTabTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/dashboardTabTitle"
             android:text="un titlu interesant"
             android:textSize="30sp"
             android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@+id/dashboardTabDate"/>
+            android:layout_below="@id/dashboardTabDate" />
 
         <TextView
+            android:id="@+id/dashboardTabBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/dashboardTabBody"
             android:paddingTop="5dp"
             android:ellipsize="end"
             android:maxLines="3"
             android:text="Lorem Ipsum 2 is simply dummy text of the prrdjd d ffgkd ddkk sessss iiiiii tg fddsssa the prrdjd d ffgkd ddkk sessss iiiiii tg fddsssa"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@+id/dashboardTabTitle"
-            tools:layout_editor_absoluteX="20dp" />
+            android:layout_below="@id/dashboardTabTitle" />
 
-        <!--
-        <View
-            android:id="@+id/emptyView"
-            android:layout_width="match_parent"
-            app:layout_constraintTop_toBottomOf="@+id/dashboardTabBody"
-            android:layout_height="80dp"
-            android:background="#00000000"
-            />
-            -->
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 
     <!--
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
+        android:id="@+id/dashboardTab2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/dashboardTab2"
         android:background="@drawable/dashboard_article_background"
         android:padding="10dp"
         android:layout_marginLeft="30dp"
@@ -101,44 +89,44 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true" />
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/baseline_open_in_new_24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/black" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            app:tint="@android:color/black" />
+
 
         <TextView
+            android:id="@+id/dashboardTabTitle2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/dashboardTabTitle2"
             android:text="Dap, alt titlu"
             android:textSize="30sp"
             android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@+id/dashboardTabDate2"/>
+            android:layout_below="@id/dashboardTabDate2" />
 
         <TextView
+            android:id="@+id/dashboardTabBody2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/dashboardTabBody2"
             android:paddingTop="5dp"
             android:ellipsize="end"
             android:maxLines="3"
             android:text="Mai mult lorem ipsum, dar mai putin, draci, laci, etc."
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@+id/dashboardTabTitle2"
-            tools:layout_editor_absoluteX="20dp" />
+            android:layout_below="@id/dashboardTabTitle2" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 
-    -->
+-->
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -149,9 +137,9 @@
             android:clickable="true"
             android:src="@drawable/baseline_today_24"
             android:layout_margin="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:contentDescription="Add Event" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </RelativeLayout>
