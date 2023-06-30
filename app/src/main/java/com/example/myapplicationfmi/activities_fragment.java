@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.transition.TransitionManager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,11 +23,14 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class activities_fragment extends Fragment {
 
-    FloatingActionButton buttonCreateDashboardTab;
+
 
     // Generate dynamic view IDs
     int previousDashboardTabDateId;
@@ -34,12 +41,19 @@ public class activities_fragment extends Fragment {
     ImageView dashboardTabImage;
     Button dashboardTabDelete;
     private RelativeLayout activitiesRelativeLayout;
-
+    private LinearLayout fillDashboardTabInfo;
+    FloatingActionButton buttonCreateDashboardTab;
     private ArrayList<Integer> dashboardTabIds;
+    private Button addDashboardTabInfo;
+    private EditText addDashboardTitle;
+    private EditText addDashboardBody;
+    private EditText addDashboardLink;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
         dashboardTabIds = new ArrayList<Integer>();
 
@@ -47,11 +61,19 @@ public class activities_fragment extends Fragment {
         activitiesRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.activitiesRelativeLayout);
         dashboardTabImage = (ImageView) rootView.findViewById(R.id.dashboardTabImage);
         dashboardTabDelete = (Button) rootView.findViewById(R.id.dashboardTabDelete);
+
+        fillDashboardTabInfo = (LinearLayout) rootView.findViewById(R.id.fillDashboardTabInfo);
+        addDashboardTabInfo = (Button) rootView.findViewById(R.id.addDashboardTabInfo);
+        addDashboardTitle = (EditText) rootView.findViewById(R.id.addDashboardTitle);
+        addDashboardBody = (EditText) rootView.findViewById(R.id.addDashboardBody);
+        addDashboardLink = (EditText) rootView.findViewById(R.id.addDashboardLink);
+
         //daca e admin
         //dashboardTabDelete.setVisibility(View.VISIBLE);
 
 
         buttonCreateDashboardTab = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
+        //daca e admin
         buttonCreateDashboardTab.setVisibility(View.VISIBLE);
 
 
@@ -81,19 +103,27 @@ public class activities_fragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             activitiesRelativeLayout.removeView(dashboardParent);
-                            dashboardTabIds.remove((Object)dashboardParent.getId());
                             if(dashboardTabIds.size() == 1)
                                 previousDashboardTabId = R.id.failSafe;
                             else{
                                 int nextId = dashboardTabIds.get(1);
                                 previousDashboardTabId = nextId;
                             }
+                            dashboardTabIds.remove((Object)dashboardParent.getId());
                         }
                     });
                 }
             }
         }
+
         buttonCreateDashboardTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TransitionManager.beginDelayedTransition(fillDashboardTabInfo);
+                fillDashboardTabInfo.setVisibility(View.VISIBLE);
+            }
+        });
+        addDashboardTabInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -131,7 +161,7 @@ public class activities_fragment extends Fragment {
                 dashboardTabDate.setLayoutParams(dashboardTabDateParams);
                 dashboardTabDate.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.lavender_border));
                 dashboardTabDate.setPadding(dpToPx(v.getContext(),8), dpToPx(v.getContext(),4), dpToPx(v.getContext(),8), dpToPx(v.getContext(),4));
-                dashboardTabDate.setText(R.string.dashboard_date);
+                dashboardTabDate.setText(sdf.format(new Date()));
                 dashboardTabDate.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
                 dashboardTabDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                 dashboardTab.addView(dashboardTabDate);
@@ -199,7 +229,7 @@ public class activities_fragment extends Fragment {
                 RelativeLayout.LayoutParams dashboardTabTitleParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 dashboardTabTitleParams.addRule(RelativeLayout.BELOW, newDashboardTabDateId);
                 dashboardTabTitle.setLayoutParams(dashboardTabTitleParams);
-                dashboardTabTitle.setText("Dap, alt titlu" + dashboardTabIds.size());
+                dashboardTabTitle.setText(addDashboardTitle.getText());
                 dashboardTabTitle.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
                 dashboardTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
                 dashboardTab.addView(dashboardTabTitle);
@@ -213,7 +243,7 @@ public class activities_fragment extends Fragment {
                 dashboardTabBody.setPadding(0, dpToPx(v.getContext(),5), 0, 0);
                 dashboardTabBody.setEllipsize(TextUtils.TruncateAt.END);
                 dashboardTabBody.setMaxLines(3);
-                dashboardTabBody.setText("Mai mult lorem ipsum, dar mai putin, draci, laci, etc.");
+                dashboardTabBody.setText(addDashboardBody.getText());
                 dashboardTabBody.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
                 dashboardTabBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                 dashboardTab.addView(dashboardTabBody);
@@ -231,7 +261,24 @@ public class activities_fragment extends Fragment {
                 previousDashboardTabDateId = newDashboardTabDateId;
                 previousDashboardTabId = newDashboardTabId;
                 previousDashboardTabTitleId = newDashboardTabTitleId;
+
+                addDashboardBody.setText("");
+                addDashboardLink.setText("");
+                addDashboardTitle.setText("");
+
+                TransitionManager.beginDelayedTransition(fillDashboardTabInfo);
+                fillDashboardTabInfo.setVisibility(View.GONE);
             }
+
+            /*
+            sa adaugam in baza ce completam aici ca sa incarcam dashboard-urile la fiecare deschidere de aplicatie
+            optiune de formatare textȘ new line bold, underline, italic
+            optiune adugare poza din galerie ca fundal pe dashboard
+            extindere sau deschidere dashboard pt a vedea textul complet fara sa intram pe site
+            titlul si body-ul textului sa aiba un minim de caractere
+            link mandatoriu
+            legare link sa deschida ceva dupa adaugarea in baza
+             */
         });
 
         return rootView;
@@ -247,6 +294,30 @@ public class activities_fragment extends Fragment {
     private void goToUrl(String url) {
         Uri uri = Uri.parse(url);
         startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    }
+    boolean isWithinEditTextBounds(int xPoint, int yPoint) {
+        int[] l = new int[2];
+        fillDashboardTabInfo.getLocationOnScreen(l);
+        int x = l[0];
+        int y = l[1];
+        int w = fillDashboardTabInfo.getWidth();
+        int h = fillDashboardTabInfo.getHeight();
+
+        if (xPoint< x || xPoint> x + w || yPoint< y || yPoint> y + h) {
+            return false;
+        }
+        return true;
+    }
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (fillDashboardTabInfo.getVisibility() == View.VISIBLE && !isWithinEditTextBounds((int) ev.getRawX(), (int) ev.getRawY())){
+            TransitionManager.beginDelayedTransition(fillDashboardTabInfo);
+            fillDashboardTabInfo.setVisibility(View.GONE);
+            addDashboardBody.setText("");
+            addDashboardLink.setText("");
+            addDashboardTitle.setText("");
+            return true;
+        }
+        return false;
     }
 
 //    private int dpToPx(int dp) {

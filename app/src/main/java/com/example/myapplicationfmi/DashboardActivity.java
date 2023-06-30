@@ -113,6 +113,10 @@ public class DashboardActivity extends AppCompatActivity {
                 } else if (itemId == R.id.informatii) {
                     Toast.makeText(DashboardActivity.this, "Informatii selected", Toast.LENGTH_SHORT).show();
                 }
+                else if(itemId == R.id.creareContNou) {
+                    Intent intent = new Intent(DashboardActivity.this, RegisterActivity.class);
+                    startActivity(intent);
+                }
                 return false;
             }
         });

@@ -9,87 +9,87 @@
         <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
-        <RelativeLayout
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/activitiesRelativeLayout">
-
             <RelativeLayout
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/failSafe"/>
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/activitiesRelativeLayout">
 
-            <RelativeLayout
-                android:id="@+id/dashboardTab"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/dashboard_article_background"
-                android:padding="10dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="30dp">
-
-                <TextView
-                    android:id="@+id/dashboardTabDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/lavender_border"
-                    android:paddingStart="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="4dp"
-                    android:text="00.00.2023"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="15dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true" />
-
-                <ImageView
-                    android:id="@+id/dashboardTabImage"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/baseline_open_in_new_24"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true" />
-
-                <Button
-                    android:id="@+id/dashboardTabDelete"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="40dp"
-                    android:background="@drawable/baseline_close_24"
-                    android:visibility="visible"/>
-
-                <TextView
-                    android:id="@+id/dashboardTabTitle"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="un titlu interesant"
-                    android:textSize="30sp"
-                    android:textColor="@color/black"
-                    android:layout_below="@id/dashboardTabDate" />
+                    android:id="@+id/failSafe"/>
 
-                <TextView
-                    android:id="@+id/dashboardTabBody"
+                <RelativeLayout
+                    android:id="@+id/dashboardTab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:text="Lorem Ipsum 2 is simply dummy text of the prrdjd d ffgkd ddkk sessss iiiiii tg fddsssa the prrdjd d ffgkd ddkk sessss iiiiii tg fddsssa"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:layout_below="@id/dashboardTabTitle" />
+                    android:background="@drawable/dashboard_article_background"
+                    android:padding="10dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="30dp">
+
+                    <TextView
+                        android:id="@+id/dashboardTabDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/lavender_border"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="4dp"
+                        android:text="00.00.2023"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="15dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true" />
+
+                    <ImageView
+                        android:id="@+id/dashboardTabImage"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/baseline_open_in_new_24"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true" />
+
+                    <Button
+                        android:id="@+id/dashboardTabDelete"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="40dp"
+                        android:background="@drawable/baseline_close_24"
+                        android:visibility="visible"/>
+
+                    <TextView
+                        android:id="@+id/dashboardTabTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="un titlu interesant"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:layout_below="@id/dashboardTabDate" />
+
+                    <TextView
+                        android:id="@+id/dashboardTabBody"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:text="Lorem Ipsum 2 is simply dummy text of the prrdjd d ffgkd ddkk sessss iiiiii tg fddsssa the prrdjd d ffgkd ddkk sessss iiiiii tg fddsssa"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:layout_below="@id/dashboardTabTitle" />
+
+                </RelativeLayout>
 
             </RelativeLayout>
-
-        </RelativeLayout>
-    </ScrollView>
+        </ScrollView>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -108,5 +108,73 @@
                 android:contentDescription="Add Event" />
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:background="@drawable/dashboard_article_background_v2"
+            android:id="@+id/fillDashboardTabInfo"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Creare articol nou"
+                    android:textSize="20dp"
+                    android:textColor="@color/original_lavender"
+                    android:textStyle="italic|bold"
+                    android:gravity="center"/>
+                <EditText
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:id="@+id/addDashboardTitle"
+                    android:background="@drawable/lavender_border"
+                    android:layout_marginTop="10dp"
+                    android:padding="8dp"
+                    android:hint="Titlul articolului"
+                    android:textColorHint="#808080"
+                    android:drawablePadding="8dp"/>
+                <EditText
+                    android:layout_width="350dp"
+                    android:layout_height="200dp"
+                    android:id="@+id/addDashboardBody"
+                    android:background="@drawable/lavender_border_v2"
+                    android:layout_marginTop="20dp"
+                    android:padding="8dp"
+                    android:hint="Conținut articol..."
+                    android:textColorHint="#808080"
+                    android:gravity="top"
+                    android:drawablePadding="8dp"/>
+                <EditText
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/addDashboardLink"
+                    android:background="@drawable/lavender_border"
+                    android:layout_marginTop="10dp"
+                    android:padding="8dp"
+                    android:hint="Link catre articol pe site"
+                    android:textColorHint="#808080"
+                    android:drawablePadding="8dp"/>
+                <Button
+                    android:layout_width="180dp"
+                    android:layout_height="70dp"
+                    android:text="Adaugă"
+                    android:textColor="@color/white"
+                    android:id="@+id/addDashboardTabInfo"
+                    android:textSize="18sp"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/original_lavender"
+                    android:background="@drawable/lavender_border"/>
+            </LinearLayout>
+        </LinearLayout>
+
     </FrameLayout>
 </RelativeLayout>

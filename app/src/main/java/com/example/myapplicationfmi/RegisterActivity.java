@@ -2,21 +2,24 @@ package com.example.myapplicationfmi;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText Email, Password, Name ;
+    EditText Email, Password, Nume, Prenume ;
     Button Register;
-    String NameHolder, EmailHolder, PasswordHolder;
+    String NumeHolder, PrenumeHolder, EmailHolder, PasswordHolder;
     Boolean EditTextEmptyHolder;
     SQLiteDatabase sqLiteDatabaseObj;
     String SQLiteDataBaseQueryHolder ;
@@ -30,7 +33,17 @@ public class RegisterActivity extends AppCompatActivity {
         Register = (Button)findViewById(R.id.buttonRegister);
         Email = (EditText)findViewById(R.id.editEmail);
         Password = (EditText)findViewById(R.id.editPassword);
-        Name = (EditText)findViewById(R.id.editName);
+        Nume = (EditText)findViewById(R.id.editFirstName);
+        Prenume = (EditText)findViewById(R.id.editLastName);
+
+
+        String[] items = {"STUDENT", "PROFESOR"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+
+        Spinner spinnerTipCont = findViewById(R.id.spinnerTipCont);
+        spinnerTipCont.setAdapter(adapter);
+
+
         sqLiteHelper = new SQLiteHelper(this);
         // Adding click listener to register button.
         Register.setOnClickListener(new View.OnClickListener() {
@@ -64,33 +77,36 @@ public class RegisterActivity extends AppCompatActivity {
         if(EditTextEmptyHolder == true)
         {
             // SQLite query to insert data into table.
-            SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelper.TABLE_NAME+" (name,email,password) VALUES('"+NameHolder+"', '"+EmailHolder+"', '"+PasswordHolder+"');";
+            SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelper.TABLE_NAME+" (name,email,password) VALUES('"+NumeHolder+"', '"+EmailHolder+"', '"+PasswordHolder+"');";
             // Executing query.
             sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
             // Closing SQLite database object.
             sqLiteDatabaseObj.close();
             // Printing toast message after done inserting.
-            Toast.makeText(RegisterActivity.this,"User Registered Successfully", Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this,"User înregistrat cu succes", Toast.LENGTH_LONG).show();
         }
         // This block will execute if any of the registration EditText is empty.
         else {
             // Printing toast message if any of EditText is empty.
-            Toast.makeText(RegisterActivity.this,"Please Fill All The Required Fields.", Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this,"Trebuie completate toate câmpurile", Toast.LENGTH_LONG).show();
         }
     }
     // Empty edittext after done inserting process method.
     public void EmptyEditTextAfterDataInsert(){
-        Name.getText().clear();
+        Nume.getText().clear();
         Email.getText().clear();
         Password.getText().clear();
+        Intent intent = new Intent(RegisterActivity.this, DashboardActivity.class);
+        startActivity(intent);
     }
     // Method to check EditText is empty or Not.
     public void CheckEditTextStatus(){
         // Getting value from All EditText and storing into String Variables.
-        NameHolder = Name.getText().toString() ;
+        NumeHolder = Nume.getText().toString() ;
+        PrenumeHolder = Prenume.getText().toString() ;
         EmailHolder = Email.getText().toString();
         PasswordHolder = Password.getText().toString();
-        if(TextUtils.isEmpty(NameHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)){
+        if(TextUtils.isEmpty(NumeHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)){
             EditTextEmptyHolder = false ;
         }
         else {

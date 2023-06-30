@@ -8,9 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity
-            android:name=".AdminCreateDashboard"
-            />
+        <activity android:name=".AdminCreateDashboard" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -22,7 +20,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".DashboardActivity" />
+        <activity
+            android:name=".DashboardActivity"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

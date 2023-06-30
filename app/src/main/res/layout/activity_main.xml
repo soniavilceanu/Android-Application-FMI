@@ -8,8 +8,6 @@
     android:background="@drawable/untitled_artwork_cyan"
     tools:context=".MainActivity">
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
