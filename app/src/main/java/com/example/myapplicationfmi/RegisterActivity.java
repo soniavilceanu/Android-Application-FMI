@@ -187,11 +187,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
         checkboxID.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
@@ -219,8 +214,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
-
-
         spinnerStudentAn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -310,30 +303,50 @@ public class RegisterActivity extends AppCompatActivity {
     }
     // SQLite table build method.
     public void SQLiteTableBuild() {
-        //datele vor fi introduse de un admin, nu le mai introducem noi
-        //sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + SQLiteHelper.TABLE_NAME + "(" + SQLiteHelper.Table_Column_ID + " PRIMARY KEY AUTOINCREMENT NOT NULL, " + SQLiteHelper.Table_Column_1_Last_Name + " VARCHAR, " + SQLiteHelper.Table_Column_2_Email + " VARCHAR, " + SQLiteHelper.Table_Column_3_Password + " VARCHAR);");
+        sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + SQLiteHelper.TABLE_NAME + "("
+                + SQLiteHelper.Table_Column_ID + " INTEGER PRIMARY KEY, "
+                + SQLiteHelper.Table_Column_1_Nume + " VARCHAR, "
+                + SQLiteHelper.Table_Column_2_Prenume + " VARCHAR, "
+                + SQLiteHelper.Table_Column_3_Email + " VARCHAR, "
+                + SQLiteHelper.Table_Column_4_Password + " VARCHAR, "
+                + SQLiteHelper.Table_Column_5_An + " VARCHAR, "
+                + SQLiteHelper.Table_Column_6_Serie + " VARCHAR, "
+                + SQLiteHelper.Table_Column_7_Grupa + " VARCHAR, "
+                + SQLiteHelper.Table_Column_8_Taxa + " VARCHAR, "
+                + SQLiteHelper.Table_Column_9_Bursa + " VARCHAR, "
+                + SQLiteHelper.Table_Column_10_An_Inscriere + " VARCHAR, "
+                + SQLiteHelper.Table_Column_11_Forma_De_Invatamant + " VARCHAR, "
+                + SQLiteHelper.Table_Column_12_Tip_Studii + " VARCHAR);");
     }
     // Insert data into SQLite database method.
     public void InsertDataIntoSQLiteDatabase(){
         // If editText is not empty then this block will executed.
         if(EditTextEmptyHolder == true)
         {
+            String formaDeInvatamant = null;
+            String tipStudii = null;
+            if(checkboxIFR.isChecked()) formaDeInvatamant = "IFR";
+            else if(checkboxIF.isChecked()) formaDeInvatamant = "IF";
+            else if(checkboxID.isChecked()) formaDeInvatamant = "ID";
+
+            if(checkboxLicenta.isChecked()) tipStudii = "Licenta";
+            else if(checkboxMaster.isChecked()) tipStudii = "Master";
+
             // SQLite query to insert data into table.
-            SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelper.TABLE_NAME+" (name,email,password) VALUES('"+NumeHolder+"', '"+EmailHolder+"', '"+PasswordHolder+"');";
-            // Executing query.
+            SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelper.TABLE_NAME+" (nume,prenume,email,password,an,serie,grupa,taxa,bursa,an_inscriere,forma_de_invatamant,tip_studii)" +
+                    " VALUES('"+NumeHolder+"', '"+PrenumeHolder+"', '"+EmailHolder+"', '"+PasswordHolder+"', '"+spinnerStudentAn.getSelectedItem()+"', '"+spinnerStudentSerie.getSelectedItem()+"', '"+spinnerStudentGrupa.getSelectedItem()+"', '"+checkboxTaxa.isChecked()+"'," +
+                    "'"+checkboxBursa.isChecked()+"', '"+editStudentAnIncepereHolder+"', '"+formaDeInvatamant+"', '"+tipStudii+"');";
+
             sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
-            // Closing SQLite database object.
             sqLiteDatabaseObj.close();
-            // Printing toast message after done inserting.
+
             Toast.makeText(RegisterActivity.this,"User înregistrat cu succes", Toast.LENGTH_LONG).show();
         }
-        // This block will execute if any of the registration EditText is empty.
         else {
-            // Printing toast message if any of EditText is empty.
-            Toast.makeText(RegisterActivity.this,"Trebuie completate toate câmpurile", Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this,"Va rog completati toate datele necesare!", Toast.LENGTH_LONG).show();
         }
     }
-    // Empty edittext after done inserting process method.
+
     public void EmptyEditTextAfterDataInsert(){
         Nume.getText().clear();
         Prenume.getText().clear();
@@ -350,7 +363,7 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent = new Intent(RegisterActivity.this, DashboardActivity.class);
         startActivity(intent);
     }
-    // Method to check EditText is empty or Not.
+    // metoda sa vedem daca e totul completat cum vrem
     public void CheckEditTextStatus(){
         // Getting value from All EditText and storing into String Variables.
         NumeHolder = Nume.getText().toString();
@@ -373,7 +386,7 @@ public class RegisterActivity extends AppCompatActivity {
         while (cursor.moveToNext()) {
             if (cursor.isFirst()) {
                 cursor.moveToFirst();
-                // If Email is already exists then Result variable value set as Email Found.
+                // If Email already exists then Result variable value set as Email Found.
                 F_Result = "Email Found";
                 // Closing cursor.
                 cursor.close();
@@ -387,11 +400,11 @@ public class RegisterActivity extends AppCompatActivity {
         // Checking whether email is already exists or not.
         if(F_Result.equalsIgnoreCase("Email Found"))
         {
-            // If email is exists then toast msg will display.
-            Toast.makeText(RegisterActivity.this,"Email Already Exists",Toast.LENGTH_LONG).show();
+            // If email exists then toast msg will display.
+            Toast.makeText(RegisterActivity.this,"Email deja utilizat!",Toast.LENGTH_LONG).show();
         }
         else {
-            // If email already dose n't exists then user registration details will entered to SQLite database.
+            // If email doesn't already exist then user registration details will be entered in SQLite database.
             InsertDataIntoSQLiteDatabase();
         }
         F_Result = "Not_Found" ;
