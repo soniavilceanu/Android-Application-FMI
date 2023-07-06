@@ -7,7 +7,7 @@
     android:paddingBottom="16dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingTop="50dp"
+    android:paddingTop="20dp"
     tools:context="com.example.myapplicationfmi.RegisterActivity"
     android:background="@drawable/dashboard_article_background_v2">
 <!--    android:layout_width="match_parent"-->
@@ -21,7 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
         android:gravity="center">
         <TextView
             android:layout_width="match_parent"
@@ -82,13 +81,66 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/LayoutStudent"
+            android:id="@+id/layoutStudent"
             android:visibility="visible"
             android:paddingBottom="10dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center">
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Licență"
+                    android:textSize="18dp"
+                    android:textColor="@color/lapis_blue"
+                    android:gravity="center"
+                    android:paddingEnd="40dp"
+                    android:id="@+id/checkboxLicenta"
+                    />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Master"
+                    android:textSize="18dp"
+                    android:textColor="@color/lapis_blue"
+                    android:gravity="center"
+                    android:id="@+id/checkboxMaster"
+                    />
+            </LinearLayout>
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:gravity="center"-->
+<!--                android:padding="12dp">-->
+<!--                <Spinner-->
+<!--                    android:id="@+id/spinnerStudentProgramDeStudiu"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="20dp"-->
+<!--                    android:textColor="@color/original_lavender"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:gravity="center"-->
+<!--                    android:padding="12dp"/>-->
+<!--                <Spinner-->
+<!--                    android:id="@+id/spinnerStudentProfil"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="20dp"-->
+<!--                    android:textColor="@color/original_lavender"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:gravity="center"-->
+<!--                    android:padding="12dp"/>-->
+<!--            </LinearLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
 <!--                <EditText-->
 <!--                    android:layout_width="0dp"-->
 <!--                    android:layout_height="wrap_content"-->
@@ -139,7 +191,7 @@
                     android:textColor="@color/original_lavender"
                     android:textStyle="bold"
                     android:gravity="center"
-                    android:padding="12dp"/>
+                    android:padding="8dp"/>
                 <Spinner
                     android:id="@+id/spinnerStudentSerie"
                     android:layout_width="wrap_content"
@@ -206,32 +258,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:padding="12dp">
-                <Spinner
-                    android:id="@+id/spinnerStudentProgramDeStudiu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20dp"
-                    android:textColor="@color/original_lavender"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:padding="12dp"/>
-                <Spinner
-                    android:id="@+id/spinnerStudentProfil"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20dp"
-                    android:textColor="@color/original_lavender"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:padding="12dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center">
                 <CheckBox
                     android:layout_width="wrap_content"
@@ -253,6 +279,17 @@
                     android:textColor="@color/lapis_blue"
                     android:gravity="center"
                     android:id="@+id/checkboxID"
+                    android:paddingEnd="40dp"
+                    />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="IFR"
+                    android:textSize="18dp"
+                    android:textColor="@color/lapis_blue"
+                    android:gravity="center"
+                    android:id="@+id/checkboxIFR"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -262,7 +299,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/LayoutProfesor"
+            android:id="@+id/layoutProfesor"
             android:visibility="gone">
 
             <Spinner
