@@ -15,7 +15,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME="UserTable"; // tabela cu useri din aplicatie si date despe acestia
 
     public static final String Table_Column_ID="id";
-//  public static final String Table_Column_ID="id INTEGER PRIMARY KEY AUTOINCREMENT";
     public static final String Table_Column_1_Nume="nume";
     public static final String Table_Column_2_Prenume="prenume";
 
