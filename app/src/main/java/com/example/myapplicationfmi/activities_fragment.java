@@ -129,14 +129,16 @@ public class activities_fragment extends Fragment {
         addDashboardLink = (EditText) rootView.findViewById(R.id.addDashboardLink);
 
         //daca e admin
-        //dashboardTabDelete.setVisibility(View.VISIBLE);
+        if(MainActivity.USER_TYPE == 1)
+            dashboardTabDelete.setVisibility(View.VISIBLE);
+        else dashboardTabDelete.setVisibility(View.GONE);
 
 
         buttonCreateDashboardTab = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
         //daca e admin
-        buttonCreateDashboardTab.setVisibility(View.VISIBLE);
-
-
+        if(MainActivity.USER_TYPE == 1)
+            buttonCreateDashboardTab.setVisibility(View.VISIBLE);
+        else buttonCreateDashboardTab.setVisibility(View.GONE);
 
 
         /**
@@ -305,8 +307,6 @@ public class activities_fragment extends Fragment {
             dashboardTabDelete.setLayoutParams(dashboardTabDeleteParams);
             dashboardTab.addView(dashboardTabDelete);
 
-            ///////////////////////////////////////////////////////////////////////////////////////////////////
-            //temporar, va trebui scos cand le incarcam din baza
             dashboardTabDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -320,10 +320,6 @@ public class activities_fragment extends Fragment {
                         int nextId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) + 1);
 
                         if(dashboardTabIds.indexOf((Object)dashboardTab.getId()) != 0){
-//                               //is the first element in the dashboardTab list
-//                                previousDashboardTabId = nextId;
-//                            }
-//                            else {
                             //is a middle element in the dashboardTab list
                             int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) - 1);
                             RelativeLayout nextDashboard = rootView.findViewById(nextId);
@@ -390,14 +386,6 @@ public class activities_fragment extends Fragment {
 
         }
 
-
-
-
-
-
-
-
-
         for (int j = 0; j < activitiesRelativeLayout.getChildCount(); j++) {
 
             RelativeLayout childDashboard = (RelativeLayout) activitiesRelativeLayout.getChildAt(j);
@@ -417,16 +405,14 @@ public class activities_fragment extends Fragment {
                     final int buttonId = childView.getId();
 
                     //daca e admin facem butonul de delete visibil
-                    ((Button)rootView.findViewById(buttonId)).setVisibility(View.VISIBLE);
+                    if(MainActivity.USER_TYPE == 1)
+                        ((Button)rootView.findViewById(buttonId)).setVisibility(View.VISIBLE);
+                    else ((Button)rootView.findViewById(buttonId)).setVisibility(View.GONE);
 
                     RelativeLayout dashboardParent = (RelativeLayout) ((Button)rootView.findViewById(buttonId)).getParent();
                     childView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
-
-
-
 
                             activitiesRelativeLayout.removeView(dashboardParent);
                             if(dashboardTabIds.indexOf((Object)dashboardParent.getId()) == dashboardTabIds.size() - 1 && dashboardTabIds.size() > 1){
@@ -438,11 +424,6 @@ public class activities_fragment extends Fragment {
                                 int nextId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardParent.getId()) + 1);
 
                                 if(dashboardTabIds.indexOf((Object)dashboardParent.getId()) != 0){
-//                               //is the first element in the dashboardTab list
-//                                previousDashboardTabId = nextId;
-//                            }
-//                            else {
-                                    //is a middle element in the dashboardTab list
                                     int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardParent.getId()) - 1);
                                     RelativeLayout nextDashboard = rootView.findViewById(nextId);
 
@@ -466,12 +447,6 @@ public class activities_fragment extends Fragment {
                             //vezi daca mai trebuie instantiat sqLiteDatabaseObj
                             sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
                             int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperDashboard.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardParent.getId())});
-
-
-
-
-
-
 
 //                            activitiesRelativeLayout.removeView(dashboardParent);
 //                            if(dashboardTabIds.size() == 1)
@@ -535,13 +510,6 @@ public class activities_fragment extends Fragment {
                 int newDashboardDeleteId = View.generateViewId();
                 while(allIds.contains(String.valueOf(newDashboardDeleteId)))
                     newDashboardDeleteId = View.generateViewId();
-
-//                int newDashboardTabDateId = View.generateViewId();
-//                int newDashboardTabTitleId = View.generateViewId();
-//                int newDashboardTabBodyId = View.generateViewId();
-//                int newDashboardTabId = View.generateViewId();
-//                int newDashboardImageId = View.generateViewId();
-//                int newDashboardDeleteId = View.generateViewId();
 
                 dashboardTabIds.add(newDashboardTabId);
 
@@ -609,8 +577,6 @@ public class activities_fragment extends Fragment {
                 tabDeleteIdList.add(String.valueOf(newDashboardDeleteId));
                 allIds.add(String.valueOf(newDashboardDeleteId));
 
-                ///////////////////////////////////////////////////////////////////////////////////////////////////
-                //temporar, va trebui scos cand le incarcam din baza
                 dashboardTabDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -624,11 +590,6 @@ public class activities_fragment extends Fragment {
                             int nextId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) + 1);
 
                             if(dashboardTabIds.indexOf((Object)dashboardTab.getId()) != 0){
-//                               //is the first element in the dashboardTab list
-//                                previousDashboardTabId = nextId;
-//                            }
-//                            else {
-                                //is a middle element in the dashboardTab list
                                 int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) - 1);
                                 RelativeLayout nextDashboard = rootView.findViewById(nextId);
 
@@ -723,13 +684,6 @@ public class activities_fragment extends Fragment {
                 TransitionManager.beginDelayedTransition(fillDashboardTabInfo);
                 fillDashboardTabInfo.setVisibility(View.GONE);
 
-                /*
-            optiune de formatare text new line bold, underline, italic
-            optiune adugare poza din galerie ca fundal pe dashboard
-            extindere sau deschidere dashboard pt a vedea textul complet fara sa intram pe site
-            titlul si body-ul textului sa aiba un minim de caractere
-            legare link sa deschida ceva dupa adaugarea in baza
-             */
             }
         });
 
@@ -739,11 +693,9 @@ public class activities_fragment extends Fragment {
     private void handleButtonClick(int buttonId) {
 
         for(int k = 0; k< tabImageIdList.size(); k ++){
-            //if(buttonId == dashboardTabImage.getId()){
             if(buttonId == Integer.valueOf(tabImageIdList.get(k))){
                 goToUrl(imageLinkList.get(k));
-                //goToUrl("https://fmi.unibuc.ro/noutati/conferinta-lunara-a-fmi-joi-15-iunie-2023-ora-14-amfiteatrul-stoilow-c-s-1-dr-dorin-popescu-imar-teorema-functiilor-implicite-si-aplicatiile-ei-in-algebra/\n");
-            }
+                }
         }
     }
 

@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     String TempPassword = "NOT_FOUND" ;
     public static final String UserEmail = "";
     public static final String SHARED_PREFS = "sharedPrefs";
+    public static int USER_TYPE = 1; //1 - admin, 2 - student, 3 - profesor
     CheckBox checkBox;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +52,6 @@ public class MainActivity extends AppCompatActivity {
                 LoginFunction();
             }
         });
-        // Adding click listener to register button.
-//        RegisterButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // Opening new user registration activity using intent on button click.
-//                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-//                startActivity(intent);
-//            }
-//        });
     }
 
     private void checkbox() {
@@ -104,12 +96,13 @@ public class MainActivity extends AppCompatActivity {
         EmailHolder = Email.getText().toString();
         PasswordHolder = Password.getText().toString();
         // Checking EditText is empty or no using TextUtils.
-        if( TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)){
-            EditTextEmptyHolder = false ;
-        }
-        else {
-            EditTextEmptyHolder = true ;
-        }
+        if( TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder))
+            EditTextEmptyHolder = false;
+        else EditTextEmptyHolder = true;
+        //verificam tipul de user
+        if(EmailHolder.contains("@s.unibuc.ro")) MainActivity.USER_TYPE = 2;
+        else if(!EmailHolder.contains("admin")) MainActivity.USER_TYPE = 3;
+            else  MainActivity.USER_TYPE = 1;
     }
     // Checking entered password from SQLite database email associated password.
     public void CheckFinalResult(){

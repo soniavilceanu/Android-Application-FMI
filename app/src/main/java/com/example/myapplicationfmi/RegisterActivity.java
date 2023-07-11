@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.PipedOutputStream;
 import java.util.ArrayList;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -59,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         //spinnerStudentProfil = findViewById(R.id.spinnerStudentProfil);
 
-        String[] tipContItems = {"STUDENT", "PROFESOR"};
+        String[] tipContItems = {"STUDENT", "PROFESOR", "ADMIN"};
         ArrayAdapter<String> adaptertipCont = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, tipContItems);
         spinnerTipCont = findViewById(R.id.spinnerTipCont);
         spinnerTipCont.setAdapter(adaptertipCont);
@@ -67,12 +68,22 @@ public class RegisterActivity extends AppCompatActivity {
         spinnerTipCont.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(position == 0) {
+                    layoutStudent.setVisibility(View.VISIBLE);
+                    layoutProfesor.setVisibility(View.GONE);
+                    Nume.setVisibility(View.VISIBLE);
+                    Prenume.setVisibility(View.VISIBLE);
+                }
                 if(position == 1) {
                     layoutStudent.setVisibility(View.GONE);
                     layoutProfesor.setVisibility(View.VISIBLE);
+                    Nume.setVisibility(View.VISIBLE);
+                    Prenume.setVisibility(View.VISIBLE);
                 }
-                if(position == 0) {
-                    layoutStudent.setVisibility(View.VISIBLE);
+                if(position == 2){
+                    Nume.setVisibility(View.GONE);
+                    Prenume.setVisibility(View.GONE);
+                    layoutStudent.setVisibility(View.GONE);
                     layoutProfesor.setVisibility(View.GONE);
                 }
             }
@@ -340,7 +351,7 @@ public class RegisterActivity extends AppCompatActivity {
             sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
             sqLiteDatabaseObj.close();
 
-            Toast.makeText(RegisterActivity.this,"User înregistrat cu succes", Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this,"User înregistrat cu succes!", Toast.LENGTH_LONG).show();
         }
         else {
             Toast.makeText(RegisterActivity.this,"Va rog completati toate datele necesare!", Toast.LENGTH_LONG).show();
@@ -371,11 +382,18 @@ public class RegisterActivity extends AppCompatActivity {
         EmailHolder = Email.getText().toString();
         PasswordHolder = Password.getText().toString();
         editStudentAnIncepereHolder = editStudentAnIncepere.getText().toString();
-        if(TextUtils.isEmpty(NumeHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder) ||
+        if(((int)spinnerTipCont.getSelectedItemPosition()) == 0 && (TextUtils.isEmpty(NumeHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder) ||
                 TextUtils.isEmpty(editStudentAnIncepereHolder) || (!checkboxIF.isChecked() && !checkboxID.isChecked() && !checkboxIFR.isChecked()) ||
-                (!checkboxMaster.isChecked() && !checkboxLicenta.isChecked()))
+                (!checkboxMaster.isChecked() && !checkboxLicenta.isChecked())))
             EditTextEmptyHolder = false;
-        else EditTextEmptyHolder = true;
+        else if(((int)spinnerTipCont.getSelectedItemPosition()) == 1 && (TextUtils.isEmpty(NumeHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)))
+                EditTextEmptyHolder = false;
+        /**
+         * TO DO    modif if-ul de mai sus ca sa fie check-ul valid pt conturi de profesori
+         */
+            else if(((int)spinnerTipCont.getSelectedItemPosition()) == 2 && (TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)))
+                    EditTextEmptyHolder = false;
+                else EditTextEmptyHolder = true;
     }
     // Checking Email is already exists or not.
     public void CheckingEmailAlreadyExistsOrNot(){
