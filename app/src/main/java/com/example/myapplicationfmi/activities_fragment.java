@@ -109,21 +109,13 @@ public class activities_fragment extends Fragment {
         // Creating SQLite table if doesn't exist.
         SQLiteTableBuild();
 
-//        for(int i = 1; i <= 3; i ++){
+//        for(int i = 1; i <= 5; i ++){
 //            sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
-//            int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperDashboard.TABLE_NAME, "id = ?", new String[]{String.valueOf(i)});
+//            int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperDashboard.TABLE_NAME, "data = ?", new String[]{"11.07.2023"});
 //
 //        }
 
         dashboardTabIds = new ArrayList<Integer>();
-
-
-//        if(previousDashboardTabId == 0){
-//            dashboardTabIds.add( R.id.dashboardTab);
-//        }
-//        dashboardTabIds.addAll(getDashboardTabIds());
-//
-
 
         View rootView = inflater.inflate(R.layout.fragment_activities_fragment, container, false);
         activitiesRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.activitiesRelativeLayout);
@@ -161,6 +153,8 @@ public class activities_fragment extends Fragment {
         ArrayList<String> tabDeleteIdList = new ArrayList<>();
         ArrayList<String> tabTitleIdList = new ArrayList<>();
         ArrayList<String> tabBodyIdList = new ArrayList<>();
+
+        ArrayList<String> allIds = new ArrayList<>();
 
         //vezi daca mai trebuie instantiat cu sqLiteHelperDashboard.getWritableDatabase();
         sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
@@ -232,6 +226,12 @@ public class activities_fragment extends Fragment {
             cursor.close();
         }
 
+        allIds.addAll(tabIdList);
+        allIds.addAll(tabBodyIdList);
+        allIds.addAll(tabDeleteIdList);
+        allIds.addAll(tabDateIdList);
+        allIds.addAll(tabTitleIdList);
+        allIds.addAll(tabImageIdList);
 
 
         /**
@@ -337,6 +337,12 @@ public class activities_fragment extends Fragment {
                         }
                     }
                     dashboardTabIds.remove((Object)dashboardTab.getId());
+                    tabIdList.remove(String.valueOf((Object)dashboardTab.getId()));
+                    allIds.remove(String.valueOf((Object)dashboardTab.getId()));
+
+                    /**
+                     *  poate ar trebui sterse si image, title, body ids din tabTitleIdList, tabImageIdList, etc.
+                     */
 
                     //vezi daca mai trebuie instantiat sqLiteDatabaseObj
                     sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
@@ -449,6 +455,13 @@ public class activities_fragment extends Fragment {
                                 }
                             }
                             dashboardTabIds.remove((Object)dashboardParent.getId());
+                            tabIdList.remove(String.valueOf((Object)dashboardParent.getId()));
+                            allIds.remove(String.valueOf((Object)dashboardParent.getId()));
+
+                            /**
+                             *  poate ar trebui sterse si image, title, body ids din tabTitleIdList, tabImageIdList, etc.
+                             */
+
 
                             //vezi daca mai trebuie instantiat sqLiteDatabaseObj
                             sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
@@ -500,27 +513,27 @@ public class activities_fragment extends Fragment {
 
                 // Generate dynamic view IDs
                 int newDashboardTabDateId = View.generateViewId();
-                while(dashboardTabIds.contains(newDashboardTabDateId))
+                while(allIds.contains(String.valueOf(newDashboardTabDateId)))
                     newDashboardTabDateId = View.generateViewId();
 
                 int newDashboardTabTitleId = View.generateViewId();
-                while(dashboardTabIds.contains(newDashboardTabTitleId))
+                while(allIds.contains(String.valueOf(newDashboardTabTitleId)))
                     newDashboardTabTitleId = View.generateViewId();
 
                 int newDashboardTabBodyId = View.generateViewId();
-                while(dashboardTabIds.contains(newDashboardTabBodyId))
+                while(allIds.contains(String.valueOf(newDashboardTabBodyId)))
                     newDashboardTabBodyId = View.generateViewId();
 
                 int newDashboardTabId = View.generateViewId();
-                while(dashboardTabIds.contains(newDashboardTabId))
+                while(allIds.contains(String.valueOf(newDashboardTabId)))
                     newDashboardTabId = View.generateViewId();
 
                 int newDashboardImageId = View.generateViewId();
-                while(dashboardTabIds.contains(newDashboardImageId))
+                while(allIds.contains(String.valueOf(newDashboardImageId)))
                     newDashboardImageId = View.generateViewId();
 
                 int newDashboardDeleteId = View.generateViewId();
-                while(dashboardTabIds.contains(newDashboardDeleteId))
+                while(allIds.contains(String.valueOf(newDashboardDeleteId)))
                     newDashboardDeleteId = View.generateViewId();
 
 //                int newDashboardTabDateId = View.generateViewId();
@@ -540,6 +553,9 @@ public class activities_fragment extends Fragment {
                 dashboardTab.setLayoutParams(dashboardTabParams);
                 dashboardTab.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.dashboard_article_background));
 
+                tabIdList.add(String.valueOf(newDashboardTabId));
+                allIds.add(String.valueOf(newDashboardTabId));
+
                 TextView dashboardTabDate = new TextView(v.getContext());
                 dashboardTabDate.setId(newDashboardTabDateId);
                 RelativeLayout.LayoutParams dashboardTabDateParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -553,6 +569,9 @@ public class activities_fragment extends Fragment {
                 dashboardTabDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                 dashboardTab.addView(dashboardTabDate);
 
+                tabDateIdList.add(String.valueOf(newDashboardTabDateId));
+                allIds.add(String.valueOf(newDashboardTabDateId));
+
                 ImageView dashboardTabImage = new ImageView(v.getContext());
                 dashboardTabImage.setLayoutParams(new RelativeLayout.LayoutParams(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30)));
                 dashboardTabImage.setImageResource(R.drawable.baseline_open_in_new_24);
@@ -563,14 +582,17 @@ public class activities_fragment extends Fragment {
                 dashboardTabImageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 dashboardTabImage.setLayoutParams(dashboardTabImageParams);
                 dashboardTab.addView(dashboardTabImage);
-//
-//                dashboardTabImage.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        handleButtonClick(dashboardTabImage.getId());
-//                    }
-//                });
-//                imageLinkList.add(addDashboardLink.getText().toString());
+
+                tabImageIdList.add(String.valueOf(newDashboardImageId));
+                allIds.add(String.valueOf(newDashboardImageId));
+
+                dashboardTabImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        handleButtonClick(dashboardTabImage.getId());
+                    }
+                });
+                imageLinkList.add(addDashboardLink.getText().toString());
 
                 Button dashboardTabDelete = new Button(v.getContext());
                 dashboardTabDelete.setLayoutParams(new RelativeLayout.LayoutParams(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30)));
@@ -583,6 +605,9 @@ public class activities_fragment extends Fragment {
                 dashboardTabDeleteParams.setMargins(dpToPx(v.getContext(),40), 0,0,0);
                 dashboardTabDelete.setLayoutParams(dashboardTabDeleteParams);
                 dashboardTab.addView(dashboardTabDelete);
+
+                tabDeleteIdList.add(String.valueOf(newDashboardDeleteId));
+                allIds.add(String.valueOf(newDashboardDeleteId));
 
                 ///////////////////////////////////////////////////////////////////////////////////////////////////
                 //temporar, va trebui scos cand le incarcam din baza
@@ -616,8 +641,14 @@ public class activities_fragment extends Fragment {
                             }
                         }
                         dashboardTabIds.remove((Object)dashboardTab.getId());
+                        allIds.remove(String.valueOf((Object)dashboardTab.getId()));
+                        tabIdList.remove(String.valueOf((Object)dashboardTab.getId()));
 
-                        //vezi daca mai trebuie instantiat a
+                        /**
+                         *  poate ar trebui sterse si image, title, body, etc. ids din tabTitleIdList, tabImageIdList, etc.
+                         */
+
+                        //vezi daca mai trebuie instantiat sqLiteDatabaseObj
                         sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
                         int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperDashboard.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardTab.getId())});
                     }
@@ -633,6 +664,9 @@ public class activities_fragment extends Fragment {
                 dashboardTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
                 dashboardTab.addView(dashboardTabTitle);
 
+                tabTitleIdList.add(String.valueOf(newDashboardTabTitleId));
+                allIds.add(String.valueOf(newDashboardTabTitleId));
+
 
                 TextView dashboardTabBody = new TextView(v.getContext());
                 dashboardTabBody.setId(newDashboardTabBodyId);
@@ -646,6 +680,9 @@ public class activities_fragment extends Fragment {
                 dashboardTabBody.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
                 dashboardTabBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                 dashboardTab.addView(dashboardTabBody);
+
+                tabBodyIdList.add(String.valueOf(newDashboardTabBodyId));
+                allIds.add(String.valueOf(newDashboardTabBodyId));
 
                 RelativeLayout.LayoutParams dashboardTabParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 dashboardTabParams2.addRule(RelativeLayout.BELOW, previousDashboardTabId);
@@ -673,10 +710,6 @@ public class activities_fragment extends Fragment {
                     sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
                     sqLiteDatabaseObj.close();
                 }
-
-
-
-
 
                 previousDashboardTabBodyId = newDashboardTabBodyId;
                 previousDashboardTabDateId = newDashboardTabDateId;
