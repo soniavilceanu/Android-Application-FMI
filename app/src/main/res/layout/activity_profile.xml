@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity"
+    android:paddingBottom="16dp"
+    android:paddingLeft="10dp"
+    android:paddingTop="20dp"
+    android:orientation="vertical"
+    android:background="@drawable/dashboard_article_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/original_lavender">
+
+        <Button
+            android:id="@+id/buttonBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/baseline_arrow_back_24_white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Informații student"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:padding="4dp"
+            android:paddingStart="40dp"
+            android:fontFamily="casual"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/logoProfile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/baseline_account_circle_24_white"
+            android:layout_gravity="end" />
+
+    </LinearLayout>
+
+<!--    <ImageView-->
+<!--        android:id="@+id/logoUni"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:src="@drawable/logouni"-->
+<!--        android:layout_gravity="center" />-->
+
+
+    <TextView
+        android:id="@+id/nume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nume: "
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:fontFamily="casual"
+        android:layout_marginEnd="8dp" />
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email: "
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/black"
+        android:fontFamily="casual"
+        android:layout_marginEnd="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Matematică și informatică"
+        android:background="#a1c6ff"
+        android:paddingBottom="10dp"
+        android:fontFamily="casual"
+        android:textStyle="bold"
+        android:textSize="26sp"
+        android:paddingTop="10dp"
+        android:textColor="@color/white"
+        android:includeFontPadding="false"
+        android:layout_marginBottom="-4dp" />
+
+
+        <TextView
+            android:id="@+id/anUniversitar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="An univ.: "
+            android:textSize="22sp"
+            android:fontFamily="casual"
+            android:paddingTop="20dp"
+            android:textColor="@color/black"
+            android:layout_marginEnd="8dp" />
+    <View
+        android:layout_width="380dp"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/formaInvatamant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forma înv.: "
+            android:textSize="22sp"
+            android:fontFamily="casual"
+            android:paddingTop="20dp"
+            android:textColor="@color/black"
+            android:layout_marginEnd="8dp" />
+
+    <View
+        android:layout_width="380dp"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:paddingTop="30dp">
+
+
+        <ImageView
+            android:id="@+id/bugetCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_check_circle_outline_24"
+            android:paddingEnd="10dp"
+            android:paddingStart="60dp"
+            android:layout_gravity="bottom"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buget"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:fontFamily="casual"
+            android:paddingEnd="60dp"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/bursaCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_check_circle_outline_24"
+            android:paddingEnd="10dp"
+            android:layout_gravity="bottom"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bursa"
+            android:fontFamily="casual"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:layout_gravity="end"
+            android:layout_marginEnd="8dp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="380dp"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/an"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="An: "
+        android:paddingTop="20dp"
+        android:fontFamily="casual"
+        android:paddingBottom="10dp"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:layout_marginEnd="8dp" />
+    <View
+        android:layout_width="380dp"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:id="@+id/semestru"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Semestru: "
+        android:textSize="22sp"
+        android:fontFamily="casual"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/black"
+        android:layout_marginEnd="8dp" />
+    <View
+        android:layout_width="380dp"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:id="@+id/serie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Serie: "
+        android:paddingTop="20dp"
+        android:fontFamily="casual"
+        android:paddingBottom="10dp"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:layout_marginEnd="8dp" />
+    <View
+        android:layout_width="380dp"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:id="@+id/grupa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Grupa: "
+        android:textSize="22sp"
+        android:fontFamily="casual"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/black"
+        android:layout_marginEnd="8dp" />
+    <View
+        android:layout_width="380dp"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"/>
+
+</LinearLayout>

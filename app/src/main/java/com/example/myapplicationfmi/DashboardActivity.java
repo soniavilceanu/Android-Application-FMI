@@ -49,19 +49,9 @@ public class DashboardActivity extends AppCompatActivity {
             return true;
         return super.onOptionsItemSelected(item);
     }
-//    public boolean onPrepareOptionsMenu(Menu menu)
-//    {
-//        MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
-//        if(MainActivity.USER_TYPE != 1)
-//            creareContNouItem.setVisible(false);
-//        else creareContNouItem.setVisible(true);
-//        return true;
-//    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.clear();
+        //menu.clear();
         getMenuInflater().inflate(R.menu.main_menu, menu);
         this.menu = menu;
 
@@ -75,19 +65,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         return true;
     }
-    private Menu getMenu() {
-        if (menu == null) {
-            try {
-                // Use reflection to create an instance of Menu
-                Class<?> cls = Class.forName("com.android.internal.view.menu.MenuBuilder");
-                Constructor<?> constructor = cls.getDeclaredConstructor(Context.class);
-                menu = (Menu) constructor.newInstance(this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return menu;
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,19 +77,18 @@ public class DashboardActivity extends AppCompatActivity {
         vpAdapter = new VPAdapter(this);
         viewPager.setAdapter(vpAdapter);
 
-        onCreateOptionsMenu(getMenu());
-        invalidateOptionsMenu();
+        navigationView = findViewById(R.id.nav_view);
 
-        // Inflate the menu
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.main_menu, getMenu());
-//
-//        // Find the menu item and modify its visibility
-//        MenuItem creareContNouItem = getMenu().findItem(R.id.creareContNou);
-//
-//        if(MainActivity.USER_TYPE != 1)
-//            creareContNouItem.setVisible(false);
-//        else creareContNouItem.setVisible(true);
+        Menu menu = navigationView.getMenu();
+        MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
+        if (MainActivity.USER_TYPE != 1) {
+            creareContNouItem.setVisible(false);
+        } else {
+            creareContNouItem.setVisible(true);
+        }
+
+
+
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -141,12 +117,11 @@ public class DashboardActivity extends AppCompatActivity {
 
         drawerLayout = findViewById(R.id.activity_dashboard);
         materialToolbar = findViewById(R.id.topAppBar);
-        navigationView = findViewById(R.id.nav_view);
+
 
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, materialToolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -187,7 +162,10 @@ public class DashboardActivity extends AppCompatActivity {
                     Toast.makeText(DashboardActivity.this, "Search selected", Toast.LENGTH_SHORT).show();
                 }
                 if(item.getItemId() == R.id.profil){
-                    Toast.makeText(DashboardActivity.this, "Profile selected", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(DashboardActivity.this, "Profile selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(DashboardActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 if(item.getItemId() == R.id.setari){
                     Toast.makeText(DashboardActivity.this, "Settings selected", Toast.LENGTH_SHORT).show();
