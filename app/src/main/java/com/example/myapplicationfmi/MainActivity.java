@@ -17,8 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 public class MainActivity extends AppCompatActivity {
-    Button LogInButton, RegisterButton ;
-    EditText Email, Password ;
+    Button LogInButton, RegisterButton;
+    EditText Email, Password;
     String EmailHolder, PasswordHolder;
     Boolean EditTextEmptyHolder;
     SQLiteDatabase sqLiteDatabaseObj;
@@ -108,13 +108,15 @@ public class MainActivity extends AppCompatActivity {
     public void CheckFinalResult(){
         if(TempPassword.equalsIgnoreCase(PasswordHolder))
         {
+            SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
             if(checkBox.isChecked()) {
-                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("name", "true");
                 editor.apply();
             }
-
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("email", String.valueOf(Email.getText()));
+            editor.apply();
             Toast.makeText(MainActivity.this,"Login Successful",Toast.LENGTH_LONG).show();
             // Going to Dashboard activity after login success message.
             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);

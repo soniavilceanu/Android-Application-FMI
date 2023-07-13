@@ -29,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
     String NumeHolder, PrenumeHolder, EmailHolder, PasswordHolder, editStudentAnIncepereHolder;
     Boolean EditTextEmptyHolder;
     SQLiteDatabase sqLiteDatabaseObj;
-    String SQLiteDataBaseQueryHolder ;
+    String SQLiteDataBaseQueryHolder;
     SQLiteHelper sqLiteHelper;
     Cursor cursor;
     String F_Result = "Not_Found";
