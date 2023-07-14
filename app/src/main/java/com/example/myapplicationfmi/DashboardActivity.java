@@ -17,8 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -41,6 +43,8 @@ public class DashboardActivity extends AppCompatActivity {
     ViewPager2 viewPager;
     VPAdapter vpAdapter;
     private Menu menu;
+    private MaterialToolbar topAppBar;
+    public static SearchView searchView;
     public static final String SHARED_PREFS = "sharedPrefs";
 
     @Override
@@ -78,6 +82,7 @@ public class DashboardActivity extends AppCompatActivity {
         viewPager.setAdapter(vpAdapter);
 
         navigationView = findViewById(R.id.nav_view);
+        topAppBar = findViewById(R.id.topAppBar);
 
         Menu menu = navigationView.getMenu();
         MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
@@ -87,7 +92,13 @@ public class DashboardActivity extends AppCompatActivity {
             creareContNouItem.setVisible(true);
         }
 
+//        Menu menuTopBar  = topAppBar.getMenu();
+//        searchView = (SearchView) menuTopBar.findItem(R.id.cautare);
 
+        getMenuInflater().inflate(R.menu.top_app_bar, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.cautare);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

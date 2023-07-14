@@ -1,6 +1,5 @@
 package com.example.myapplicationfmi;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,6 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +54,7 @@ public class activities_fragment extends Fragment {
     SQLiteDatabase sqLiteDatabaseObj;
     private ArrayList<String> imageLinkList;
     private  ArrayList<String> tabImageIdList;
-
+    private ScrollView scrollViewDashboards;
 
     // SQLite database build method.
     public void SQLiteDataBaseBuild(){
@@ -95,6 +96,44 @@ public class activities_fragment extends Fragment {
         }
         return dashboardTabIds;
     }
+    public ArrayList<String> getDashboardTabTitles() {
+        ArrayList<String> dashboardTabTitles = new ArrayList<>();
+
+        //vezi daca mai trebuie instantiat
+        sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_1_Titlu}, null, null, null, null, null);
+
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperDashboard.Table_Column_1_Titlu);
+            if (columnIndex != -1) {
+                while (cursor.moveToNext()) {
+                    String dashboardTabTitle = cursor.getString(columnIndex);
+                    dashboardTabTitles.add(dashboardTabTitle);
+                }
+            }
+            cursor.close();
+        }
+        return dashboardTabTitles;
+    }
+    public ArrayList<String> getDashboardTabBodies() {
+        ArrayList<String> dashboardTabBodies = new ArrayList<>();
+
+        //vezi daca mai trebuie instantiat
+        sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_4_Body}, null, null, null, null, null);
+
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperDashboard.Table_Column_4_Body);
+            if (columnIndex != -1) {
+                while (cursor.moveToNext()) {
+                    String dashboardTabBody = cursor.getString(columnIndex);
+                    dashboardTabBodies.add(dashboardTabBody);
+                }
+            }
+            cursor.close();
+        }
+        return dashboardTabBodies;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -127,6 +166,8 @@ public class activities_fragment extends Fragment {
         addDashboardTitle = (EditText) rootView.findViewById(R.id.addDashboardTitle);
         addDashboardBody = (EditText) rootView.findViewById(R.id.addDashboardBody);
         addDashboardLink = (EditText) rootView.findViewById(R.id.addDashboardLink);
+
+        scrollViewDashboards = (ScrollView) rootView.findViewById(R.id.scrollViewDashboards);
 
         //daca e admin
         if(MainActivity.USER_TYPE == 1)
@@ -687,6 +728,50 @@ public class activities_fragment extends Fragment {
             }
         });
 
+
+        ArrayList<String> titles = getDashboardTabTitles();
+        ArrayList<String> bodies = getDashboardTabBodies();
+
+        DashboardActivity.searchView.setQueryHint("Cauta...");
+
+        SearchView sc = new SearchView(DashboardActivity.searchView.getContext());
+        sc.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Perform the search operation based on the submitted query
+                //performSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+                for (int i = 0; i < titles.size(); i++) {
+                    if (titles.get(i).toLowerCase().contains(newText.toLowerCase())) {
+                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
+                        if (cursor.moveToFirst()) {
+                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
+                            RelativeLayout dash = rootView.findViewById(Integer.valueOf(dashboardIdExtras));
+                            focusOnView(dash);
+                            cursor.close();
+                        }
+                    }
+                }
+                for (int i = 0; i < bodies.size(); i++) {
+                    if (bodies.get(i).toLowerCase().contains(newText.toLowerCase())) {
+                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
+                        if (cursor.moveToFirst()) {
+                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
+                            RelativeLayout dash = rootView.findViewById(Integer.valueOf(dashboardIdExtras));
+                            focusOnView(dash);
+                            cursor.close();
+                        }
+                    }
+                }
+                return true;
+            }
+        });
+
         return rootView;
     }
 
@@ -739,5 +824,21 @@ public class activities_fragment extends Fragment {
         for (Integer e : list)
             ret[i++] = e;
         return ret;
+    }
+
+    private final void focusOnView(View myTextView){
+        scrollViewDashboards.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollViewDashboards.smoothScrollTo(0, myTextView.getBottom());
+
+                /*
+                int vTop = view.getTop();
+                int vBottom = view.getBottom();
+                int sHeight = scroll.getBottom();
+                scroll.smoothScrollTo(0, ((vTop + vBottom - sHeight) / 2));
+                 */
+            }
+        });
     }
 }
