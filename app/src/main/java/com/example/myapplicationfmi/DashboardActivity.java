@@ -141,8 +141,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<String> titles = getDashboardTabTitles();
-        ArrayList<String> bodies = getDashboardTabBodies();
+
         materialToolbar.setOnMenuItemClickListener(new MaterialToolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -152,12 +151,13 @@ public class DashboardActivity extends AppCompatActivity {
                     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
                         public boolean onQueryTextSubmit(String query) {
+                            ArrayList<String> titles = getDashboardTabTitles();
+                            ArrayList<String> bodies = getDashboardTabBodies();
                             sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
                             for (int i = 0; i < titles.size(); i++) {
                                 if (titles.get(i).toLowerCase().contains(query.toLowerCase())) {
                                     Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
                                     if (cursor.moveToFirst()) {
-                                        Toast.makeText(DashboardActivity.this, "SEARCH! text", Toast.LENGTH_LONG).show();
                                         String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
 
                                         int currentItem = viewPager.getCurrentItem();
@@ -176,7 +176,6 @@ public class DashboardActivity extends AppCompatActivity {
                                 if (bodies.get(i).toLowerCase().contains(query.toLowerCase())) {
                                     Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
                                     if (cursor.moveToFirst()) {
-                                        Toast.makeText(DashboardActivity.this, "SEARCH! body", Toast.LENGTH_LONG).show();
                                         String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
 
                                         int currentItem = viewPager.getCurrentItem();

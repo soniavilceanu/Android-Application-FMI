@@ -1,5 +1,7 @@
 package com.example.myapplicationfmi;
 
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VPAdapter extends FragmentStateAdapter {
-    private List<Fragment> fragments;
+    private static List<Fragment> fragments;
 
     public VPAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
@@ -28,7 +30,7 @@ public class VPAdapter extends FragmentStateAdapter {
                 fragment = new announcements_fragment();
                 break;
             case 1:
-                fragment = new activities_fragment();
+                fragment = new activities_fragment(this);
                 break;
             default:
                 fragment = new announcements_fragment();
@@ -48,6 +50,15 @@ public class VPAdapter extends FragmentStateAdapter {
             return fragments.get(position);
         }
         return null;
+    }
+    public void updateFragments(Fragment rootView) {
+        for(int i = 0; i < fragments.size(); i ++){
+            if (fragments.get(i) instanceof activities_fragment && rootView instanceof activities_fragment ||
+                    fragments.get(i) instanceof announcements_fragment && rootView instanceof announcements_fragment) {
+                fragments.remove(fragments.get(i));
+                fragments.add(rootView);
+            }
+        }
     }
 }
 
