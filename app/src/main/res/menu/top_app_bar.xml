@@ -6,8 +6,8 @@
         android:title="Căutare"
         android:icon="@drawable/baseline_search_24"
         android:contentDescription="Cautare"
-        app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="ifRoom|withText"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView"
         />
     <item
         android:id="@+id/profil"

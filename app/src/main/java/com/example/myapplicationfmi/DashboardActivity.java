@@ -3,49 +3,48 @@ package com.example.myapplicationfmi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.OnLifecycleEvent;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
-
-import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 
 public class DashboardActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
-    Button LogOUT;
     MaterialToolbar materialToolbar;
     TabLayout tabLayout;
     ViewPager2 viewPager;
     VPAdapter vpAdapter;
-    private Menu menu;
     private MaterialToolbar topAppBar;
     public static SearchView searchView;
     public static final String SHARED_PREFS = "sharedPrefs";
+    private Menu menu;
+    SQLiteDatabase sqLiteDatabaseObj;
+    private SQLiteHelperDashboard sqLiteHelperDashboard;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -55,7 +54,6 @@ public class DashboardActivity extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //menu.clear();
         getMenuInflater().inflate(R.menu.main_menu, menu);
         this.menu = menu;
 
@@ -66,14 +64,12 @@ public class DashboardActivity extends AppCompatActivity {
         } else {
             creareContNouItem.setVisible(true);
         }
-
         return true;
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        //getSupportActionBar().hide();
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
@@ -83,6 +79,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         navigationView = findViewById(R.id.nav_view);
         topAppBar = findViewById(R.id.topAppBar);
+        sqLiteHelperDashboard = new SQLiteHelperDashboard(this);
 
         Menu menu = navigationView.getMenu();
         MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
@@ -92,32 +89,18 @@ public class DashboardActivity extends AppCompatActivity {
             creareContNouItem.setVisible(true);
         }
 
-//        Menu menuTopBar  = topAppBar.getMenu();
-//        searchView = (SearchView) menuTopBar.findItem(R.id.cautare);
-
-        getMenuInflater().inflate(R.menu.top_app_bar, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.cautare);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
-
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
-
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -125,11 +108,8 @@ public class DashboardActivity extends AppCompatActivity {
                 tabLayout.getTabAt(position).select();
             }
         });
-
         drawerLayout = findViewById(R.id.activity_dashboard);
         materialToolbar = findViewById(R.id.topAppBar);
-
-
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, materialToolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
@@ -138,11 +118,6 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
-//                if (itemId == R.id.profil) {
-//                    Toast.makeText(DashboardActivity.this, "Profil selected", Toast.LENGTH_SHORT).show();
-//                } else if (itemId == R.id.setari) {
-//                    Toast.makeText(DashboardActivity.this, "Setari selected", Toast.LENGTH_SHORT).show();
-//                } else
                 if (itemId == R.id.carnet) {
                     Toast.makeText(DashboardActivity.this, "Carnet selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.orar) {
@@ -166,14 +141,67 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
+        ArrayList<String> titles = getDashboardTabTitles();
+        ArrayList<String> bodies = getDashboardTabBodies();
         materialToolbar.setOnMenuItemClickListener(new MaterialToolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if(item.getItemId() == R.id.cautare){
+                    searchView = (SearchView) MenuItemCompat.getActionView(item);
+                    searchView.setQueryHint("Caută...");
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+                            for (int i = 0; i < titles.size(); i++) {
+                                if (titles.get(i).toLowerCase().contains(query.toLowerCase())) {
+                                    Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
+                                    if (cursor.moveToFirst()) {
+                                        Toast.makeText(DashboardActivity.this, "SEARCH! text", Toast.LENGTH_LONG).show();
+                                        String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
+
+                                        int currentItem = viewPager.getCurrentItem();
+                                        Fragment fragment = vpAdapter.getFragment(currentItem);
+
+                                        if (fragment instanceof activities_fragment) {
+                                            activities_fragment yourFragment = (activities_fragment) fragment;
+                                            //yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras));
+                                            yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras));
+                                            cursor.close();
+                                        }
+                                    }
+                                }
+                            }
+                            for (int i = 0; i < bodies.size(); i++) {
+                                if (bodies.get(i).toLowerCase().contains(query.toLowerCase())) {
+                                    Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
+                                    if (cursor.moveToFirst()) {
+                                        Toast.makeText(DashboardActivity.this, "SEARCH! body", Toast.LENGTH_LONG).show();
+                                        String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
+
+                                        int currentItem = viewPager.getCurrentItem();
+                                        Fragment fragment = vpAdapter.getFragment(currentItem);
+
+                                        if (fragment instanceof activities_fragment) {
+                                            activities_fragment yourFragment = (activities_fragment) fragment;
+
+                                            yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras));
+                                            cursor.close();
+                                        }
+                                        cursor.close();
+                                    }
+                                }
+                            }
+                            return true;
+                        }
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            return false;
+                        }
+                    });
                     Toast.makeText(DashboardActivity.this, "Search selected", Toast.LENGTH_SHORT).show();
                 }
                 if(item.getItemId() == R.id.profil){
-                    //Toast.makeText(DashboardActivity.this, "Profile selected", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(DashboardActivity.this, ProfileActivity.class);
                     startActivity(intent);
                     finish();
@@ -196,22 +224,48 @@ public class DashboardActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        // Adding click listener to Log Out button.
-//        LogOUT.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //Finishing current DashBoard activity on button click.
-//                finish();
-//                Toast.makeText(DashboardActivity.this,"Log Out Successful", Toast.LENGTH_LONG).show();
-//            }
-//        });
     }
-
     @Override
     public void onBackPressed() {
         if(drawerLayout.isDrawerOpen((GravityCompat.START)))
             drawerLayout.closeDrawer(GravityCompat.START);
         else super.onBackPressed();
+    }
+    public SearchView getSearchView() {
+        return searchView;
+    }
+    public ArrayList<String> getDashboardTabTitles() {
+        ArrayList<String> dashboardTabTitles = new ArrayList<>();
+        sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_1_Titlu}, null, null, null, null, null);
+
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperDashboard.Table_Column_1_Titlu);
+            if (columnIndex != -1) {
+                while (cursor.moveToNext()) {
+                    String dashboardTabTitle = cursor.getString(columnIndex);
+                    dashboardTabTitles.add(dashboardTabTitle);
+                }
+            }
+            cursor.close();
+        }
+        return dashboardTabTitles;
+    }
+    public ArrayList<String> getDashboardTabBodies() {
+        ArrayList<String> dashboardTabBodies = new ArrayList<>();
+        sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_4_Body}, null, null, null, null, null);
+
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperDashboard.Table_Column_4_Body);
+            if (columnIndex != -1) {
+                while (cursor.moveToNext()) {
+                    String dashboardTabBody = cursor.getString(columnIndex);
+                    dashboardTabBodies.add(dashboardTabBody);
+                }
+            }
+            cursor.close();
+        }
+        return dashboardTabBodies;
     }
 }

@@ -9,29 +9,45 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VPAdapter extends FragmentStateAdapter {
+    private List<Fragment> fragments;
 
     public VPAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
+        fragments = new ArrayList<>();
     }
-
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position){
+        Fragment fragment;
+        switch (position) {
             case 0:
-                return new announcements_fragment();
+                fragment = new announcements_fragment();
+                break;
             case 1:
-                return new activities_fragment();
+                fragment = new activities_fragment();
+                break;
             default:
-                return new announcements_fragment();
+                fragment = new announcements_fragment();
+                break;
         }
+        fragments.add(fragment);
+        return fragment;
     }
 
     @Override
     public int getItemCount() {
         return 2;
     }
+
+    public Fragment getFragment(int position) {
+        if (position >= 0 && position < fragments.size()) {
+            return fragments.get(position);
+        }
+        return null;
+    }
 }
+

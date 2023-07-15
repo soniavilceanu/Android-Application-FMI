@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,10 +21,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -54,7 +56,7 @@ public class activities_fragment extends Fragment {
     SQLiteDatabase sqLiteDatabaseObj;
     private ArrayList<String> imageLinkList;
     private  ArrayList<String> tabImageIdList;
-    private ScrollView scrollViewDashboards;
+    private static ScrollView scrollViewDashboards;
 
     // SQLite database build method.
     public void SQLiteDataBaseBuild(){
@@ -732,45 +734,52 @@ public class activities_fragment extends Fragment {
         ArrayList<String> titles = getDashboardTabTitles();
         ArrayList<String> bodies = getDashboardTabBodies();
 
-        DashboardActivity.searchView.setQueryHint("Cauta...");
 
-        SearchView sc = new SearchView(DashboardActivity.searchView.getContext());
-        sc.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Perform the search operation based on the submitted query
-                //performSearch(query);
-                return true;
-            }
+        DashboardActivity activity = (DashboardActivity) getActivity();
+        SearchView searchView = activity.getSearchView();
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
-                for (int i = 0; i < titles.size(); i++) {
-                    if (titles.get(i).toLowerCase().contains(newText.toLowerCase())) {
-                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
-                        if (cursor.moveToFirst()) {
-                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
-                            RelativeLayout dash = rootView.findViewById(Integer.valueOf(dashboardIdExtras));
-                            focusOnView(dash);
-                            cursor.close();
-                        }
-                    }
-                }
-                for (int i = 0; i < bodies.size(); i++) {
-                    if (bodies.get(i).toLowerCase().contains(newText.toLowerCase())) {
-                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
-                        if (cursor.moveToFirst()) {
-                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
-                            RelativeLayout dash = rootView.findViewById(Integer.valueOf(dashboardIdExtras));
-                            focusOnView(dash);
-                            cursor.close();
-                        }
-                    }
-                }
-                return true;
-            }
-        });
+
+
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//
+//                // Perform the search operation based on the submitted query
+//                //performSearch(query);
+//                Toast.makeText(requireContext(),"SEARCH!", Toast.LENGTH_LONG).show();
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                Toast.makeText(requireContext(),"SEARCH!22", Toast.LENGTH_LONG).show();
+//                sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+//                for (int i = 0; i < titles.size(); i++) {
+//                    if (titles.get(i).toLowerCase().contains(newText.toLowerCase())) {
+//                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
+//                        if (cursor.moveToFirst()) {
+//                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
+//                            RelativeLayout dash = rootView.findViewById(Integer.valueOf(dashboardIdExtras));
+//                            focusOnView(dash);
+//                            cursor.close();
+//                        }
+//                    }
+//                }
+//                for (int i = 0; i < bodies.size(); i++) {
+//                    if (bodies.get(i).toLowerCase().contains(newText.toLowerCase())) {
+//                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
+//                        if (cursor.moveToFirst()) {
+//                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
+//                            RelativeLayout dash = rootView.findViewById(Integer.valueOf(dashboardIdExtras));
+//                            focusOnView(dash);
+//                            cursor.close();
+//                        }
+//                    }
+//                }
+//                return true;
+//            }
+//        });
+
 
         return rootView;
     }
@@ -826,19 +835,23 @@ public class activities_fragment extends Fragment {
         return ret;
     }
 
-    private final void focusOnView(View myTextView){
+    public void focusOnView(int id) {
+        View dash = requireView().findViewById(Integer.valueOf(id));
         scrollViewDashboards.post(new Runnable() {
             @Override
             public void run() {
-                scrollViewDashboards.smoothScrollTo(0, myTextView.getBottom());
-
-                /*
-                int vTop = view.getTop();
-                int vBottom = view.getBottom();
-                int sHeight = scroll.getBottom();
-                scroll.smoothScrollTo(0, ((vTop + vBottom - sHeight) / 2));
-                 */
+                scrollViewDashboards.smoothScrollTo(0, dash.getTop());
             }
         });
     }
+
+//    public void focusOnView(View rootView, int dashboardId) {
+//            View dash = rootView.findViewById(dashboardId);
+//            scrollViewDashboards.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    scrollViewDashboards.smoothScrollTo(0, dash.getBottom());
+//                }
+//            });
+//    }
 }
