@@ -1,6 +1,7 @@
 package com.example.myapplicationfmi;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -14,6 +15,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //copyDatabaseToDevice(this);
         //getSupportActionBar().hide();
         LogInButton = (Button)findViewById(R.id.buttonLogin);
         //RegisterButton = (Button)findViewById(R.id.buttonRegister);
@@ -52,6 +60,32 @@ public class MainActivity extends AppCompatActivity {
                 LoginFunction();
             }
         });
+    }
+
+    private void copyDatabaseToDevice(Context context) {
+        String destinationPath = context.getDatabasePath("UserDataBase_copie_noua").getPath();
+
+        try {
+            InputStream inputStream = context.getAssets().open("baze_de_date/UserDataBase_copie_noua");
+            OutputStream outputStream = new FileOutputStream(destinationPath);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+
+            // Optional: Display a message confirming the successful copy
+            Toast.makeText(context, "Database copied to device", Toast.LENGTH_SHORT).show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception
+        }
     }
 
     private void checkbox() {

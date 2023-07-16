@@ -1,5 +1,6 @@
 package com.example.myapplicationfmi;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.util.TypedValue;
@@ -42,7 +44,6 @@ public class activities_fragment extends Fragment {
     int previousDashboardTabBodyId;
     int previousDashboardTabId;
 
-    ImageView dashboardTabImage;
     Button dashboardTabDelete;
     private RelativeLayout activitiesRelativeLayout;
     private LinearLayout fillDashboardTabInfo;
@@ -58,6 +59,8 @@ public class activities_fragment extends Fragment {
     private  ArrayList<String> tabImageIdList;
     private static ScrollView scrollViewDashboards;
     private VPAdapter vpAdapter;
+    private Button scrollDownButton;
+    private int lastDashboardTabId;
 
     // SQLite database build method.
     public void SQLiteDataBaseBuild(){
@@ -161,8 +164,8 @@ public class activities_fragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_activities_fragment, container, false);
         activitiesRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.activitiesRelativeLayout);
-        dashboardTabImage = (ImageView) rootView.findViewById(R.id.dashboardTabImage);
-        dashboardTabDelete = (Button) rootView.findViewById(R.id.dashboardTabDelete);
+//        dashboardTabImage = (ImageView) rootView.findViewById(R.id.dashboardTabImage);
+//        dashboardTabDelete = (Button) rootView.findViewById(R.id.dashboardTabDelete);
 
         fillDashboardTabInfo = (LinearLayout) rootView.findViewById(R.id.fillDashboardTabInfo);
         addDashboardTabInfo = (Button) rootView.findViewById(R.id.addDashboardTabInfo);
@@ -173,9 +176,9 @@ public class activities_fragment extends Fragment {
         scrollViewDashboards = (ScrollView) rootView.findViewById(R.id.scrollViewDashboards);
 
         //daca e admin
-        if(MainActivity.USER_TYPE == 1)
-            dashboardTabDelete.setVisibility(View.VISIBLE);
-        else dashboardTabDelete.setVisibility(View.GONE);
+//        if(MainActivity.USER_TYPE == 1)
+//            dashboardTabDelete.setVisibility(View.VISIBLE);
+//        else dashboardTabDelete.setVisibility(View.GONE);
 
 
         buttonCreateDashboardTab = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
@@ -204,7 +207,7 @@ public class activities_fragment extends Fragment {
 
         //vezi daca mai trebuie instantiat cu sqLiteHelperDashboard.getWritableDatabase();
         sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
-                Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_1_Titlu, SQLiteHelperDashboard.Table_Column_2_Data, SQLiteHelperDashboard.Table_Column_3_Image_Link, SQLiteHelperDashboard.Table_Column_4_Body,SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id, SQLiteHelperDashboard.Table_Column_6_Dashboard_Tab_Date_Id, SQLiteHelperDashboard.Table_Column_7_Dashboard_Tab_Image_Id, SQLiteHelperDashboard.Table_Column_8_Dashboard_Tab_Delete_Id, SQLiteHelperDashboard.Table_Column_9_Dashboard_Tab_Title_Id, SQLiteHelperDashboard.Table_Column_10_Dashboard_Tab_Body_Id}, null, null, null, null, null);
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_1_Titlu, SQLiteHelperDashboard.Table_Column_2_Data, SQLiteHelperDashboard.Table_Column_3_Image_Link, SQLiteHelperDashboard.Table_Column_4_Body,SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id, SQLiteHelperDashboard.Table_Column_6_Dashboard_Tab_Date_Id, SQLiteHelperDashboard.Table_Column_7_Dashboard_Tab_Image_Id, SQLiteHelperDashboard.Table_Column_8_Dashboard_Tab_Delete_Id, SQLiteHelperDashboard.Table_Column_9_Dashboard_Tab_Title_Id, SQLiteHelperDashboard.Table_Column_10_Dashboard_Tab_Body_Id}, null, null, null, null, null);
 
         if (cursor != null) {
             int titluIndex = cursor.getColumnIndex(SQLiteHelperDashboard.Table_Column_1_Titlu);
@@ -359,6 +362,9 @@ public class activities_fragment extends Fragment {
                         //is the last element in the dashboardTab list and the list is not made of only 1 element
                         int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) - 1);
                         previousDashboardTabId = previousId;
+
+                        if(dashboardTab.getId() == lastDashboardTabId)
+                            lastDashboardTabId = previousId;
                     }
                     else if(dashboardTabIds.size() > 1){
                         int nextId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) + 1);
@@ -368,12 +374,14 @@ public class activities_fragment extends Fragment {
                             int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) - 1);
                             RelativeLayout nextDashboard = rootView.findViewById(nextId);
 
+                            if(dashboardTab.getId() == lastDashboardTabId)
+                                lastDashboardTabId = previousId;
+
                             RelativeLayout.LayoutParams dashboardTabParamsToDelete = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             dashboardTabParamsToDelete.addRule(RelativeLayout.BELOW, previousId);
                             dashboardTabParamsToDelete.setMargins(dpToPx(requireContext(),30), dpToPx(requireContext(),30), dpToPx(requireContext(),30), 0);
                             nextDashboard.setPadding(10, 10, 10, 10);
                             nextDashboard.setLayoutParams(dashboardTabParamsToDelete);
-
                         }
                     }
                     dashboardTabIds.remove((Object)dashboardTab.getId());
@@ -427,8 +435,28 @@ public class activities_fragment extends Fragment {
             previousDashboardTabDateId = newDashboardTabDateId;
             previousDashboardTabId = newDashboardTabId;
             previousDashboardTabTitleId = newDashboardTabTitleId;
+            lastDashboardTabId = previousDashboardTabId;
 
+            dashboardTab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), DetailsDashboardTabsActivity.class);
+                    intent.putExtra("title",dashboardTabTitle.getText().toString());
+                    intent.putExtra("date",dashboardTabDate.getText().toString());
+                    intent.putExtra("body",dashboardTabBody.getText().toString());
+                    startActivity(intent);
+                }
+            });
         }
+
+        scrollDownButton = rootView.findViewById(R.id.scrollDownButton);
+        scrollDownButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                focusOnView(lastDashboardTabId, "bottom");
+            }
+        });
+
 
         for (int j = 0; j < activitiesRelativeLayout.getChildCount(); j++) {
 
@@ -445,7 +473,7 @@ public class activities_fragment extends Fragment {
                         }
                     });
                 }
-                if (childView instanceof Button) {
+                if (childView instanceof Button && String.valueOf(childView.getId()).equals("dashboardTabDelete")) {
                     final int buttonId = childView.getId();
 
                     //daca e admin facem butonul de delete visibil
@@ -457,12 +485,13 @@ public class activities_fragment extends Fragment {
                     childView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
                             activitiesRelativeLayout.removeView(dashboardParent);
                             if(dashboardTabIds.indexOf((Object)dashboardParent.getId()) == dashboardTabIds.size() - 1 && dashboardTabIds.size() > 1){
                                 //is the last element in the dashboardTab list and the list is not made of only 1 element
                                 int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardParent.getId()) - 1);
                                 previousDashboardTabId = previousId;
+                                if(dashboardParent.getId() == lastDashboardTabId)
+                                    lastDashboardTabId = previousId;
                             }
                             else if(dashboardTabIds.size() > 1){
                                 int nextId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardParent.getId()) + 1);
@@ -470,6 +499,9 @@ public class activities_fragment extends Fragment {
                                 if(dashboardTabIds.indexOf((Object)dashboardParent.getId()) != 0){
                                     int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardParent.getId()) - 1);
                                     RelativeLayout nextDashboard = rootView.findViewById(nextId);
+
+                                    if(dashboardParent.getId() == lastDashboardTabId)
+                                        lastDashboardTabId = previousId;
 
                                     RelativeLayout.LayoutParams dashboardTabParamsToDelete = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                     dashboardTabParamsToDelete.addRule(RelativeLayout.BELOW, previousId);
@@ -479,7 +511,7 @@ public class activities_fragment extends Fragment {
 
                                 }
                             }
-                            dashboardTabIds.remove((Object)dashboardParent.getId());
+                                        dashboardTabIds.remove((Object)dashboardParent.getId());
                             tabIdList.remove(String.valueOf((Object)dashboardParent.getId()));
                             allIds.remove(String.valueOf((Object)dashboardParent.getId()));
 
@@ -629,6 +661,9 @@ public class activities_fragment extends Fragment {
                             //is the last element in the dashboardTab list and the list is not made of only 1 element
                             int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) - 1);
                             previousDashboardTabId = previousId;
+
+                            if(dashboardTab.getId() == lastDashboardTabId)
+                                lastDashboardTabId = previousId;
                         }
                         else if(dashboardTabIds.size() > 1){
                             int nextId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) + 1);
@@ -636,6 +671,9 @@ public class activities_fragment extends Fragment {
                             if(dashboardTabIds.indexOf((Object)dashboardTab.getId()) != 0){
                                 int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) - 1);
                                 RelativeLayout nextDashboard = rootView.findViewById(nextId);
+
+                                if(dashboardTab.getId() == lastDashboardTabId)
+                                    lastDashboardTabId = previousId;
 
                                 RelativeLayout.LayoutParams dashboardTabParamsToDelete = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                 dashboardTabParamsToDelete.addRule(RelativeLayout.BELOW, previousId);
@@ -689,6 +727,18 @@ public class activities_fragment extends Fragment {
                 tabBodyIdList.add(String.valueOf(newDashboardTabBodyId));
                 allIds.add(String.valueOf(newDashboardTabBodyId));
 
+
+                dashboardTab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), DetailsDashboardTabsActivity.class);
+                        intent.putExtra("title",dashboardTabTitle.getText().toString());
+                        intent.putExtra("date",dashboardTabDate.getText().toString());
+                        intent.putExtra("body",dashboardTabBody.getText().toString());
+                        startActivity(intent);
+                    }
+                });
+
                 RelativeLayout.LayoutParams dashboardTabParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 dashboardTabParams2.addRule(RelativeLayout.BELOW, previousDashboardTabId);
                 dashboardTabParams2.setMargins(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), 0);
@@ -699,7 +749,7 @@ public class activities_fragment extends Fragment {
 
                 if(TextUtils.isEmpty(addDashboardTitle.getText().toString()) || TextUtils.isEmpty(addDashboardBody.getText().toString()) || TextUtils.isEmpty(addDashboardLink.getText().toString()))
                 {
-                    Toast.makeText(requireContext(),"Va rog completati toate datele!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(),"Vă rog completați toate datele!", Toast.LENGTH_LONG).show();
                 }
                 else {
                     String SQLiteDataBaseQueryHolder;
@@ -718,6 +768,7 @@ public class activities_fragment extends Fragment {
                 previousDashboardTabDateId = newDashboardTabDateId;
                 previousDashboardTabId = newDashboardTabId;
                 previousDashboardTabTitleId = newDashboardTabTitleId;
+                lastDashboardTabId = previousDashboardTabId;
 
                 addDashboardBody.setText("");
                 addDashboardLink.setText("");
@@ -730,8 +781,32 @@ public class activities_fragment extends Fragment {
             }
         });
 
+        //expanding the main (first) dashboard tab
+        dashboardTabBodyToExpand = rootView.findViewById(R.id.dashboardTabBody);
+        dashboardTabToExpand = rootView.findViewById(R.id.dashboardTab);
+        dashboardTabDateToExpand = rootView.findViewById(R.id.dashboardTabDate);
+        dashboardTabImageToExpand = rootView.findViewById(R.id.dashboardTabImage);
+
+        dashboardTabToExpand.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
+
+        dashboardTabToExpand.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                int visibility = (dashboardTabBodyToExpand.getVisibility() == View.GONE)? View.VISIBLE : View.GONE;
+
+                TransitionManager.beginDelayedTransition(dashboardTabToExpand, new AutoTransition());
+                dashboardTabBodyToExpand.setVisibility(visibility);
+                dashboardTabDateToExpand.setVisibility(visibility);
+                dashboardTabImageToExpand.setVisibility(visibility);
+            }
+        });
+
         return rootView;
     }
+    private TextView dashboardTabBodyToExpand;
+    private RelativeLayout dashboardTabToExpand;
+    private TextView dashboardTabDateToExpand;
+    private ImageView dashboardTabImageToExpand;
     public activities_fragment(VPAdapter vpAdapter) {
         this.vpAdapter = vpAdapter;
     }
@@ -741,7 +816,7 @@ public class activities_fragment extends Fragment {
         for(int k = 0; k< tabImageIdList.size(); k ++){
             if(buttonId == Integer.valueOf(tabImageIdList.get(k))){
                 goToUrl(imageLinkList.get(k));
-                }
+            }
         }
     }
 
@@ -787,12 +862,12 @@ public class activities_fragment extends Fragment {
         return ret;
     }
 
-    public void focusOnView(int id) {
+    public void focusOnView(int id, String whereToScroll) {
         View dash = requireView().findViewById(Integer.valueOf(id));
         scrollViewDashboards.post(new Runnable() {
             @Override
             public void run() {
-                scrollViewDashboards.smoothScrollTo(0, dash.getTop());
+                scrollViewDashboards.smoothScrollTo(0, whereToScroll.equals("top")? dash.getTop() : dash.getBottom());
             }
         });
     }

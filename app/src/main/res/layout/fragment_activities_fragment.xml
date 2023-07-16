@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -26,11 +27,12 @@
                     android:id="@+id/dashboardTab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/dashboard_article_background"
+                    android:background="@drawable/dashboard_article_background_v2"
                     android:padding="10dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
-                    android:layout_marginTop="30dp">
+                    android:layout_marginTop="30dp"
+                    android:animateLayoutChanges="true">
 
                     <TextView
                         android:id="@+id/dashboardTabDate"
@@ -41,12 +43,13 @@
                         android:paddingTop="4dp"
                         android:paddingEnd="8dp"
                         android:paddingBottom="4dp"
-                        android:text="00.00.2023"
+                        android:text="06.06.2023"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="15dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true" />
+                        android:layout_alignParentTop="true"
+                        android:visibility="gone"/>
 
                     <ImageView
                         android:id="@+id/dashboardTabImage"
@@ -54,23 +57,24 @@
                         android:layout_height="30dp"
                         android:src="@drawable/baseline_open_in_new_24"
                         android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true" />
-
-                    <Button
-                        android:id="@+id/dashboardTabDelete"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginStart="40dp"
-                        android:background="@drawable/baseline_close_24"
                         android:visibility="gone"/>
+
+<!--                    <Button-->
+<!--                        android:id="@+id/dashboardTabDelete"-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:layout_alignParentStart="true"-->
+<!--                        android:layout_alignParentTop="true"-->
+<!--                        android:layout_marginStart="40dp"-->
+<!--                        android:background="@drawable/baseline_close_24"-->
+<!--                        android:visibility="gone"/>-->
 
                     <TextView
                         android:id="@+id/dashboardTabTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="un titlu interesant"
+                        android:text="Important !"
                         android:textSize="30sp"
                         android:textColor="@color/black"
                         android:layout_below="@id/dashboardTabDate" />
@@ -82,33 +86,50 @@
                         android:paddingTop="5dp"
                         android:ellipsize="end"
                         android:maxLines="3"
-                        android:text="Lorem Ipsum 2 is simply dummy text of the prrdjd d ffgkd ddkk sessss iiiiii tg fddsssa the prrdjd d ffgkd ddkk sessss iiiiii tg fddsssa"
+                        android:text="Diplomele de licență vor fi eliberate săptămâna aceasta. Studenții trebuie să se deplaseze la Biroul Acte Studii al rectoratului Universității București"
+
                         android:textColor="@color/black"
                         android:textSize="20sp"
-                        android:layout_below="@id/dashboardTabTitle" />
+                        android:layout_below="@id/dashboardTabTitle"
+                        android:visibility="gone"/>
 
                 </RelativeLayout>
 
             </RelativeLayout>
         </ScrollView>
-        <RelativeLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/scrollDownButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/baseline_arrow_drop_down_24"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@id/floatingActionButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/floatingActionButton"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:visibility="visible"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:clickable="true"
+                android:contentDescription="Add Event"
                 android:src="@drawable/baseline_today_24"
-                android:layout_margin="16dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="bottom|end"
-                android:contentDescription="Add Event" />
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

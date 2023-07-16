@@ -29,6 +29,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -165,7 +171,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                                         if (fragment instanceof activities_fragment) {
                                             activities_fragment yourFragment = (activities_fragment) fragment;
-                                            yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras));
+                                            yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras), "top");
                                             cursor.close();
                                         }
                                     }
@@ -182,7 +188,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                                         if (fragment instanceof activities_fragment) {
                                             activities_fragment yourFragment = (activities_fragment) fragment;
-                                            yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras));
+                                            yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras), "top");
                                             cursor.close();
                                         }
                                         cursor.close();
