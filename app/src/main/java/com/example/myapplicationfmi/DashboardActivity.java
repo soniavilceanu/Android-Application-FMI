@@ -165,7 +165,6 @@ public class DashboardActivity extends AppCompatActivity {
 
                                         if (fragment instanceof activities_fragment) {
                                             activities_fragment yourFragment = (activities_fragment) fragment;
-                                            //yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras));
                                             yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras));
                                             cursor.close();
                                         }
@@ -183,7 +182,6 @@ public class DashboardActivity extends AppCompatActivity {
 
                                         if (fragment instanceof activities_fragment) {
                                             activities_fragment yourFragment = (activities_fragment) fragment;
-
                                             yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras));
                                             cursor.close();
                                         }

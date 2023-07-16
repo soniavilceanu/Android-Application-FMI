@@ -695,9 +695,7 @@ public class activities_fragment extends Fragment {
                 dashboardTab.setPadding(10, 10, 10, 10);
                 dashboardTab.setLayoutParams(dashboardTabParams2);
 
-
                 activitiesRelativeLayout.addView(dashboardTab);
-
 
                 if(TextUtils.isEmpty(addDashboardTitle.getText().toString()) || TextUtils.isEmpty(addDashboardBody.getText().toString()) || TextUtils.isEmpty(addDashboardLink.getText().toString()))
                 {
@@ -726,20 +724,11 @@ public class activities_fragment extends Fragment {
                 addDashboardTitle.setText("");
 
                 TransitionManager.beginDelayedTransition(fillDashboardTabInfo);
+
                 fillDashboardTabInfo.setVisibility(View.GONE);
                 vpAdapter.updateFragments(activities_fragment.this);
-
             }
         });
-
-
-        ArrayList<String> titles = getDashboardTabTitles();
-        ArrayList<String> bodies = getDashboardTabBodies();
-
-
-        DashboardActivity activity = (DashboardActivity) getActivity();
-        SearchView searchView = activity.getSearchView();
-
 
         return rootView;
     }
@@ -807,14 +796,4 @@ public class activities_fragment extends Fragment {
             }
         });
     }
-
-//    public void focusOnView(View rootView, int dashboardId) {
-//            View dash = rootView.findViewById(dashboardId);
-//            scrollViewDashboards.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    scrollViewDashboards.smoothScrollTo(0, dash.getBottom());
-//                }
-//            });
-//    }
 }
