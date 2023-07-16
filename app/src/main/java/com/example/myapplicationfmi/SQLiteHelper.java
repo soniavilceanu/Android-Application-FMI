@@ -24,14 +24,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public static final String Table_Column_5_An="an"; // anul in care e studentul
     public static final String Table_Column_6_Serie="serie"; //seria
-    public static final String Table_Column_7_Grupa="grupa"; //grupa
+    public static final String Table_Column_7_Grupa="grupa"; //grupa ||| grupele la care predau profesorii
     //public static final String Table_Column_8_Program_de_studiu="program_of_study"; //programul de studiu (matematica si informatica_
     //public static final String Table_Column_9_Profil="profil"; //profilul (informatica)
     public static final String Table_Column_8_Taxa="taxa"; //e sau nu la taxa
     public static final String Table_Column_9_Bursa="bursa"; //are sau nu bursa
-    public static final String Table_Column_10_An_Inscriere="an_inscriere"; //anul in care a inceput studiile
+    public static final String Table_Column_10_An_Inscriere="an_inscriere"; //anul in care a inceput studiile ||| pozitia/gradul profesorului
     public static final String Table_Column_11_Forma_De_Invatamant="forma_de_invatamant"; //forma de invatamant: IF, ID, IFR
-    public static final String Table_Column_12_Tip_Studii="tip_studii"; //daca e licenta sau master
+    public static final String Table_Column_12_Tip_Studii="tip_studii"; //daca e licenta sau master |||| disciplinele in cazul profesorilor
 
 
     public SQLiteHelper(Context context) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,12 +11,6 @@
     android:paddingTop="20dp"
     tools:context="com.example.myapplicationfmi.RegisterActivity"
     android:background="@drawable/dashboard_article_background_v2">
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:orientation="vertical"-->
-<!--    android:padding="20dp"-->
-<!--    android:gravity="center"-->
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,17 +26,6 @@
             android:textStyle="bold"
             android:gravity="center"
             android:paddingBottom="20dp"/>
-
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="STUDENT"-->
-<!--            android:textSize="20dp"-->
-<!--            android:textColor="@color/original_lavender"-->
-<!--            android:textStyle="bold"-->
-<!--            android:gravity="center"-->
-<!--            android:padding="10dp"/>-->
-
         <Spinner
             android:id="@+id/spinnerTipCont"
             android:layout_width="wrap_content"
@@ -51,7 +35,6 @@
             android:textStyle="bold"
             android:gravity="center"
             android:padding="10dp"/>
-
         <EditText
             android:layout_width="350dp"
             android:layout_height="wrap_content"
@@ -76,13 +59,12 @@
             android:drawablePadding="8dp"/>
 
         <!-- layout STUDENT mai jos-->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:id="@+id/layoutStudent"
-            android:visibility="visible"
+            android:visibility="gone"
             android:paddingBottom="10dp">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -111,78 +93,11 @@
                     android:id="@+id/checkboxMaster"
                     />
             </LinearLayout>
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:gravity="center"-->
-<!--                android:padding="12dp">-->
-<!--                <Spinner-->
-<!--                    android:id="@+id/spinnerStudentProgramDeStudiu"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:textColor="@color/original_lavender"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:gravity="center"-->
-<!--                    android:padding="12dp"/>-->
-<!--                <Spinner-->
-<!--                    android:id="@+id/spinnerStudentProfil"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:textSize="20dp"-->
-<!--                    android:textColor="@color/original_lavender"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:gravity="center"-->
-<!--                    android:padding="12dp"/>-->
-<!--            </LinearLayout>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="12dp">
-<!--                <EditText-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:id="@+id/editAn"-->
-<!--                    android:background="@drawable/lavender_border"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:layout_marginEnd="8dp"-->
-<!--                    android:padding="8dp"-->
-<!--                    android:gravity="center"-->
-<!--                    android:hint="An"-->
-<!--                    android:textColorHint="#808080"-->
-<!--                    android:drawablePadding="8dp"/>-->
-<!--        -->
-<!--                <EditText-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:id="@+id/editSerie"-->
-<!--                    android:background="@drawable/lavender_border"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:padding="8dp"-->
-<!--                    android:layout_marginStart="4dp"-->
-<!--                    android:layout_marginEnd="4dp"-->
-<!--                    android:gravity="center"-->
-<!--                    android:hint="Serie"-->
-<!--                    android:textColorHint="#808080"-->
-<!--                    android:drawablePadding="8dp"/>-->
-<!--                <EditText-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:id="@+id/editGrupă"-->
-<!--                    android:background="@drawable/lavender_border"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:padding="8dp"-->
-<!--                    android:layout_marginStart="8dp"-->
-<!--                    android:gravity="center"-->
-<!--                    android:hint="Grupă"-->
-<!--                    android:textColorHint="#808080"-->
-<!--                    android:drawablePadding="8dp"/>-->
-
                 <Spinner
                     android:id="@+id/spinnerStudentAn"
                     android:layout_width="wrap_content"
@@ -212,7 +127,6 @@
                     android:padding="12dp"
                     />
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -294,16 +208,16 @@
             </LinearLayout>
         </LinearLayout>
         <!-- layout PROF mai jos-->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:id="@+id/layoutProfesor"
-            android:visibility="gone">
+            android:visibility="visible"
+            android:gravity="center">
 
             <Spinner
-                android:id="@+id/spinnerProfesorDisciplina"
+                android:id="@+id/spinnerProfesorPozitie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
@@ -311,25 +225,62 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:padding="12dp"/>
-            <Spinner
-                android:id="@+id/spinnerProfesorGrad"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/original_lavender"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:padding="12dp"/>
-            <Spinner
-                android:id="@+id/spinnerProfesorGradatie"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/original_lavender"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:padding="12dp"
-                />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardProfesorDisciplina"
+                android:layout_width="340dp"
+                android:layout_height="30dp"
+                app:cardCornerRadius="5dp"
+                android:theme="@style/Theme.MaterialComponents.Light"
+                app:cardElevation="10dp"
+                android:layout_marginTop="10dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profDisciplineTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:hint="Selectează discipline"
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/baseline_arrow_drop_down_24"
+                        android:layout_centerInParent="true"
+                        android:layout_alignParentEnd="true"/>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardProfesorGrupe"
+                android:layout_width="340dp"
+                android:layout_height="30dp"
+                app:cardCornerRadius="5dp"
+                android:theme="@style/Theme.MaterialComponents.Light"
+                app:cardElevation="10dp"
+                android:layout_marginTop="20dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profGrupeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:hint="Selectează grupe"
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/baseline_arrow_drop_down_24"
+                        android:layout_centerInParent="true"
+                        android:layout_alignParentEnd="true"/>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <EditText
@@ -337,14 +288,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/editEmail"
             android:background="@drawable/lavender_border"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:padding="8dp"
             android:gravity="center"
             android:inputType="textEmailAddress"
             android:hint="Email"
             android:textColorHint="#808080"
             android:drawablePadding="8dp"/>
-
         <EditText
             android:layout_width="350dp"
             android:layout_height="wrap_content"
@@ -368,86 +318,4 @@
             android:backgroundTint="@color/original_lavender"
             android:background="@drawable/lavender_border"/>
     </LinearLayout>
-
-<!--    <TextView-->
-<!--        android:text="Adaugă cont nou"-->
-<!--        android:gravity="center"-->
-<!--        android:textSize="20dp"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:id="@+id/textView" />-->
-
-<!--    <EditText-->
-<!--        android:id="@+id/editFirstName"-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@+id/textView"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:ems="10"-->
-<!--        android:background="@drawable/lavender_border"-->
-<!--        android:gravity="center"-->
-<!--        android:hint="Nume"-->
-<!--        android:inputType="textEmailAddress"-->
-<!--        android:textColor="#000" />-->
-
-<!--    <EditText-->
-<!--        android:id="@+id/editLastName"-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@+id/editFirstName"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:ems="10"-->
-<!--        android:background="@drawable/lavender_border"-->
-<!--        android:gravity="center"-->
-<!--        android:hint="Prenume"-->
-<!--        android:textColorHint="#808080"-->
-<!--        android:inputType="textEmailAddress"-->
-<!--        android:textColor="#000" />-->
-<!--    -->
-<!--    <EditText-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:inputType="textEmailAddress"-->
-<!--        android:hint="Email"-->
-<!--        android:textColorHint="#808080"-->
-<!--        android:textColor="#000"-->
-<!--        android:ems="10"-->
-<!--        android:background="@drawable/lavender_border"-->
-<!--        android:layout_below="@+id/editLastName"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:id="@+id/editEmail"-->
-<!--        android:gravity="center"/>-->
-<!--    <EditText-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:inputType="textPassword"-->
-<!--        android:hint="Parolă"-->
-<!--        android:textColorHint="#808080"-->
-<!--        android:textColor="#000"-->
-<!--        android:background="@drawable/lavender_border"-->
-<!--        android:ems="10"-->
-<!--        android:layout_below="@+id/editEmail"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:id="@+id/editPassword"-->
-<!--        android:gravity="center"/>-->
-<!--    <Button-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="@drawable/lavender_border"-->
-<!--        android:backgroundTint="@color/lavender"-->
-<!--        android:id="@+id/buttonRegister"-->
-<!--        android:gravity="center"-->
-<!--        android:layout_below="@+id/editPassword"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:textSize="15sp"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:text="Adaugă"/>-->
-
 </LinearLayout>

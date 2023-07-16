@@ -2,6 +2,7 @@ package com.example.myapplicationfmi;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,9 +17,13 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.io.PipedOutputStream;
 import java.util.ArrayList;
@@ -33,10 +38,32 @@ public class RegisterActivity extends AppCompatActivity {
     SQLiteHelper sqLiteHelper;
     Cursor cursor;
     String F_Result = "Not_Found";
-    Spinner spinnerTipCont, spinnerStudentAn, spinnerStudentSerie, spinnerStudentGrupa;
+    Spinner spinnerTipCont, spinnerStudentAn, spinnerStudentSerie, spinnerStudentGrupa, spinnerProfesorPozitie;
 //    Spinner spinnerStudentProfil;
     CheckBox checkboxLicenta, checkboxMaster, checkboxIF, checkboxIFR, checkboxID, checkboxTaxa, checkboxBursa;
     LinearLayout layoutStudent, layoutProfesor;
+    MaterialCardView materialCardProfesorDisciplina, materialCardProfesorGrupe;
+    TextView profDisciplineTextView;
+    boolean [] disciplineSelectate;
+    ArrayList<Integer> listDiscipline = new ArrayList<>();
+    String[] discipline = {"Structuri algebrice în informatică", "Arhitectura sistemelor de calcul", "Gândire critică și etică academică", "Programare algoritmică", "Calcul diferențial și integral",
+            "Programare funcțională", "Probabilități și statistică", "Sisteme de gestiune a bazelor de date", "Algoritmi fundamentali", "Sisteme de operare",
+            "Inginerie Software", "Calcul și complexități", "Securitatea sistemelor informatice",
+            "Data Mining & Knowledge discovery", "Deontologie academică", "Sisteme de baze de date", "Programare web și tehnologii java", "Management și organizarea proiectelor software", "Programare algoritmi eficienți", "Analiza și modificarea sistemelor software",
+            "Practical Machine Learning", "Programare paralelă și concurentă", "Advanced Crypto","OS: Design și securitate","Linguistics for computer science","Foundations NLP",
+            "Securitatea bazelor de date","Data Warehousing & Bussiness intelligence", "Cloud Computing","Arhitectura sistemelor software","Modelarea sistemelor software","Arhitectura sistemelor software","Natural Language Processing","Deep learning", "Distributed data engineering",
+            "Machine Translation",
+            "Baze de date", "Programare orientată pe obiecte", "Structuri de date", "Tehnici Web", "Geometrie și algoritmi liniari", "Limbaje formale și automate"
+            ,"Programare avansată pe obiecte","Metode dezvoltare software","Inteligență artificială","Rețele de calcul","Algoritmi avansați","Tehnologii compilare","Tehnologii optimizare",
+            "Criptare și securitate","Tehnologii simulare","Ingineria programării",
+            "Big data","Aplicații web pentru baze de date","Dezvoltare software pentru dispozitive mobile","Tehnologii avansate de programare","Advanced machine learning","Computer Vision","Network security","Cyber security","Statistical data science","Bio mechanical NLP",
+            "Metode de optimizare și distribuire în baze de date","Topici speciale în baze de date și tehnologii software","Testare și verificare","Dezvoltare aplicații interactive","Special Topics AI","Problem Solving & Searching","Pagini web semantice", "Procese concurente", "Special topics security & applied logic","Info Visualization"};
+    TextView profGrupeTextView;
+    boolean [] grupeSelectate;
+    ArrayList<Integer> listGrupe = new ArrayList<>();
+    String[] grupe = {"131", "132", "133", "134", "135", "141", "142", "143", "144", "231", "232", "233", "234", "235", "241", "242", "243", "244", "331", "332", "333", "334", "335",
+    "341","342","343","344","405","406","407","408","410","411","412","505","506","507","508","510","511","512"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +85,14 @@ public class RegisterActivity extends AppCompatActivity {
         layoutStudent = findViewById(R.id.layoutStudent);
         layoutProfesor = findViewById(R.id.layoutProfesor);
 
+        materialCardProfesorDisciplina = findViewById(R.id.materialCardProfesorDisciplina);
+        profDisciplineTextView = findViewById(R.id.profDisciplineTextView);
+        disciplineSelectate = new boolean[discipline.length];
+
+        materialCardProfesorGrupe = findViewById(R.id.materialCardProfesorGrupe);
+        profGrupeTextView = findViewById(R.id.profGrupeTextView);
+        grupeSelectate = new boolean[grupe.length];
+
         //spinnerStudentProfil = findViewById(R.id.spinnerStudentProfil);
 
         String[] tipContItems = {"STUDENT", "PROFESOR", "ADMIN"};
@@ -69,18 +104,21 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if(position == 0) {
+                    //student
                     layoutStudent.setVisibility(View.VISIBLE);
                     layoutProfesor.setVisibility(View.GONE);
                     Nume.setVisibility(View.VISIBLE);
                     Prenume.setVisibility(View.VISIBLE);
                 }
                 if(position == 1) {
+                    //profesor
                     layoutStudent.setVisibility(View.GONE);
                     layoutProfesor.setVisibility(View.VISIBLE);
                     Nume.setVisibility(View.VISIBLE);
                     Prenume.setVisibility(View.VISIBLE);
                 }
                 if(position == 2){
+                    //admin
                     Nume.setVisibility(View.GONE);
                     Prenume.setVisibility(View.GONE);
                     layoutStudent.setVisibility(View.GONE);
@@ -133,7 +171,6 @@ public class RegisterActivity extends AppCompatActivity {
 //            public void onNothingSelected(AdapterView<?> parentView) {
 //            }
 //        });
-
 
         String[] licentaAnItems = {"Anul 1", "Anul 2", "Anul 3"};
         String[] masterAnItems = {"Anul 1", "Anul 2"};
@@ -250,7 +287,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
             }
         });
 
@@ -286,33 +322,130 @@ public class RegisterActivity extends AppCompatActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
             }
         });
 
+
+        String[] profesorPozitieItems = {"Asistent", "Lector", "Conferențiar", "Profesor"};
+        ArrayAdapter<String> adapterProfesorPozitie = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, profesorPozitieItems);
+        spinnerProfesorPozitie = findViewById(R.id.spinnerProfesorPozitie);
+        spinnerProfesorPozitie.setAdapter(adapterProfesorPozitie);
+
+
+        materialCardProfesorDisciplina.setOnClickListener(v -> {
+            displayDiscipline();
+        });
+
+        materialCardProfesorGrupe.setOnClickListener(v -> {
+            displayGrupe();
+        });
 
         sqLiteHelper = new SQLiteHelper(this);
         Register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Creating SQLite database if doesn't exists
                 SQLiteDataBaseBuild();
-                // Creating SQLite table if doesn't exists.
                 SQLiteTableBuild();
-                // Checking EditText is empty or Not.
                 CheckEditTextStatus();
-                // Method to check Email is already exists or not.
                 CheckingEmailAlreadyExistsOrNot();
-                // Empty EditText After done inserting process.
                 EmptyEditTextAfterDataInsert();
             }
         });
     }
-    // SQLite database build method.
+
+    private void displayDiscipline(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+        builder.setTitle("Selectează discipline");
+        builder.setCancelable(false);
+
+        builder.setMultiChoiceItems(discipline, disciplineSelectate, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if (isChecked) {
+                    listDiscipline.add(which);
+                } else {
+                    if (listDiscipline.contains(which)) {
+                        listDiscipline.remove(Integer.valueOf(which));
+                    }
+                }
+            }
+        }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < listDiscipline.size(); i++) {
+                    stringBuilder.append(discipline[listDiscipline.get(i)]);
+                    if (i != listDiscipline.size() - 1)
+                        stringBuilder.append(", ");
+                }
+                profDisciplineTextView.setText(stringBuilder.toString());
+            }
+        }).setNegativeButton("Anulează", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setNeutralButton("Ștergere", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < disciplineSelectate.length; i++) {
+                    disciplineSelectate[i] = false;
+                }
+                listDiscipline.clear();
+                profDisciplineTextView.setText("");
+            }
+        });
+        builder.show();
+    }
+
+    private void displayGrupe(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+        builder.setTitle("Selectează grupe");
+        builder.setCancelable(false);
+
+        builder.setMultiChoiceItems(grupe, grupeSelectate, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if (isChecked) {
+                    listGrupe.add(which);
+                } else {
+                    if (listGrupe.contains(which)) {
+                        listGrupe.remove(Integer.valueOf(which));
+                    }
+                }
+            }
+        }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < listGrupe.size(); i++) {
+                    stringBuilder.append(grupe[listGrupe.get(i)]);
+                    if (i != listGrupe.size() - 1)
+                        stringBuilder.append(", ");
+                }
+                profGrupeTextView.setText(stringBuilder.toString());
+            }
+        }).setNegativeButton("Anulează", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setNeutralButton("Ștergere", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < grupeSelectate.length; i++) {
+                    grupeSelectate[i] = false;
+                }
+                listGrupe.clear();
+                profGrupeTextView.setText("");
+            }
+        });
+        builder.show();
+    }
+
     public void SQLiteDataBaseBuild(){
         sqLiteDatabaseObj = openOrCreateDatabase(SQLiteHelper.DATABASE_NAME, Context.MODE_PRIVATE, null);
     }
-    // SQLite table build method.
     public void SQLiteTableBuild() {
         sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + SQLiteHelper.TABLE_NAME + "("
                 + SQLiteHelper.Table_Column_ID + " INTEGER PRIMARY KEY, "
@@ -329,10 +462,8 @@ public class RegisterActivity extends AppCompatActivity {
                 + SQLiteHelper.Table_Column_11_Forma_De_Invatamant + " VARCHAR, "
                 + SQLiteHelper.Table_Column_12_Tip_Studii + " VARCHAR);");
     }
-    // Insert data into SQLite database method.
     public void InsertDataIntoSQLiteDatabase(){
-        // If editText is not empty then this block will executed.
-        if(EditTextEmptyHolder == true)
+        if(EditTextEmptyHolder == true && (int)spinnerTipCont.getSelectedItemPosition() == 0)
         {
             String formaDeInvatamant = null;
             String tipStudii = null;
@@ -343,7 +474,6 @@ public class RegisterActivity extends AppCompatActivity {
             if(checkboxLicenta.isChecked()) tipStudii = "Licenta";
             else if(checkboxMaster.isChecked()) tipStudii = "Master";
 
-            // SQLite query to insert data into table.
             SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelper.TABLE_NAME+" (nume,prenume,email,password,an,serie,grupa,taxa,bursa,an_inscriere,forma_de_invatamant,tip_studii)" +
                     " VALUES('"+NumeHolder+"', '"+PrenumeHolder+"', '"+EmailHolder+"', '"+PasswordHolder+"', '"+spinnerStudentAn.getSelectedItem()+"', '"+spinnerStudentSerie.getSelectedItem()+"', '"+spinnerStudentGrupa.getSelectedItem()+"', '"+checkboxTaxa.isChecked()+"'," +
                     "'"+checkboxBursa.isChecked()+"', '"+editStudentAnIncepereHolder+"', '"+formaDeInvatamant+"', '"+tipStudii+"');";
@@ -353,8 +483,40 @@ public class RegisterActivity extends AppCompatActivity {
 
             Toast.makeText(RegisterActivity.this,"User înregistrat cu succes!", Toast.LENGTH_LONG).show();
         }
+        else if(EditTextEmptyHolder == true && (int)spinnerTipCont.getSelectedItemPosition() == 2)
+        {
+            SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelper.TABLE_NAME+" (nume,prenume,email,password,an,serie,grupa,taxa,bursa,an_inscriere,forma_de_invatamant,tip_studii)" +
+                    " VALUES('"+NumeHolder+"', '"+null+"', '"+EmailHolder+"', '"+PasswordHolder+"', '"+null+"', '"+null+"', '"+null+"', '"+null+"'," +
+                    "'"+null+"', '"+null+"', '"+null+"', '"+null+"');";
+
+            sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
+            sqLiteDatabaseObj.close();
+
+            Toast.makeText(RegisterActivity.this,"User înregistrat cu succes!", Toast.LENGTH_LONG).show();
+        }
+        else if(EditTextEmptyHolder == true && (int)spinnerTipCont.getSelectedItemPosition() == 1)
+        {
+            StringBuilder stringBuilderGrupe = new StringBuilder();
+            for(int i = 0; i < listGrupe.size() - 1; i ++)
+                stringBuilderGrupe.append(grupe[listGrupe.get(i)]). append("; ");
+            stringBuilderGrupe.append(grupe[listGrupe.get(listGrupe.size() - 1)]);
+
+            StringBuilder stringBuilderDiscipline = new StringBuilder();
+            for(int i = 0; i < listDiscipline.size() - 1; i ++)
+                stringBuilderDiscipline.append(discipline[listDiscipline.get(i)]). append("; ");
+            stringBuilderDiscipline.append(discipline[listDiscipline.get(listDiscipline.size() - 1)]);
+
+            SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelper.TABLE_NAME+" (nume,prenume,email,password,an,serie,grupa,taxa,bursa,an_inscriere,forma_de_invatamant,tip_studii)" +
+                    " VALUES('"+NumeHolder+"', '"+PrenumeHolder+"', '"+EmailHolder+"', '"+PasswordHolder+"', '"+null+"', '"+null+"', '"+stringBuilderGrupe+"', '"+null+"'," +
+                    "'"+null+"', '"+spinnerProfesorPozitie.getSelectedItem()+"', '"+null+"', '"+stringBuilderDiscipline+"');";
+
+            sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
+            sqLiteDatabaseObj.close();
+
+            Toast.makeText(RegisterActivity.this,"User înregistrat cu succes!", Toast.LENGTH_LONG).show();
+        }
         else {
-            Toast.makeText(RegisterActivity.this,"Va rog completati toate datele necesare!", Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this,"Vă rog completați toate datele necesare!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -376,55 +538,39 @@ public class RegisterActivity extends AppCompatActivity {
     }
     // metoda sa vedem daca e totul completat cum vrem
     public void CheckEditTextStatus(){
-        // Getting value from All EditText and storing into String Variables.
         NumeHolder = Nume.getText().toString();
         PrenumeHolder = Prenume.getText().toString();
         EmailHolder = Email.getText().toString();
         PasswordHolder = Password.getText().toString();
         editStudentAnIncepereHolder = editStudentAnIncepere.getText().toString();
-        if(((int)spinnerTipCont.getSelectedItemPosition()) == 0 && (TextUtils.isEmpty(NumeHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder) ||
+        if(((int)spinnerTipCont.getSelectedItemPosition()) == 0 && (TextUtils.isEmpty(NumeHolder) || TextUtils.isEmpty(PrenumeHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder) ||
                 TextUtils.isEmpty(editStudentAnIncepereHolder) || (!checkboxIF.isChecked() && !checkboxID.isChecked() && !checkboxIFR.isChecked()) ||
                 (!checkboxMaster.isChecked() && !checkboxLicenta.isChecked())))
             EditTextEmptyHolder = false;
-        else if(((int)spinnerTipCont.getSelectedItemPosition()) == 1 && (TextUtils.isEmpty(NumeHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)))
+        else if(((int)spinnerTipCont.getSelectedItemPosition()) == 2 && (TextUtils.isEmpty(NumeHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)))
                 EditTextEmptyHolder = false;
-        /**
-         * TO DO    modif if-ul de mai sus ca sa fie check-ul valid pt conturi de profesori
-         */
-            else if(((int)spinnerTipCont.getSelectedItemPosition()) == 2 && (TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)))
+            else if(((int)spinnerTipCont.getSelectedItemPosition()) == 1 && (TextUtils.isEmpty(NumeHolder) || TextUtils.isEmpty(PrenumeHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)
+                || profDisciplineTextView.getText().toString().isEmpty() || profDisciplineTextView.getText().toString().equals("Selectează discipline") || profGrupeTextView.getText().toString().isEmpty() || profGrupeTextView.getText().toString().equals("Selectează grupe")))
                     EditTextEmptyHolder = false;
                 else EditTextEmptyHolder = true;
     }
-    // Checking Email is already exists or not.
     public void CheckingEmailAlreadyExistsOrNot(){
-        // Opening SQLite database write permission.
         sqLiteDatabaseObj = sqLiteHelper.getWritableDatabase();
-        // Adding search email query to cursor.
         cursor = sqLiteDatabaseObj.query(SQLiteHelper.TABLE_NAME, null, " " + SQLiteHelper.Table_Column_3_Email + "=?", new String[]{EmailHolder}, null, null, null);
         while (cursor.moveToNext()) {
             if (cursor.isFirst()) {
                 cursor.moveToFirst();
-                // If Email already exists then Result variable value set as Email Found.
                 F_Result = "Email Found";
-                // Closing cursor.
                 cursor.close();
             }
         }
         // Calling method to check final result and insert data into SQLite database.
         CheckFinalResult();
     }
-    // Checking result
     public void CheckFinalResult(){
-        // Checking whether email is already exists or not.
         if(F_Result.equalsIgnoreCase("Email Found"))
-        {
-            // If email exists then toast msg will display.
             Toast.makeText(RegisterActivity.this,"Email deja utilizat!",Toast.LENGTH_LONG).show();
-        }
-        else {
-            // If email doesn't already exist then user registration details will be entered in SQLite database.
-            InsertDataIntoSQLiteDatabase();
-        }
+        else InsertDataIntoSQLiteDatabase();
         F_Result = "Not_Found" ;
     }
 }

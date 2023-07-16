@@ -196,7 +196,6 @@ public class DashboardActivity extends AppCompatActivity {
                             return false;
                         }
                     });
-                    Toast.makeText(DashboardActivity.this, "Search selected", Toast.LENGTH_SHORT).show();
                 }
                 if(item.getItemId() == R.id.profil){
                     Intent intent = new Intent(DashboardActivity.this, ProfileActivity.class);
@@ -207,8 +206,6 @@ public class DashboardActivity extends AppCompatActivity {
                     Toast.makeText(DashboardActivity.this, "Settings selected", Toast.LENGTH_SHORT).show();
                 }
                 if(item.getItemId() == R.id.deconectare){
-                    Toast.makeText(DashboardActivity.this, "Log out selected", Toast.LENGTH_SHORT).show();
-
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("name", "");
