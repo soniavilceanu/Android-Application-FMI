@@ -51,6 +51,7 @@ public class DashboardActivity extends AppCompatActivity {
     private Menu menu;
     SQLiteDatabase sqLiteDatabaseObj;
     private SQLiteHelperDashboard sqLiteHelperDashboard;
+    private SQLiteHelperAnnouncements sqLiteHelperAnnouncements;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -86,6 +87,7 @@ public class DashboardActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.nav_view);
         topAppBar = findViewById(R.id.topAppBar);
         sqLiteHelperDashboard = new SQLiteHelperDashboard(this);
+        sqLiteHelperAnnouncements = new SQLiteHelperAnnouncements(this);
 
         Menu menu = navigationView.getMenu();
         MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
@@ -157,19 +159,30 @@ public class DashboardActivity extends AppCompatActivity {
                     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
                         public boolean onQueryTextSubmit(String query) {
-                            ArrayList<String> titles = getDashboardTabTitles();
-                            ArrayList<String> bodies = getDashboardTabBodies();
-                            sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
-                            for (int i = 0; i < titles.size(); i++) {
-                                if (titles.get(i).toLowerCase().contains(query.toLowerCase())) {
-                                    Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
-                                    if (cursor.moveToFirst()) {
-                                        String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
+                            int currentItem = viewPager.getCurrentItem();
+                            Fragment fragment = vpAdapter.getFragment(currentItem);
+                            if(fragment instanceof activities_fragment) {
+                                ArrayList<String> titles = getDashboardTabTitlesActivities();
+                                ArrayList<String> bodies = getDashboardTabBodiesActivities();
+                                sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+                                for (int i = 0; i < titles.size(); i++) {
+                                    if (titles.get(i).toLowerCase().contains(query.toLowerCase())) {
+                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
+                                        if (cursor.moveToFirst()) {
+                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
 
-                                        int currentItem = viewPager.getCurrentItem();
-                                        Fragment fragment = vpAdapter.getFragment(currentItem);
+                                            activities_fragment yourFragment = (activities_fragment) fragment;
+                                            yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras), "top");
+                                            cursor.close();
+                                        }
+                                    }
+                                }
+                                for (int i = 0; i < bodies.size(); i++) {
+                                    if (bodies.get(i).toLowerCase().contains(query.toLowerCase())) {
+                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
+                                        if (cursor.moveToFirst()) {
+                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
 
-                                        if (fragment instanceof activities_fragment) {
                                             activities_fragment yourFragment = (activities_fragment) fragment;
                                             yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras), "top");
                                             cursor.close();
@@ -177,21 +190,32 @@ public class DashboardActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                            for (int i = 0; i < bodies.size(); i++) {
-                                if (bodies.get(i).toLowerCase().contains(query.toLowerCase())) {
-                                    Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
-                                    if (cursor.moveToFirst()) {
-                                        String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
+                            else if(fragment instanceof announcements_fragment){
+                                ArrayList<String> titles = getDashboardTabTitlesAnnouncements();
+                                ArrayList<String> bodies = getDashboardTabBodiesAnnouncements();
+                                sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
+                                for (int i = 0; i < titles.size(); i++) {
+                                    if (titles.get(i).toLowerCase().contains(query.toLowerCase())) {
+                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperAnnouncements.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
+                                        if (cursor.moveToFirst()) {
+                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id));
 
-                                        int currentItem = viewPager.getCurrentItem();
-                                        Fragment fragment = vpAdapter.getFragment(currentItem);
-
-                                        if (fragment instanceof activities_fragment) {
-                                            activities_fragment yourFragment = (activities_fragment) fragment;
+                                            announcements_fragment yourFragment = (announcements_fragment) fragment;
                                             yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras), "top");
                                             cursor.close();
                                         }
-                                        cursor.close();
+                                    }
+                                }
+                                for (int i = 0; i < bodies.size(); i++) {
+                                    if (bodies.get(i).toLowerCase().contains(query.toLowerCase())) {
+                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperAnnouncements.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
+                                        if (cursor.moveToFirst()) {
+                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id));
+
+                                            announcements_fragment yourFragment = (announcements_fragment) fragment;
+                                            yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras), "top");
+                                            cursor.close();
+                                        }
                                     }
                                 }
                             }
@@ -234,7 +258,7 @@ public class DashboardActivity extends AppCompatActivity {
     public SearchView getSearchView() {
         return searchView;
     }
-    public ArrayList<String> getDashboardTabTitles() {
+    public ArrayList<String> getDashboardTabTitlesActivities() {
         ArrayList<String> dashboardTabTitles = new ArrayList<>();
         sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
         Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_1_Titlu}, null, null, null, null, null);
@@ -251,13 +275,48 @@ public class DashboardActivity extends AppCompatActivity {
         }
         return dashboardTabTitles;
     }
-    public ArrayList<String> getDashboardTabBodies() {
+    public ArrayList<String> getDashboardTabBodiesActivities() {
         ArrayList<String> dashboardTabBodies = new ArrayList<>();
         sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
         Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_4_Body}, null, null, null, null, null);
 
         if (cursor != null) {
             int columnIndex = cursor.getColumnIndex(SQLiteHelperDashboard.Table_Column_4_Body);
+            if (columnIndex != -1) {
+                while (cursor.moveToNext()) {
+                    String dashboardTabBody = cursor.getString(columnIndex);
+                    dashboardTabBodies.add(dashboardTabBody);
+                }
+            }
+            cursor.close();
+        }
+        return dashboardTabBodies;
+    }
+
+    public ArrayList<String> getDashboardTabTitlesAnnouncements() {
+        ArrayList<String> dashboardTabTitles = new ArrayList<>();
+        sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_1_Titlu}, null, null, null, null, null);
+
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_1_Titlu);
+            if (columnIndex != -1) {
+                while (cursor.moveToNext()) {
+                    String dashboardTabTitle = cursor.getString(columnIndex);
+                    dashboardTabTitles.add(dashboardTabTitle);
+                }
+            }
+            cursor.close();
+        }
+        return dashboardTabTitles;
+    }
+    public ArrayList<String> getDashboardTabBodiesAnnouncements() {
+        ArrayList<String> dashboardTabBodies = new ArrayList<>();
+        sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_4_Body}, null, null, null, null, null);
+
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_4_Body);
             if (columnIndex != -1) {
                 while (cursor.moveToNext()) {
                     String dashboardTabBody = cursor.getString(columnIndex);

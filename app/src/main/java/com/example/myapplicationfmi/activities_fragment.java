@@ -316,7 +316,7 @@ public class activities_fragment extends Fragment {
             dashboardTabParams.setMargins(dpToPx(requireContext(),30), dpToPx(requireContext(),30), dpToPx(requireContext(),30), 0);
             dashboardTab.setPadding(10, 10, 10, 10);
             dashboardTab.setLayoutParams(dashboardTabParams);
-            dashboardTab.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.dashboard_article_background));
+            dashboardTab.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.dashboard_article_background_v4));
 
             TextView dashboardTabDate = new TextView(requireContext());
             dashboardTabDate.setId(newDashboardTabDateId);
@@ -595,7 +595,7 @@ public class activities_fragment extends Fragment {
                 dashboardTabParams.setMargins(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), 0);
                 dashboardTab.setPadding(10, 10, 10, 10);
                 dashboardTab.setLayoutParams(dashboardTabParams);
-                dashboardTab.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.dashboard_article_background));
+                dashboardTab.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.dashboard_article_background_v4));
 
                 tabIdList.add(String.valueOf(newDashboardTabId));
                 allIds.add(String.valueOf(newDashboardTabId));
@@ -795,9 +795,9 @@ public class activities_fragment extends Fragment {
                 int visibility = (dashboardTabBodyToExpand.getVisibility() == View.GONE)? View.VISIBLE : View.GONE;
 
                 TransitionManager.beginDelayedTransition(dashboardTabToExpand, new AutoTransition());
-                dashboardTabBodyToExpand.setVisibility(visibility);
                 dashboardTabDateToExpand.setVisibility(visibility);
                 dashboardTabImageToExpand.setVisibility(visibility);
+                dashboardTabBodyToExpand.setVisibility(visibility);
             }
         });
 

@@ -27,13 +27,13 @@ public class VPAdapter extends FragmentStateAdapter {
         Fragment fragment;
         switch (position) {
             case 0:
-                fragment = new announcements_fragment();
+                fragment = new announcements_fragment(this);
                 break;
             case 1:
                 fragment = new activities_fragment(this);
                 break;
             default:
-                fragment = new announcements_fragment();
+                fragment = new announcements_fragment(this);
                 break;
         }
         fragments.add(fragment);
