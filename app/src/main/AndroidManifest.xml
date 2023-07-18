@@ -9,6 +9,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
+            android:name=".ExtracurricularActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
             android:name=".DetailsDashboardTabsActivity"
             android:exported="false" />
         <activity

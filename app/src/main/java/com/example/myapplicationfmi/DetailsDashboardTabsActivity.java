@@ -25,6 +25,7 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
         String title = intent.getStringExtra("title");
         String date = intent.getStringExtra("date");
         String body = intent.getStringExtra("body");
+        String whereFrom = intent.getStringExtra("previousActivity");
 
         buttonBack = findViewById(R.id.buttonBack);
         titluInformatii = findViewById(R.id.titluInformatii);
@@ -38,10 +39,16 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(whereFrom.equals("DashboardActivity")){
                     Intent intent = new Intent(DetailsDashboardTabsActivity.this, DashboardActivity.class);
-
                     startActivity(intent);
                     finish();
+                }
+                else if(whereFrom.equals("ExtracurricularActivity")){
+                    Intent intent = new Intent(DetailsDashboardTabsActivity.this, ExtracurricularActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
                 }
         });
     }

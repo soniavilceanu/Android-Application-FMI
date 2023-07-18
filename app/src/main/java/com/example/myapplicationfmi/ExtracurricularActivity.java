@@ -1,17 +1,5 @@
 package com.example.myapplicationfmi;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,38 +8,37 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.OnLifecycleEvent;
 import androidx.viewpager2.widget.ViewPager2;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-
-public class DashboardActivity extends AppCompatActivity {
+public class ExtracurricularActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
     MaterialToolbar materialToolbar;
     TabLayout tabLayout;
     ViewPager2 viewPager;
-    VPAdapter vpAdapter;
+    VPAdapter2 vpAdapter2;
     private MaterialToolbar topAppBar;
     public static SearchView searchView;
     public static final String SHARED_PREFS = "sharedPrefs";
     private Menu menu;
     SQLiteDatabase sqLiteDatabaseObj;
-    private SQLiteHelperDashboard sqLiteHelperDashboard;
-    private SQLiteHelperAnnouncements sqLiteHelperAnnouncements;
+    private SQLiteHelperInternships sqLiteHelperInternships;
+    private SQLiteHelperVolunteerings sqLiteHelperVolunteerings;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -76,18 +63,18 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+        setContentView(R.layout.activity_extracurricular);
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
 
-        vpAdapter = new VPAdapter(this);
-        viewPager.setAdapter(vpAdapter);
+        vpAdapter2 = new VPAdapter2(this);
+        viewPager.setAdapter(vpAdapter2);
 
         navigationView = findViewById(R.id.nav_view);
         topAppBar = findViewById(R.id.topAppBar);
-        sqLiteHelperDashboard = new SQLiteHelperDashboard(this);
-        sqLiteHelperAnnouncements = new SQLiteHelperAnnouncements(this);
+        sqLiteHelperInternships = new SQLiteHelperInternships(this);
+        sqLiteHelperVolunteerings = new SQLiteHelperVolunteerings(this);
 
         Menu menu = navigationView.getMenu();
         MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
@@ -127,25 +114,25 @@ public class DashboardActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.carnet) {
-                    Toast.makeText(DashboardActivity.this, "Carnet selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExtracurricularActivity.this, "Carnet selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.orar) {
-                    Toast.makeText(DashboardActivity.this, "Orar selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExtracurricularActivity.this, "Orar selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.calendar) {
-                    Toast.makeText(DashboardActivity.this, "Calendar selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExtracurricularActivity.this, "Calendar selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.activitiesAnnouncements) {
-                        Toast.makeText(DashboardActivity.this, "Activities and Announcements selected", Toast.LENGTH_SHORT).show();
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                } else if (itemId == R.id.internshipVoluntariat) {
-                    Intent intent = new Intent(DashboardActivity.this, ExtracurricularActivity.class);
+                    Intent intent = new Intent(ExtracurricularActivity.this, DashboardActivity.class);
                     startActivity(intent);
                     finish();
+                } else if (itemId == R.id.internshipVoluntariat) {
+                    Toast.makeText(ExtracurricularActivity.this, "Internship si voluntariat selected", Toast.LENGTH_SHORT).show();
+                    drawerLayout.closeDrawer(GravityCompat.START);
                 } else if (itemId == R.id.cantina) {
-                    Toast.makeText(DashboardActivity.this, "Cantina selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExtracurricularActivity.this, "Cantina selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.informatii) {
-                    Toast.makeText(DashboardActivity.this, "Informatii selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExtracurricularActivity.this, "Informatii selected", Toast.LENGTH_SHORT).show();
                 }
                 else if(itemId == R.id.creareContNou) {
-                    Intent intent = new Intent(DashboardActivity.this, RegisterActivity.class);
+                    Intent intent = new Intent(ExtracurricularActivity.this, RegisterActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -164,18 +151,18 @@ public class DashboardActivity extends AppCompatActivity {
                         @Override
                         public boolean onQueryTextSubmit(String query) {
                             int currentItem = viewPager.getCurrentItem();
-                            Fragment fragment = vpAdapter.getFragment(currentItem);
-                            if(fragment instanceof activities_fragment) {
-                                ArrayList<String> titles = getDashboardTabTitlesActivities();
-                                ArrayList<String> bodies = getDashboardTabBodiesActivities();
-                                sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
+                            Fragment fragment = vpAdapter2.getFragment(currentItem);
+                            if(fragment instanceof internships_fragment) {
+                                ArrayList<String> titles = getDashboardTabTitlesInternships();
+                                ArrayList<String> bodies = getDashboardTabBodiesInternships();
+                                sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
                                 for (int i = 0; i < titles.size(); i++) {
                                     if (titles.get(i).toLowerCase().contains(query.toLowerCase())) {
-                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
+                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperInternships.TABLE_NAME, new String[]{SQLiteHelperInternships.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperInternships.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
                                         if (cursor.moveToFirst()) {
-                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
+                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperInternships.Table_Column_5_Dashboard_Tab_Id));
 
-                                            activities_fragment yourFragment = (activities_fragment) fragment;
+                                            internships_fragment yourFragment = (internships_fragment) fragment;
                                             yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras), "top");
                                             cursor.close();
                                         }
@@ -183,28 +170,28 @@ public class DashboardActivity extends AppCompatActivity {
                                 }
                                 for (int i = 0; i < bodies.size(); i++) {
                                     if (bodies.get(i).toLowerCase().contains(query.toLowerCase())) {
-                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperDashboard.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
+                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperInternships.TABLE_NAME, new String[]{SQLiteHelperInternships.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperInternships.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
                                         if (cursor.moveToFirst()) {
-                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperDashboard.Table_Column_5_Dashboard_Tab_Id));
+                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperInternships.Table_Column_5_Dashboard_Tab_Id));
 
-                                            activities_fragment yourFragment = (activities_fragment) fragment;
+                                            internships_fragment yourFragment = (internships_fragment) fragment;
                                             yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras), "top");
                                             cursor.close();
                                         }
                                     }
                                 }
                             }
-                            else if(fragment instanceof announcements_fragment){
-                                ArrayList<String> titles = getDashboardTabTitlesAnnouncements();
-                                ArrayList<String> bodies = getDashboardTabBodiesAnnouncements();
-                                sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
+                            else if(fragment instanceof volunteerings_fragment){
+                                ArrayList<String> titles = getDashboardTabTitlesVolunteerings();
+                                ArrayList<String> bodies = getDashboardTabBodiesVolunteerings();
+                                sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
                                 for (int i = 0; i < titles.size(); i++) {
                                     if (titles.get(i).toLowerCase().contains(query.toLowerCase())) {
-                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperAnnouncements.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
+                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperVolunteerings.TABLE_NAME, new String[]{SQLiteHelperVolunteerings.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperVolunteerings.Table_Column_1_Titlu + " = ?", new String[]{titles.get(i)}, null, null, null);
                                         if (cursor.moveToFirst()) {
-                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id));
+                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperVolunteerings.Table_Column_5_Dashboard_Tab_Id));
 
-                                            announcements_fragment yourFragment = (announcements_fragment) fragment;
+                                            volunteerings_fragment yourFragment = (volunteerings_fragment) fragment;
                                             yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras), "top");
                                             cursor.close();
                                         }
@@ -212,11 +199,11 @@ public class DashboardActivity extends AppCompatActivity {
                                 }
                                 for (int i = 0; i < bodies.size(); i++) {
                                     if (bodies.get(i).toLowerCase().contains(query.toLowerCase())) {
-                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperAnnouncements.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
+                                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperVolunteerings.TABLE_NAME, new String[]{SQLiteHelperVolunteerings.Table_Column_5_Dashboard_Tab_Id}, SQLiteHelperVolunteerings.Table_Column_4_Body + " = ?", new String[]{bodies.get(i)}, null, null, null);
                                         if (cursor.moveToFirst()) {
-                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id));
+                                            String dashboardIdExtras = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelperVolunteerings.Table_Column_5_Dashboard_Tab_Id));
 
-                                            announcements_fragment yourFragment = (announcements_fragment) fragment;
+                                            volunteerings_fragment yourFragment = (volunteerings_fragment) fragment;
                                             yourFragment.focusOnView(Integer.valueOf(dashboardIdExtras), "top");
                                             cursor.close();
                                         }
@@ -232,13 +219,13 @@ public class DashboardActivity extends AppCompatActivity {
                     });
                 }
                 if(item.getItemId() == R.id.profil){
-                    Intent intent = new Intent(DashboardActivity.this, ProfileActivity.class);
-                    intent.putExtra("previousActivity", "DashboardActivity");
+                    Intent intent = new Intent(ExtracurricularActivity.this, ProfileActivity.class);
+                    intent.putExtra("previousActivity", "ExtracurricularActivity");
                     startActivity(intent);
                     finish();
                 }
                 if(item.getItemId() == R.id.setari){
-                    Toast.makeText(DashboardActivity.this, "Settings selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExtracurricularActivity.this, "Settings selected", Toast.LENGTH_SHORT).show();
                 }
                 if(item.getItemId() == R.id.deconectare){
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -246,7 +233,7 @@ public class DashboardActivity extends AppCompatActivity {
                     editor.putString("name", "");
                     editor.apply();
 
-                    Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
+                    Intent intent = new Intent(ExtracurricularActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -263,13 +250,13 @@ public class DashboardActivity extends AppCompatActivity {
     public SearchView getSearchView() {
         return searchView;
     }
-    public ArrayList<String> getDashboardTabTitlesActivities() {
+    public ArrayList<String> getDashboardTabTitlesInternships() {
         ArrayList<String> dashboardTabTitles = new ArrayList<>();
-        sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
-        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_1_Titlu}, null, null, null, null, null);
+        sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperInternships.TABLE_NAME, new String[]{SQLiteHelperInternships.Table_Column_1_Titlu}, null, null, null, null, null);
 
         if (cursor != null) {
-            int columnIndex = cursor.getColumnIndex(SQLiteHelperDashboard.Table_Column_1_Titlu);
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_1_Titlu);
             if (columnIndex != -1) {
                 while (cursor.moveToNext()) {
                     String dashboardTabTitle = cursor.getString(columnIndex);
@@ -280,13 +267,13 @@ public class DashboardActivity extends AppCompatActivity {
         }
         return dashboardTabTitles;
     }
-    public ArrayList<String> getDashboardTabBodiesActivities() {
+    public ArrayList<String> getDashboardTabBodiesInternships() {
         ArrayList<String> dashboardTabBodies = new ArrayList<>();
-        sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
-        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperDashboard.TABLE_NAME, new String[]{SQLiteHelperDashboard.Table_Column_4_Body}, null, null, null, null, null);
+        sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperInternships.TABLE_NAME, new String[]{SQLiteHelperInternships.Table_Column_4_Body}, null, null, null, null, null);
 
         if (cursor != null) {
-            int columnIndex = cursor.getColumnIndex(SQLiteHelperDashboard.Table_Column_4_Body);
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_4_Body);
             if (columnIndex != -1) {
                 while (cursor.moveToNext()) {
                     String dashboardTabBody = cursor.getString(columnIndex);
@@ -298,13 +285,13 @@ public class DashboardActivity extends AppCompatActivity {
         return dashboardTabBodies;
     }
 
-    public ArrayList<String> getDashboardTabTitlesAnnouncements() {
+    public ArrayList<String> getDashboardTabTitlesVolunteerings() {
         ArrayList<String> dashboardTabTitles = new ArrayList<>();
-        sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
-        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_1_Titlu}, null, null, null, null, null);
+        sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperVolunteerings.TABLE_NAME, new String[]{SQLiteHelperVolunteerings.Table_Column_1_Titlu}, null, null, null, null, null);
 
         if (cursor != null) {
-            int columnIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_1_Titlu);
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperVolunteerings.Table_Column_1_Titlu);
             if (columnIndex != -1) {
                 while (cursor.moveToNext()) {
                     String dashboardTabTitle = cursor.getString(columnIndex);
@@ -315,13 +302,13 @@ public class DashboardActivity extends AppCompatActivity {
         }
         return dashboardTabTitles;
     }
-    public ArrayList<String> getDashboardTabBodiesAnnouncements() {
+    public ArrayList<String> getDashboardTabBodiesVolunteerings() {
         ArrayList<String> dashboardTabBodies = new ArrayList<>();
-        sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
-        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_4_Body}, null, null, null, null, null);
+        sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperVolunteerings.TABLE_NAME, new String[]{SQLiteHelperVolunteerings.Table_Column_4_Body}, null, null, null, null, null);
 
         if (cursor != null) {
-            int columnIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_4_Body);
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperVolunteerings.Table_Column_4_Body);
             if (columnIndex != -1) {
                 while (cursor.moveToNext()) {
                     String dashboardTabBody = cursor.getString(columnIndex);

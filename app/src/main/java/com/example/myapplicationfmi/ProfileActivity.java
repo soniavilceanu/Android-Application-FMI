@@ -47,6 +47,8 @@ public class ProfileActivity extends AppCompatActivity {
         titluInformatii = findViewById(R.id.titluInformatii);
         infoAdmin = findViewById(R.id.infoAdmin);
 
+        Intent intent = getIntent();
+        String whereFrom = intent.getStringExtra("previousActivity");
 
         sqLiteHelper = new SQLiteHelper(this);
         sqLiteDatabaseObj = sqLiteHelper.getWritableDatabase();
@@ -119,9 +121,16 @@ public class ProfileActivity extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, DashboardActivity.class);
-                startActivity(intent);
-                finish();
+                if(whereFrom.equals("DashboardActivity")) {
+                    Intent intent = new Intent(ProfileActivity.this, DashboardActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(whereFrom.equals("ExtracurricularActivity")) {
+                    Intent intent = new Intent(ProfileActivity.this, ExtracurricularActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 

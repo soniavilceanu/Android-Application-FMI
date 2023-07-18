@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class announcements_fragment extends Fragment {
+public class internships_fragment extends Fragment {
 
     int previousDashboardTabDateId;
     int previousDashboardTabTitleId;
@@ -53,45 +53,45 @@ public class announcements_fragment extends Fragment {
     private EditText addDashboardTitle;
     private EditText addDashboardBody;
     private EditText addDashboardLink;
-    private SQLiteHelperAnnouncements sqLiteHelperAnnouncements;
+    private SQLiteHelperInternships sqLiteHelperInternships;
     SQLiteDatabase sqLiteDatabaseObj;
     private ArrayList<String> imageLinkList;
     private  ArrayList<String> tabImageIdList;
     private static ScrollView scrollViewDashboards;
-    private VPAdapter vpAdapter;
+    private VPAdapter2 vpAdapter2;
     private Button scrollDownButton;
     private int lastDashboardTabId;
 
     // SQLite database build method.
     public void SQLiteDataBaseBuild(){
         Context context = requireContext();
-        sqLiteDatabaseObj = context.openOrCreateDatabase(SQLiteHelperAnnouncements.DATABASE_NAME, Context.MODE_PRIVATE, null);
+        sqLiteDatabaseObj = context.openOrCreateDatabase(SQLiteHelperInternships.DATABASE_NAME, Context.MODE_PRIVATE, null);
     }
     // SQLite table build method.
     public void SQLiteTableBuild() {
-        sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + SQLiteHelperAnnouncements.TABLE_NAME + "("
-                + SQLiteHelperAnnouncements.Table_Column_ID + " INTEGER PRIMARY KEY, "
-                + SQLiteHelperAnnouncements.Table_Column_1_Titlu + " VARCHAR, "
-                + SQLiteHelperAnnouncements.Table_Column_2_Data + " VARCHAR, "
-                + SQLiteHelperAnnouncements.Table_Column_3_Image_Link + " VARCHAR, "
-                + SQLiteHelperAnnouncements.Table_Column_4_Body + " VARCHAR, "
-                + SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id + " VARCHAR, "
-                + SQLiteHelperAnnouncements.Table_Column_6_Dashboard_Tab_Date_Id + " VARCHAR, "
-                + SQLiteHelperAnnouncements.Table_Column_7_Dashboard_Tab_Image_Id + " VARCHAR, "
-                + SQLiteHelperAnnouncements.Table_Column_8_Dashboard_Tab_Delete_Id + " VARCHAR, "
-                + SQLiteHelperAnnouncements.Table_Column_9_Dashboard_Tab_Title_Id + " VARCHAR, "
-                + SQLiteHelperAnnouncements.Table_Column_10_Dashboard_Tab_Body_Id + " VARCHAR);");
+        sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + SQLiteHelperInternships.TABLE_NAME + "("
+                + SQLiteHelperInternships.Table_Column_ID + " INTEGER PRIMARY KEY, "
+                + SQLiteHelperInternships.Table_Column_1_Titlu + " VARCHAR, "
+                + SQLiteHelperInternships.Table_Column_2_Data + " VARCHAR, "
+                + SQLiteHelperInternships.Table_Column_3_Image_Link + " VARCHAR, "
+                + SQLiteHelperInternships.Table_Column_4_Body + " VARCHAR, "
+                + SQLiteHelperInternships.Table_Column_5_Dashboard_Tab_Id + " VARCHAR, "
+                + SQLiteHelperInternships.Table_Column_6_Dashboard_Tab_Date_Id + " VARCHAR, "
+                + SQLiteHelperInternships.Table_Column_7_Dashboard_Tab_Image_Id + " VARCHAR, "
+                + SQLiteHelperInternships.Table_Column_8_Dashboard_Tab_Delete_Id + " VARCHAR, "
+                + SQLiteHelperInternships.Table_Column_9_Dashboard_Tab_Title_Id + " VARCHAR, "
+                + SQLiteHelperInternships.Table_Column_10_Dashboard_Tab_Body_Id + " VARCHAR);");
     }
 
     public ArrayList<Integer> getDashboardTabIds() {
         ArrayList<Integer> dashboardTabIds = new ArrayList<>();
 
         //vezi daca mai trebuie instantiat
-        sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
-        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id}, null, null, null, null, null);
+        sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperInternships.TABLE_NAME, new String[]{SQLiteHelperInternships.Table_Column_5_Dashboard_Tab_Id}, null, null, null, null, null);
 
         if (cursor != null) {
-            int columnIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id);
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_5_Dashboard_Tab_Id);
             if (columnIndex != -1) {
                 while (cursor.moveToNext()) {
                     String dashboardTabId = cursor.getString(columnIndex);
@@ -106,11 +106,11 @@ public class announcements_fragment extends Fragment {
         ArrayList<String> dashboardTabTitles = new ArrayList<>();
 
         //vezi daca mai trebuie instantiat
-        sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
-        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_1_Titlu}, null, null, null, null, null);
+        sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperInternships.TABLE_NAME, new String[]{SQLiteHelperInternships.Table_Column_1_Titlu}, null, null, null, null, null);
 
         if (cursor != null) {
-            int columnIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_1_Titlu);
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_1_Titlu);
             if (columnIndex != -1) {
                 while (cursor.moveToNext()) {
                     String dashboardTabTitle = cursor.getString(columnIndex);
@@ -125,11 +125,11 @@ public class announcements_fragment extends Fragment {
         ArrayList<String> dashboardTabBodies = new ArrayList<>();
 
         //vezi daca mai trebuie instantiat
-        sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
-        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_4_Body}, null, null, null, null, null);
+        sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperInternships.TABLE_NAME, new String[]{SQLiteHelperInternships.Table_Column_4_Body}, null, null, null, null, null);
 
         if (cursor != null) {
-            int columnIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_4_Body);
+            int columnIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_4_Body);
             if (columnIndex != -1) {
                 while (cursor.moveToNext()) {
                     String dashboardTabBody = cursor.getString(columnIndex);
@@ -147,14 +147,22 @@ public class announcements_fragment extends Fragment {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-        sqLiteHelperAnnouncements = new SQLiteHelperAnnouncements(requireContext());
+        sqLiteHelperInternships = new SQLiteHelperInternships(requireContext());
 
+        // Creating SQLite database if doesn't exist
         SQLiteDataBaseBuild();
+        // Creating SQLite table if doesn't exist.
         SQLiteTableBuild();
+
+//        for(int i = 1; i <= 5; i ++){
+//            sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+//            int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperInternships.TABLE_NAME, "data = ?", new String[]{"11.07.2023"});
+//
+//        }
 
         dashboardTabIds = new ArrayList<Integer>();
 
-        View rootView = inflater.inflate(R.layout.fragment_announcements_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_internships_fragment, container, false);
         activitiesRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.activitiesRelativeLayout);
 //        dashboardTabImage = (ImageView) rootView.findViewById(R.id.dashboardTabImage);
 //        dashboardTabDelete = (Button) rootView.findViewById(R.id.dashboardTabDelete);
@@ -197,21 +205,21 @@ public class announcements_fragment extends Fragment {
 
         ArrayList<String> allIds = new ArrayList<>();
 
-        //vezi daca mai trebuie instantiat cu sqLiteHelperAnnouncements.getWritableDatabase();
-        sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
-        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperAnnouncements.TABLE_NAME, new String[]{SQLiteHelperAnnouncements.Table_Column_1_Titlu, SQLiteHelperAnnouncements.Table_Column_2_Data, SQLiteHelperAnnouncements.Table_Column_3_Image_Link, SQLiteHelperAnnouncements.Table_Column_4_Body,SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id, SQLiteHelperAnnouncements.Table_Column_6_Dashboard_Tab_Date_Id, SQLiteHelperAnnouncements.Table_Column_7_Dashboard_Tab_Image_Id, SQLiteHelperAnnouncements.Table_Column_8_Dashboard_Tab_Delete_Id, SQLiteHelperAnnouncements.Table_Column_9_Dashboard_Tab_Title_Id, SQLiteHelperAnnouncements.Table_Column_10_Dashboard_Tab_Body_Id}, null, null, null, null, null);
+        //vezi daca mai trebuie instantiat cu sqLiteHelperInternships.getWritableDatabase();
+        sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperInternships.TABLE_NAME, new String[]{SQLiteHelperInternships.Table_Column_1_Titlu, SQLiteHelperInternships.Table_Column_2_Data, SQLiteHelperInternships.Table_Column_3_Image_Link, SQLiteHelperInternships.Table_Column_4_Body,SQLiteHelperInternships.Table_Column_5_Dashboard_Tab_Id, SQLiteHelperInternships.Table_Column_6_Dashboard_Tab_Date_Id, SQLiteHelperInternships.Table_Column_7_Dashboard_Tab_Image_Id, SQLiteHelperInternships.Table_Column_8_Dashboard_Tab_Delete_Id, SQLiteHelperInternships.Table_Column_9_Dashboard_Tab_Title_Id, SQLiteHelperInternships.Table_Column_10_Dashboard_Tab_Body_Id}, null, null, null, null, null);
 
         if (cursor != null) {
-            int titluIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_1_Titlu);
-            int dataIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_2_Data);
-            int imageLinkIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_3_Image_Link);
-            int bodyIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_4_Body);
-            int tabIdIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_5_Dashboard_Tab_Id);
-            int tabDateIdIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_6_Dashboard_Tab_Date_Id);
-            int tabImageIdIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_7_Dashboard_Tab_Image_Id);
-            int tabDeleteIdIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_8_Dashboard_Tab_Delete_Id);
-            int tabTitleIdIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_9_Dashboard_Tab_Title_Id);
-            int tabBodyIdIndex = cursor.getColumnIndex(SQLiteHelperAnnouncements.Table_Column_10_Dashboard_Tab_Body_Id);
+            int titluIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_1_Titlu);
+            int dataIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_2_Data);
+            int imageLinkIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_3_Image_Link);
+            int bodyIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_4_Body);
+            int tabIdIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_5_Dashboard_Tab_Id);
+            int tabDateIdIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_6_Dashboard_Tab_Date_Id);
+            int tabImageIdIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_7_Dashboard_Tab_Image_Id);
+            int tabDeleteIdIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_8_Dashboard_Tab_Delete_Id);
+            int tabTitleIdIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_9_Dashboard_Tab_Title_Id);
+            int tabBodyIdIndex = cursor.getColumnIndex(SQLiteHelperInternships.Table_Column_10_Dashboard_Tab_Body_Id);
 
             while (cursor.moveToNext()) {
                 if (titluIndex >= 0) {
@@ -308,7 +316,7 @@ public class announcements_fragment extends Fragment {
             dashboardTabParams.setMargins(dpToPx(requireContext(),30), dpToPx(requireContext(),30), dpToPx(requireContext(),30), 0);
             dashboardTab.setPadding(10, 10, 10, 10);
             dashboardTab.setLayoutParams(dashboardTabParams);
-            dashboardTab.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.dashboard_article_background));
+            dashboardTab.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.dashboard_article_background_v4));
 
             TextView dashboardTabDate = new TextView(requireContext());
             dashboardTabDate.setId(newDashboardTabDateId);
@@ -385,8 +393,8 @@ public class announcements_fragment extends Fragment {
                      */
 
                     //vezi daca mai trebuie instantiat sqLiteDatabaseObj
-                    sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
-                    int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperAnnouncements.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardTab.getId())});
+                    sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+                    int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperInternships.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardTab.getId())});
                 }
             });
 
@@ -436,7 +444,7 @@ public class announcements_fragment extends Fragment {
                     intent.putExtra("title",dashboardTabTitle.getText().toString());
                     intent.putExtra("date",dashboardTabDate.getText().toString());
                     intent.putExtra("body",dashboardTabBody.getText().toString());
-                    intent.putExtra("previousActivity", "DashboardActivity");
+                    intent.putExtra("previousActivity", "ExtracurricularActivity");
                     startActivity(intent);
                 }
             });
@@ -514,8 +522,22 @@ public class announcements_fragment extends Fragment {
 
 
                             //vezi daca mai trebuie instantiat sqLiteDatabaseObj
-                            sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
-                            int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperAnnouncements.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardParent.getId())});
+                            sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+                            int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperInternships.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardParent.getId())});
+
+//                            activitiesRelativeLayout.removeView(dashboardParent);
+//                            if(dashboardTabIds.size() == 1)
+//                                previousDashboardTabId = R.id.failSafe;
+//                            else{
+//                                int nextId = dashboardTabIds.get(1);
+//                                previousDashboardTabId = nextId;
+//                            }
+//                            dashboardTabIds.remove((Object)dashboardParent.getId());
+//                            //vezi daca mai trebuie instantiat sqLiteDatabaseObj
+//                            sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+//                            int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperInternships.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardParent.getId())});
+//
+
                         }
                     });
                 }
@@ -574,7 +596,7 @@ public class announcements_fragment extends Fragment {
                 dashboardTabParams.setMargins(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), 0);
                 dashboardTab.setPadding(10, 10, 10, 10);
                 dashboardTab.setLayoutParams(dashboardTabParams);
-                dashboardTab.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.dashboard_article_background));
+                dashboardTab.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.dashboard_article_background_v4));
 
                 tabIdList.add(String.valueOf(newDashboardTabId));
                 allIds.add(String.valueOf(newDashboardTabId));
@@ -671,8 +693,8 @@ public class announcements_fragment extends Fragment {
                          */
 
                         //vezi daca mai trebuie instantiat sqLiteDatabaseObj
-                        sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
-                        int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperAnnouncements.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardTab.getId())});
+                        sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
+                        int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperInternships.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardTab.getId())});
                     }
                 });
 
@@ -714,7 +736,7 @@ public class announcements_fragment extends Fragment {
                         intent.putExtra("title",dashboardTabTitle.getText().toString());
                         intent.putExtra("date",dashboardTabDate.getText().toString());
                         intent.putExtra("body",dashboardTabBody.getText().toString());
-                        intent.putExtra("previousActivity", "DashboardActivity");
+                        intent.putExtra("previousActivity", "ExtracurricularActivity");
                         startActivity(intent);
                     }
                 });
@@ -734,9 +756,9 @@ public class announcements_fragment extends Fragment {
                 else {
                     String SQLiteDataBaseQueryHolder;
 
-                    sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
+                    sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
                     // SQLite query to insert data into table.
-                    SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelperAnnouncements.TABLE_NAME+" (titlu,data,image_link,body,dashboard_tab_id,dashboard_tab_date_id,dashboard_tab_image_id,dashboard_tab_delete_id,dashboard_tab_title_id,dashboard_tab_body_id)" +
+                    SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelperInternships.TABLE_NAME+" (titlu,data,image_link,body,dashboard_tab_id,dashboard_tab_date_id,dashboard_tab_image_id,dashboard_tab_delete_id,dashboard_tab_title_id,dashboard_tab_body_id)" +
                             " VALUES('"+addDashboardTitle.getText().toString()+"', '"+sdf.format(new Date())+"', '"+addDashboardLink.getText().toString()+"', '"+addDashboardBody.getText().toString()+"', '"+newDashboardTabId+"', '"+newDashboardTabDateId+"', '"+newDashboardImageId+"', '"+newDashboardDeleteId+"'," +
                             "'"+newDashboardTabTitleId+"', '"+newDashboardTabBodyId+"');";
 
@@ -757,7 +779,7 @@ public class announcements_fragment extends Fragment {
                 TransitionManager.beginDelayedTransition(fillDashboardTabInfo);
 
                 fillDashboardTabInfo.setVisibility(View.GONE);
-                vpAdapter.updateFragments(announcements_fragment.this);
+                vpAdapter2.updateFragments(internships_fragment.this);
             }
         });
 
@@ -787,10 +809,10 @@ public class announcements_fragment extends Fragment {
     private RelativeLayout dashboardTabToExpand;
     private TextView dashboardTabDateToExpand;
     private ImageView dashboardTabImageToExpand;
-    public announcements_fragment(VPAdapter vpAdapter) {
-        this.vpAdapter = vpAdapter;
+    public internships_fragment(VPAdapter2 vpAdapter2) {
+        this.vpAdapter2 = vpAdapter2;
     }
-    public announcements_fragment() {
+    public internships_fragment() {
     }
 
     private void handleButtonClick(int buttonId) {

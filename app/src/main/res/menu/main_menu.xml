@@ -23,18 +23,18 @@
                 <item android:id="@+id/calendar"
                     android:icon="@drawable/baseline_school_24"
                     android:title="Calendar academic"/>
+                <item android:id="@+id/activitiesAnnouncements"
+                    android:icon="@drawable/baseline_assignment_ind_24"
+                    android:title="Anunțuri și Activități"/>
             </group>
         </menu>
     </item>
     <item android:title="Extracurriculare">
         <menu>
             <group android:checkableBehavior="single">
-                <item android:id="@+id/internship"
-                    android:icon="@drawable/baseline_assignment_ind_24"
-                    android:title="Internship"/>
-                <item android:id="@+id/voluntariat"
+                <item android:id="@+id/internshipVoluntariat"
                     android:icon="@drawable/baseline_supervisor_account_24"
-                    android:title="Voluntariat"/>
+                    android:title="Internship și Voluntariat"/>
             </group>
         </menu>
     </item>
@@ -43,13 +43,13 @@
             <group android:checkableBehavior="single">
                 <item android:id="@+id/cantina"
                     android:icon="@drawable/baseline_restaurant_24"
-                    android:title="Cantina"/>
+                    android:title="Cantină"/>
                 <item android:id="@+id/informatii"
                     android:icon="@drawable/baseline_perm_device_information_24"
-                    android:title="Informatii generale"/>
+                    android:title="Informații generale"/>
                 <item android:id="@+id/creareContNou"
                     android:icon="@drawable/baseline_supervisor_account_24"
-                    android:title="Adaugare cont nou"/>
+                    android:title="Adăugare cont nou"/>
             </group>
         </menu>
     </item>

@@ -444,6 +444,7 @@ public class activities_fragment extends Fragment {
                     intent.putExtra("title",dashboardTabTitle.getText().toString());
                     intent.putExtra("date",dashboardTabDate.getText().toString());
                     intent.putExtra("body",dashboardTabBody.getText().toString());
+                    intent.putExtra("previousActivity", "DashboardActivity");
                     startActivity(intent);
                 }
             });
@@ -735,6 +736,7 @@ public class activities_fragment extends Fragment {
                         intent.putExtra("title",dashboardTabTitle.getText().toString());
                         intent.putExtra("date",dashboardTabDate.getText().toString());
                         intent.putExtra("body",dashboardTabBody.getText().toString());
+                        intent.putExtra("previousActivity", "DashboardActivity");
                         startActivity(intent);
                     }
                 });
@@ -809,6 +811,8 @@ public class activities_fragment extends Fragment {
     private ImageView dashboardTabImageToExpand;
     public activities_fragment(VPAdapter vpAdapter) {
         this.vpAdapter = vpAdapter;
+    }
+    public activities_fragment() {
     }
 
     private void handleButtonClick(int buttonId) {
