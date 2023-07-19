@@ -127,7 +127,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
             }
 
         });

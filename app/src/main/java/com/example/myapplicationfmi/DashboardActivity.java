@@ -130,6 +130,9 @@ public class DashboardActivity extends AppCompatActivity {
                     Toast.makeText(DashboardActivity.this, "Carnet selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.orar) {
                     Toast.makeText(DashboardActivity.this, "Orar selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(DashboardActivity.this, OrarActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else if (itemId == R.id.calendar) {
                     Toast.makeText(DashboardActivity.this, "Calendar selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.activitiesAnnouncements) {

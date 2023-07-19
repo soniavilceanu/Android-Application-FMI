@@ -90,14 +90,14 @@
         android:textColor="@color/white"
         android:includeFontPadding="false"
         android:layout_marginBottom="-4dp"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/studentInfoForms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

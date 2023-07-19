@@ -116,7 +116,9 @@ public class ExtracurricularActivity extends AppCompatActivity {
                 if (itemId == R.id.carnet) {
                     Toast.makeText(ExtracurricularActivity.this, "Carnet selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.orar) {
-                    Toast.makeText(ExtracurricularActivity.this, "Orar selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ExtracurricularActivity.this, OrarActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else if (itemId == R.id.calendar) {
                     Toast.makeText(ExtracurricularActivity.this, "Calendar selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.activitiesAnnouncements) {
