@@ -27,7 +27,7 @@
             android:id="@+id/titluInformatii"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Info..."
+            android:text="Titlu..."
             android:textSize="30sp"
             android:textStyle="bold"
             android:padding="4dp"
@@ -45,7 +45,7 @@
         android:paddingTop="4dp"
         android:paddingEnd="8dp"
         android:paddingBottom="4dp"
-        android:text="06.06.2023"
+        android:text="00.00.2023"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="15dp"
@@ -65,7 +65,7 @@
         android:id="@+id/infoAdmin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Conturile de admin pot sa :\n- adauge dashboard-uri cu activitati sau anunturi, legate de facultate, voluntariat, asociatia studentilor si job posting-uri\n- posteze si editeze orarul studentilor\n- adauge conturi de studenti in aplicatie"
+        android:text="Body..."
         android:background="#a1c6ff"
         android:paddingBottom="10dp"
         android:fontFamily="casual"
@@ -75,10 +75,32 @@
         android:layout_marginTop="20dp"
         android:textColor="@color/white"
         android:includeFontPadding="false"
-        android:layout_marginBottom="-4dp"
+        android:layout_marginBottom="20dp"
         android:visibility="visible"/>
 
+    <View
+        android:layout_width="380dp"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"/>
 
+    <TextView
+        android:id="@+id/emailInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email de contact: "
+        android:paddingTop="20dp"
+        android:fontFamily="casual"
+        android:paddingBottom="10dp"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:layout_marginEnd="8dp" />
+
+    <View
+        android:layout_width="380dp"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"/>
 
 
 </LinearLayout>

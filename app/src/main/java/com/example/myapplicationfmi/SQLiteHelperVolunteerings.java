@@ -23,6 +23,7 @@ public class SQLiteHelperVolunteerings extends SQLiteOpenHelper {
     public static final String Table_Column_8_Dashboard_Tab_Delete_Id="dashboard_tab_delete_id";
     public static final String Table_Column_9_Dashboard_Tab_Title_Id="dashboard_tab_title_id";
     public static final String Table_Column_10_Dashboard_Tab_Body_Id="dashboard_tab_body_id";
+    public static final String Table_Column_11_Dashboard_Tab_Email="dashboard_tab_email";
     //public static final String Table_Column_11_Imagine="imagine";
 
     public SQLiteHelperVolunteerings(Context context) {
@@ -32,7 +33,7 @@ public class SQLiteHelperVolunteerings extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database) {
         String CREATE_TABLE="CREATE TABLE IF NOT EXISTS "+TABLE_NAME+" ("+Table_Column_ID+" INTEGER PRIMARY KEY, "+Table_Column_1_Titlu+" VARCHAR, "+Table_Column_2_Data+" VARCHAR, "+Table_Column_3_Image_Link+" VARCHAR, "+Table_Column_4_Body+" VARCHAR" +
-                ", "+Table_Column_5_Dashboard_Tab_Id+" VARCHAR, "+Table_Column_6_Dashboard_Tab_Date_Id+" VARCHAR, "+Table_Column_7_Dashboard_Tab_Image_Id+" VARCHAR, "+Table_Column_8_Dashboard_Tab_Delete_Id+" VARCHAR, "+Table_Column_9_Dashboard_Tab_Title_Id+" VARCHAR, "+Table_Column_10_Dashboard_Tab_Body_Id+" VARCHAR)";
+                ", "+Table_Column_5_Dashboard_Tab_Id+" VARCHAR, "+Table_Column_6_Dashboard_Tab_Date_Id+" VARCHAR, "+Table_Column_7_Dashboard_Tab_Image_Id+" VARCHAR, "+Table_Column_8_Dashboard_Tab_Delete_Id+" VARCHAR, "+Table_Column_9_Dashboard_Tab_Title_Id+" VARCHAR, "+Table_Column_10_Dashboard_Tab_Body_Id+" VARCHAR, "+Table_Column_11_Dashboard_Tab_Email+" VARCHAR)";
         database.execSQL(CREATE_TABLE);
 
     }

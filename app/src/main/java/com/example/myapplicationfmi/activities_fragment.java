@@ -53,6 +53,7 @@ public class activities_fragment extends Fragment {
     private EditText addDashboardTitle;
     private EditText addDashboardBody;
     private EditText addDashboardLink;
+    private Button addDashboardTabClose;
     private SQLiteHelperDashboard sqLiteHelperDashboard;
     SQLiteDatabase sqLiteDatabaseObj;
     private ArrayList<String> imageLinkList;
@@ -172,6 +173,7 @@ public class activities_fragment extends Fragment {
         addDashboardTitle = (EditText) rootView.findViewById(R.id.addDashboardTitle);
         addDashboardBody = (EditText) rootView.findViewById(R.id.addDashboardBody);
         addDashboardLink = (EditText) rootView.findViewById(R.id.addDashboardLink);
+        addDashboardTabClose = (Button) rootView.findViewById(R.id.addDashboardTabClose);
 
         scrollViewDashboards = (ScrollView) rootView.findViewById(R.id.scrollViewDashboards);
 
@@ -800,6 +802,17 @@ public class activities_fragment extends Fragment {
                 dashboardTabDateToExpand.setVisibility(visibility);
                 dashboardTabImageToExpand.setVisibility(visibility);
                 dashboardTabBodyToExpand.setVisibility(visibility);
+            }
+        });
+        addDashboardTabClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(fillDashboardTabInfo.getVisibility() == View.VISIBLE){
+                    fillDashboardTabInfo.setVisibility(View.GONE);
+                    addDashboardBody.setText("");
+                    addDashboardLink.setText("");
+                    addDashboardTitle.setText("");
+                }
             }
         });
 

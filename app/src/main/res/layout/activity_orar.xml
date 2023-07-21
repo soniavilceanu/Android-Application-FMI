@@ -532,7 +532,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/dashboard_article_background_v2"
                 android:id="@+id/editOrarInfoTab"
-                android:visibility="gone">
+                android:visibility="visible">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

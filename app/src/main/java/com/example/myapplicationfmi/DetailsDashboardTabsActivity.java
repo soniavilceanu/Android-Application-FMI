@@ -15,7 +15,7 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
     private TextView titluInformatii;
     private TextView dateInformatii;
     private TextView infoAdmin;
-
+    private TextView emailInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,15 +26,23 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
         String date = intent.getStringExtra("date");
         String body = intent.getStringExtra("body");
         String whereFrom = intent.getStringExtra("previousActivity");
+        String email = intent.getStringExtra("email");
 
         buttonBack = findViewById(R.id.buttonBack);
         titluInformatii = findViewById(R.id.titluInformatii);
         dateInformatii = findViewById(R.id.dateInformatii);
         infoAdmin = findViewById(R.id.infoAdmin);
+        emailInfo = findViewById(R.id.emailInfo);
 
         titluInformatii.setText(title);
         dateInformatii.setText(date);
         infoAdmin.setText(body);
+        emailInfo.setText(emailInfo.getText() + email);
+
+        if(whereFrom.equals("DashboardActivity")){
+            emailInfo.setVisibility(View.GONE);
+        }
+        else emailInfo.setVisibility(View.VISIBLE);
 
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override

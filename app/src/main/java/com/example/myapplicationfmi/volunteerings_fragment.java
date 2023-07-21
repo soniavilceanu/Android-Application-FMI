@@ -53,6 +53,7 @@ public class volunteerings_fragment extends Fragment {
     private EditText addDashboardTitle;
     private EditText addDashboardBody;
     private EditText addDashboardLink;
+    private EditText addDashboardEmail;
     private SQLiteHelperVolunteerings sqLiteHelperVolunteerings;
     SQLiteDatabase sqLiteDatabaseObj;
     private ArrayList<String> imageLinkList;
@@ -61,6 +62,7 @@ public class volunteerings_fragment extends Fragment {
     private VPAdapter2 vpAdapter2;
     private Button scrollDownButton;
     private int lastDashboardTabId;
+    private Button addDashboardTabClose;
 
     // SQLite database build method.
     public void SQLiteDataBaseBuild(){
@@ -80,7 +82,8 @@ public class volunteerings_fragment extends Fragment {
                 + SQLiteHelperVolunteerings.Table_Column_7_Dashboard_Tab_Image_Id + " VARCHAR, "
                 + SQLiteHelperVolunteerings.Table_Column_8_Dashboard_Tab_Delete_Id + " VARCHAR, "
                 + SQLiteHelperVolunteerings.Table_Column_9_Dashboard_Tab_Title_Id + " VARCHAR, "
-                + SQLiteHelperVolunteerings.Table_Column_10_Dashboard_Tab_Body_Id + " VARCHAR);");
+                + SQLiteHelperInternships.Table_Column_10_Dashboard_Tab_Body_Id + " VARCHAR, "
+                + SQLiteHelperInternships.Table_Column_11_Dashboard_Tab_Email + " VARCHAR);");
     }
 
     public ArrayList<Integer> getDashboardTabIds() {
@@ -164,6 +167,16 @@ public class volunteerings_fragment extends Fragment {
         addDashboardTitle = (EditText) rootView.findViewById(R.id.addDashboardTitle);
         addDashboardBody = (EditText) rootView.findViewById(R.id.addDashboardBody);
         addDashboardLink = (EditText) rootView.findViewById(R.id.addDashboardLink);
+        addDashboardEmail = (EditText) rootView.findViewById(R.id.addDashboardEmail);
+        addDashboardTabClose = (Button) rootView.findViewById(R.id.addDashboardTabClose);
+
+        addDashboardTabClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(fillDashboardTabInfo.getVisibility() == View.VISIBLE)
+                    fillDashboardTabInfo.setVisibility(View.GONE);
+            }
+        });
 
         scrollViewDashboards = (ScrollView) rootView.findViewById(R.id.scrollViewDashboards);
 
@@ -437,6 +450,20 @@ public class volunteerings_fragment extends Fragment {
                     intent.putExtra("date",dashboardTabDate.getText().toString());
                     intent.putExtra("body",dashboardTabBody.getText().toString());
                     intent.putExtra("previousActivity", "ExtracurricularActivity");
+
+                    String dashboardTabIdQQuery = String.valueOf(v.getId());
+
+                    //vezi daca mai trebuie instantiat sqLiteDatabaseObj
+                    sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
+                    Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperVolunteerings.TABLE_NAME, new String[]{SQLiteHelperVolunteerings.Table_Column_11_Dashboard_Tab_Email}, SQLiteHelperVolunteerings.Table_Column_5_Dashboard_Tab_Id + " = ?", new String[]{dashboardTabIdQQuery}, null, null, null);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        int columnIndex = cursor.getColumnIndex(SQLiteHelperVolunteerings.Table_Column_11_Dashboard_Tab_Email);
+                        if (columnIndex >= 0) {
+                            String email = cursor.getString(columnIndex);
+                            intent.putExtra("email", email);
+                        }
+                        cursor.close();
+                    }
                     startActivity(intent);
                 }
             });
@@ -715,6 +742,20 @@ public class volunteerings_fragment extends Fragment {
                         intent.putExtra("date",dashboardTabDate.getText().toString());
                         intent.putExtra("body",dashboardTabBody.getText().toString());
                         intent.putExtra("previousActivity", "ExtracurricularActivity");
+
+                        String dashboardTabIdQQuery = String.valueOf(v.getId());
+
+                        //vezi daca mai trebuie instantiat sqLiteDatabaseObj
+                        sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
+                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperVolunteerings.TABLE_NAME, new String[]{SQLiteHelperVolunteerings.Table_Column_11_Dashboard_Tab_Email}, SQLiteHelperVolunteerings.Table_Column_5_Dashboard_Tab_Id + " = ?", new String[]{dashboardTabIdQQuery}, null, null, null);
+                        if (cursor != null && cursor.moveToFirst()) {
+                            int columnIndex = cursor.getColumnIndex(SQLiteHelperVolunteerings.Table_Column_11_Dashboard_Tab_Email);
+                            if (columnIndex >= 0) {
+                                String email = cursor.getString(columnIndex);
+                                intent.putExtra("email", email);
+                            }
+                            cursor.close();
+                        }
                         startActivity(intent);
                     }
                 });
@@ -727,7 +768,7 @@ public class volunteerings_fragment extends Fragment {
 
                 activitiesRelativeLayout.addView(dashboardTab);
 
-                if(TextUtils.isEmpty(addDashboardTitle.getText().toString()) || TextUtils.isEmpty(addDashboardBody.getText().toString()) || TextUtils.isEmpty(addDashboardLink.getText().toString()))
+                if(TextUtils.isEmpty(addDashboardTitle.getText().toString()) || TextUtils.isEmpty(addDashboardBody.getText().toString()) || TextUtils.isEmpty(addDashboardLink.getText().toString()) || TextUtils.isEmpty(addDashboardEmail.getText().toString()))
                 {
                     Toast.makeText(requireContext(),"Vă rog completați toate datele!", Toast.LENGTH_LONG).show();
                 }
@@ -736,9 +777,9 @@ public class volunteerings_fragment extends Fragment {
 
                     sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
                     // SQLite query to insert data into table.
-                    SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelperVolunteerings.TABLE_NAME+" (titlu,data,image_link,body,dashboard_tab_id,dashboard_tab_date_id,dashboard_tab_image_id,dashboard_tab_delete_id,dashboard_tab_title_id,dashboard_tab_body_id)" +
+                    SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelperVolunteerings.TABLE_NAME+" (titlu,data,image_link,body,dashboard_tab_id,dashboard_tab_date_id,dashboard_tab_image_id,dashboard_tab_delete_id,dashboard_tab_title_id,dashboard_tab_body_id,dashboard_tab_email)" +
                             " VALUES('"+addDashboardTitle.getText().toString()+"', '"+sdf.format(new Date())+"', '"+addDashboardLink.getText().toString()+"', '"+addDashboardBody.getText().toString()+"', '"+newDashboardTabId+"', '"+newDashboardTabDateId+"', '"+newDashboardImageId+"', '"+newDashboardDeleteId+"'," +
-                            "'"+newDashboardTabTitleId+"', '"+newDashboardTabBodyId+"');";
+                            "'"+newDashboardTabTitleId+"', '"+newDashboardTabBodyId+"', '"+addDashboardEmail.getText().toString()+"');";
 
                     sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
                     sqLiteDatabaseObj.close();
@@ -753,6 +794,7 @@ public class volunteerings_fragment extends Fragment {
                 addDashboardBody.setText("");
                 addDashboardLink.setText("");
                 addDashboardTitle.setText("");
+                addDashboardEmail.setText("");
 
                 TransitionManager.beginDelayedTransition(fillDashboardTabInfo);
 
@@ -778,6 +820,18 @@ public class volunteerings_fragment extends Fragment {
                 dashboardTabDateToExpand.setVisibility(visibility);
                 dashboardTabImageToExpand.setVisibility(visibility);
                 dashboardTabBodyToExpand.setVisibility(visibility);
+            }
+        });
+        addDashboardTabClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(fillDashboardTabInfo.getVisibility() == View.VISIBLE){
+                    fillDashboardTabInfo.setVisibility(View.GONE);
+                    addDashboardBody.setText("");
+                    addDashboardLink.setText("");
+                    addDashboardTitle.setText("");
+                    addDashboardEmail.setText("");
+                }
             }
         });
 
@@ -826,6 +880,7 @@ public class volunteerings_fragment extends Fragment {
             addDashboardBody.setText("");
             addDashboardLink.setText("");
             addDashboardTitle.setText("");
+            addDashboardEmail.setText("");
             return true;
         }
         return false;
