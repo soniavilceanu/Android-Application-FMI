@@ -97,6 +97,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center">
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="IF"
+                    android:textSize="18dp"
+                    android:textColor="@color/lapis_blue"
+                    android:gravity="center"
+                    android:paddingEnd="40dp"
+                    android:id="@+id/checkboxIF"
+                    />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="ID"
+                    android:textSize="18dp"
+                    android:textColor="@color/lapis_blue"
+                    android:gravity="center"
+                    android:id="@+id/checkboxID"
+                    android:paddingEnd="40dp"
+                    />
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="IFR"
+                    android:textSize="18dp"
+                    android:textColor="@color/lapis_blue"
+                    android:gravity="center"
+                    android:id="@+id/checkboxIFR"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:padding="12dp">
                 <Spinner
                     android:id="@+id/spinnerStudentAn"
@@ -167,44 +205,6 @@
                     android:hint="An inscriere"
                     android:textColorHint="#808080"
                     android:drawablePadding="8dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="IF"
-                    android:textSize="18dp"
-                    android:textColor="@color/lapis_blue"
-                    android:gravity="center"
-                    android:paddingEnd="40dp"
-                    android:id="@+id/checkboxIF"
-                    />
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="ID"
-                    android:textSize="18dp"
-                    android:textColor="@color/lapis_blue"
-                    android:gravity="center"
-                    android:id="@+id/checkboxID"
-                    android:paddingEnd="40dp"
-                    />
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="IFR"
-                    android:textSize="18dp"
-                    android:textColor="@color/lapis_blue"
-                    android:gravity="center"
-                    android:id="@+id/checkboxIFR"
-                    />
             </LinearLayout>
         </LinearLayout>
         <!-- layout PROF mai jos-->
