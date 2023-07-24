@@ -50,4 +50,8 @@ public class CourseModal extends AndroidViewModel {
     public LiveData<List<Course>> getAllCourses() {
         return allcourses;
     }
+    public LiveData<Course> getCourseByGroupIdZiAndIntervalOrar(long groupId, String zi, int intervalOrar){
+        return repository.getCourseByGroupIdZiAndIntervalOrar(groupId, zi, intervalOrar);
+    }
+
 }

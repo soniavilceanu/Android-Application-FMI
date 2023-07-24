@@ -511,7 +511,7 @@
                     android:id="@+id/saptamanaTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Semigrupa: "
+                    android:text="Frecventa: "
                     android:paddingTop="20dp"
                     android:fontFamily="casual"
                     android:paddingBottom="10dp"
@@ -532,7 +532,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/dashboard_article_background_v2"
                 android:id="@+id/editOrarInfoTab"
-                android:visibility="visible">
+                android:visibility="gone">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -661,7 +661,7 @@
                         android:layout_height="70dp"
                         android:text="Adaugă"
                         android:textColor="@color/white"
-                        android:id="@+id/addDashboardTabInfo"
+                        android:id="@+id/addOrarInfo"
                         android:textSize="18sp"
                         android:layout_marginTop="10dp"
                         android:backgroundTint="@color/original_lavender"

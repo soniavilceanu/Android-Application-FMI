@@ -8,7 +8,9 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.myapplicationfmi.beans.Student;
+import com.example.myapplicationfmi.beans.StudentWithNotifications;
 import com.example.myapplicationfmi.beans.Subject;
+import com.example.myapplicationfmi.beans.SubjectWithCourses;
 import com.example.myapplicationfmi.beans.SubjectWithProfessors;
 
 import java.util.List;
@@ -32,7 +34,16 @@ public interface SubjectDAO {
     @Query("SELECT * FROM Subjects")
     List<SubjectWithProfessors> getSubjectsWithProfessors();
 
+    @Transaction
+    @Query("SELECT * FROM Subjects WHERE subjectId = :subjectId")
+    LiveData<SubjectWithProfessors> getSubjectWithProfessorsById(long subjectId);
+
+
     @Query("SELECT subjectId FROM Subjects WHERE denumire = :denumire")
     LiveData<Long> getSubjectIdByDenumire(String denumire);
+
+    @Transaction
+    @Query("SELECT * FROM Subjects WHERE subjectId = :subjectId")
+    SubjectWithCourses getSubjectWithCourses(long subjectId);
 }
 

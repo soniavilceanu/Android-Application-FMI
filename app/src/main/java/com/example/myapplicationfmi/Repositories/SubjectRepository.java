@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import com.example.myapplicationfmi.DAO.SubjectDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
 import com.example.myapplicationfmi.beans.Subject;
+import com.example.myapplicationfmi.beans.SubjectWithProfessors;
 
 import java.util.List;
 
@@ -55,6 +56,10 @@ public class SubjectRepository {
     public LiveData<Long> getSubjectIdByDenumire(String denumire) {
         return dao.getSubjectIdByDenumire(denumire);
     }
+    public LiveData<SubjectWithProfessors> getSubjectWithProfessorsById(long subjectId){
+        return dao.getSubjectWithProfessorsById(subjectId);
+    }
+
 
     // we are creating a async task method to insert new subject.
     private static class InsertsubjectAsyncTask extends AsyncTask<Subject, Void, Void> {

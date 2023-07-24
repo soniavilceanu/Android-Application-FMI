@@ -51,6 +51,10 @@ public class CourseRepository {
         return allcourses;
     }
 
+    public LiveData<Course> getCourseByGroupIdZiAndIntervalOrar(long groupId, String zi, int intervalOrar){
+        return dao.getCourseByGroupIdZiAndIntervalOrar(groupId, zi, intervalOrar);
+    }
+
     // we are creating a async task method to insert new course.
     private static class InsertcourseAsyncTask extends AsyncTask<Course, Void, Void> {
         private CourseDAO dao;

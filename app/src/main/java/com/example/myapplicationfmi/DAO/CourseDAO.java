@@ -27,5 +27,9 @@ public interface CourseDAO {
     @Query("SELECT * FROM Courses")
     LiveData<List<Course>> getAllCourses();
 
+    @Query("SELECT * FROM Courses WHERE groupId = :groupId AND zi = :zi AND intervalOrar = :intervalOrar")
+    LiveData<Course> getCourseByGroupIdZiAndIntervalOrar(long groupId, String zi, int intervalOrar);
+
+
 }
 

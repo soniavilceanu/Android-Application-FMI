@@ -74,17 +74,14 @@ public class RegisterActivity extends AppCompatActivity {
     String[] grupe;
 
     private MyRoomDatabase myRoomDatabase;
-    private StudentDAO studentDao;
-    private List<Student> studentList;
-
-private StudentModal studentModal;
-private GroupModal groupModal;
-private CourseModal courseModal;
-private DashTabModal dashTabModal;
-private NotificationModal notificationModal;
-private ProfessorModal professorModal;
-private SubjectModal subjectModal;
-private ProfessorSubjectModal professorSubjectModal;
+    private StudentModal studentModal;
+    private GroupModal groupModal;
+    private CourseModal courseModal;
+    private DashTabModal dashTabModal;
+    private NotificationModal notificationModal;
+    private ProfessorModal professorModal;
+    private SubjectModal subjectModal;
+    private ProfessorSubjectModal professorSubjectModal;
     private String[] licentaGrupaSerie13Items;
     private String[] licentaGrupaSerie14Items;
     private String[] licentaGrupaSerie23Items;
@@ -770,19 +767,15 @@ private ProfessorSubjectModal professorSubjectModal;
             subjectsNames.add(discipline[listDiscipline.get(listDiscipline.size() - 1)]);
             stringBuilderDiscipline.append(discipline[listDiscipline.get(listDiscipline.size() - 1)]);
 
-            List<Long> groupIds = new ArrayList<>();
-            for (int i = 0; i <groupsNrs.size(); i ++) {
-                groupModal.getGroupIdByNumarAndForma(groupsNrs.get(i), formaDeInvatamant.get(i)).observe(this, new Observer<Long>() {
-                    @Override
-                    public void onChanged(Long groupId) {
-                        groupIds.add(groupId);
-                    }
-                });
-//                Long groupId = groupModal.getGroupIdByNumarAndForma(groupNumber, "your_forma_de_invatamant");
-//                if (groupId != null) {
-//                    groupIds.add(groupId);
-//                }
-            }
+//            List<Long> groupIds = new ArrayList<>();
+//            for (int i = 0; i <groupsNrs.size(); i ++) {
+//                groupModal.getGroupIdByNumarAndForma(groupsNrs.get(i), formaDeInvatamant.get(i)).observe(this, new Observer<Long>() {
+//                    @Override
+//                    public void onChanged(Long groupId) {
+//                        groupIds.add(groupId);
+//                    }
+//                });
+//            }
 
             List<Long> subjectIds = new ArrayList<>();
             for (String subjectsName : subjectsNames) {
@@ -802,13 +795,13 @@ private ProfessorSubjectModal professorSubjectModal;
                 @Override
                 public void onChanged(Long professorId) {
                     if (professorId != null) {
-                        for (Long groupId : groupIds) {
-                            Course course = new Course();
-
-                            course.setProfessorId(professorId);
-                            course.setGroupId(groupId);
-                            courseModal.insert(course);
-                        }
+//                        for (Long groupId : groupIds) {
+//                            Course course = new Course();
+//
+//                            course.setProfessorId(professorId);
+//                            course.setGroupId(groupId);
+//                            courseModal.insert(course);
+//                        }
                         for (Long subjectId : subjectIds) {
                             ProfessorSubject professorSubject = new ProfessorSubject();
 
@@ -817,7 +810,6 @@ private ProfessorSubjectModal professorSubjectModal;
                             professorSubjectModal.insert(professorSubject);
                         }
                     } else {
-
                     }
                 }
             });

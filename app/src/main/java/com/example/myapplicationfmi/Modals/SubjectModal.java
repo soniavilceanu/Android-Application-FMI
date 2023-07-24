@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.Repositories.SubjectRepository;
 import com.example.myapplicationfmi.beans.Subject;
+import com.example.myapplicationfmi.beans.SubjectWithProfessors;
 
 import java.util.List;
 
@@ -52,5 +53,8 @@ public class SubjectModal extends AndroidViewModel {
     }
     public LiveData<Long> getSubjectIdByDenumire(String denumire) {
         return repository.getSubjectIdByDenumire(denumire);
+    }
+    public LiveData<SubjectWithProfessors> getSubjectWithProfessorsById(long subjectId){
+        return repository.getSubjectWithProfessorsById(subjectId);
     }
 }
