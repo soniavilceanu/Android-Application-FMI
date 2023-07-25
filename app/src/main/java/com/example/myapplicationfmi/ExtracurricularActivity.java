@@ -114,24 +114,19 @@ public class ExtracurricularActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.carnet) {
-                    Toast.makeText(ExtracurricularActivity.this, "Carnet selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.orar) {
                     Intent intent = new Intent(ExtracurricularActivity.this, OrarActivity.class);
                     startActivity(intent);
                     finish();
                 } else if (itemId == R.id.calendar) {
-                    Toast.makeText(ExtracurricularActivity.this, "Calendar selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.activitiesAnnouncements) {
                     Intent intent = new Intent(ExtracurricularActivity.this, DashboardActivity.class);
                     startActivity(intent);
                     finish();
                 } else if (itemId == R.id.internshipVoluntariat) {
-                    Toast.makeText(ExtracurricularActivity.this, "Internship si voluntariat selected", Toast.LENGTH_SHORT).show();
-                    drawerLayout.closeDrawer(GravityCompat.START);
+                     drawerLayout.closeDrawer(GravityCompat.START);
                 } else if (itemId == R.id.cantina) {
-                    Toast.makeText(ExtracurricularActivity.this, "Cantina selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.informatii) {
-                    Toast.makeText(ExtracurricularActivity.this, "Informatii selected", Toast.LENGTH_SHORT).show();
                 }
                 else if(itemId == R.id.creareContNou) {
                     Intent intent = new Intent(ExtracurricularActivity.this, RegisterActivity.class);
@@ -233,6 +228,7 @@ public class ExtracurricularActivity extends AppCompatActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("name", "");
+                    editor.putString("emailConectat","");
                     editor.apply();
 
                     Intent intent = new Intent(ExtracurricularActivity.this, MainActivity.class);

@@ -57,4 +57,7 @@ public class SubjectModal extends AndroidViewModel {
     public LiveData<SubjectWithProfessors> getSubjectWithProfessorsById(long subjectId){
         return repository.getSubjectWithProfessorsById(subjectId);
     }
+    public LiveData<Subject> getSubjectById(long subjectId){
+        return repository.getSubjectById(subjectId);
+    }
 }

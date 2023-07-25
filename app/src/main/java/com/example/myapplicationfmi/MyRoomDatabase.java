@@ -21,6 +21,7 @@ import com.example.myapplicationfmi.DAO.SubjectDAO;
 import com.example.myapplicationfmi.ModalFactory.Migration_1_2;
 import com.example.myapplicationfmi.ModalFactory.Migration_2_3;
 import com.example.myapplicationfmi.ModalFactory.Migration_3_4;
+import com.example.myapplicationfmi.ModalFactory.Migration_4_5;
 import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.DashTab;
 import com.example.myapplicationfmi.beans.Group;
@@ -30,7 +31,7 @@ import com.example.myapplicationfmi.beans.ProfessorSubject;
 import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
 
-@Database(entities = {DashTab.class, Notification.class, Student.class, Group.class, Course.class, Professor.class, Subject.class, ProfessorSubject.class}, version = 4)
+@Database(entities = {DashTab.class, Notification.class, Student.class, Group.class, Course.class, Professor.class, Subject.class, ProfessorSubject.class}, version = 5)
 public abstract class MyRoomDatabase extends RoomDatabase {
     public abstract DashTabDAO dashTabDao();
     public abstract NotificationDAO notificationDao();
@@ -40,7 +41,7 @@ public abstract class MyRoomDatabase extends RoomDatabase {
     public abstract ProfessorDAO professorDao();
     public abstract SubjectDAO subjectDao();
     public abstract ProfessorSubjectDAO professorSubjectDao();
-    static final Migration[] MIGRATIONS = {new Migration_1_2(), new Migration_2_3(), new Migration_3_4()};
+    static final Migration[] MIGRATIONS = {new Migration_1_2(), new Migration_2_3(), new Migration_3_4(), new Migration_4_5()};
 
     private static MyRoomDatabase instance;
 
@@ -54,18 +55,14 @@ public abstract class MyRoomDatabase extends RoomDatabase {
         return instance;
     }
 
-    // below line is to create a callback for our room database.
     private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            // this method is called when database is created
-            // and below line is to populate our data.
             new SPopulateDbAsyncTask(instance).execute();
         }
     };
 
-    // we are creating an async task class to perform task in background.
     private static class SPopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
         SPopulateDbAsyncTask(MyRoomDatabase instance) {
             StudentDAO studentDAO = instance.studentDao();

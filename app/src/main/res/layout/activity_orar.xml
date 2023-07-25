@@ -526,7 +526,7 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="340dp"
+                android:layout_height="420dp"
                 android:orientation="vertical"
                 android:layout_gravity="bottom"
                 android:layout_alignParentBottom="true"
@@ -544,10 +544,12 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="ADAUGĂ SAU EDITEAZĂ ORĂ"
+                        android:id="@+id/titluOrarInfoUpdate"
+                        android:text=""
                         android:textSize="20dp"
+                        android:layout_weight="1"
                         android:textColor="@color/original_lavender"
                         android:textStyle="italic|bold"
                         android:layout_marginStart="40dp"
@@ -559,21 +561,24 @@
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
                             android:layout_marginStart="40dp"
+                            android:layout_gravity="right"
                             android:background="@drawable/baseline_close_24"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="5dp">
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:paddingStart="20dp"
+                        android:layout_gravity="start">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Materie:"
                             android:textSize="20dp"
                             android:textColor="@color/original_lavender"
-                            android:textStyle="italic|bold"
-                            android:gravity="start"/>
+                            android:textStyle="italic|bold" />
                         <Spinner
                             android:id="@+id/spinnerMaterie"
                             android:layout_width="wrap_content"
@@ -581,14 +586,15 @@
                             android:textSize="20dp"
                             android:textColor="@color/original_lavender"
                             android:textStyle="bold"
-                            android:gravity="center"
                             android:padding="12dp"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="5dp">
+                        android:padding="5dp"
+                        android:paddingStart="20dp"
+                        android:layout_gravity="start">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -668,6 +674,26 @@
                         android:background="@drawable/lavender_border"/>
                 </LinearLayout>
             </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:clickable="true"
+                    android:contentDescription="Add Event"
+                    android:src="@drawable/baseline_edit_24"
+                    android:visibility="gone"
+                    android:backgroundTint="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </RelativeLayout>
         <com.google.android.material.navigation.NavigationView
             android:layout_width="wrap_content"

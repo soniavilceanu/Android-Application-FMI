@@ -43,5 +43,8 @@ public class ProfessorModal extends AndroidViewModel {
     public LiveData<Long> getProfessorIdByEmail(String email) {
         return repository.getProfessorIdByEmail(email);
     }
+    public LiveData<Professor> getProfessorById(long professorId){
+        return repository.getProfessorById(professorId);
+    }
 
 }

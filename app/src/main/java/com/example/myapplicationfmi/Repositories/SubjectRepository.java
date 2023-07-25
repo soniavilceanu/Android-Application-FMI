@@ -59,6 +59,9 @@ public class SubjectRepository {
     public LiveData<SubjectWithProfessors> getSubjectWithProfessorsById(long subjectId){
         return dao.getSubjectWithProfessorsById(subjectId);
     }
+    public LiveData<Subject> getSubjectById(long subjectId){
+        return dao.getSubjectById(subjectId);
+    }
 
 
     // we are creating a async task method to insert new subject.

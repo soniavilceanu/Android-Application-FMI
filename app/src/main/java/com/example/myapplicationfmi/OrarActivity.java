@@ -52,6 +52,7 @@ import com.example.myapplicationfmi.beans.Professor;
 import com.example.myapplicationfmi.beans.Subject;
 import com.example.myapplicationfmi.beans.SubjectWithProfessors;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Arrays;
@@ -69,15 +70,16 @@ public class OrarActivity extends AppCompatActivity {
     private Spinner spinnerSelecteazaGrupa, spinnerProfesor, spinnerMaterie, spinnerSemigrupa;
     private LinearLayout editOrarInfoTab;
     private Button orarTabClose, addOrarInfo;
+    private FloatingActionButton floatingActionButton;
     private CheckBox checkbox1, checkbox2;
     private String[] grupe;
     private String[] profesori;
     private List<Long> professorIds;
     private List<Long> grupeIds;
     private String[] materii;
-    private String[] semigrupe = new String[]{"Toată grupa", "Semigr. 1", "Semigr. 2"};
+    private String[] semigrupe = new String[]{"Toată grupa", "Gr. 1", "Gr. 2"};
     private List<Long> materiiIds;
-    private TextView materieSiGrupaTextView, profesorTextView, frecventaTextView, saptamanaTextView;
+    private TextView materieSiGrupaTextView, profesorTextView, frecventaTextView, saptamanaTextView, titluOrarInfoUpdate;
     private MyRoomDatabase myRoomDatabase;
     private StudentModal studentModal;
     private GroupModal groupModal;
@@ -87,6 +89,7 @@ public class OrarActivity extends AppCompatActivity {
     private ProfessorModal professorModal;
     private SubjectModal subjectModal;
     private ProfessorSubjectModal professorSubjectModal;
+    private int clickedCellIndex = -1;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -123,6 +126,11 @@ public class OrarActivity extends AppCompatActivity {
         subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
         professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
 
+
+        //courseModal.deleteAllcourses();
+
+
+
         navigationView = findViewById(R.id.nav_view);
         topAppBar = findViewById(R.id.topAppBar);
         editOrarInfoTab = findViewById(R.id.editOrarInfoTab);
@@ -133,12 +141,15 @@ public class OrarActivity extends AppCompatActivity {
 
         checkbox1 = findViewById(R.id.checkbox1);
         checkbox2 = findViewById(R.id.checkbox2);
-        checkbox1.setChecked(true);
+        //checkbox1.setChecked(true);
         addOrarInfo = findViewById(R.id.addOrarInfo);
 
         materieSiGrupaTextView = findViewById(R.id.materieSiGrupaTextView);
         profesorTextView = findViewById(R.id.profesorTextView);
         saptamanaTextView = findViewById(R.id.saptamanaTextView);
+        titluOrarInfoUpdate = findViewById(R.id.titluOrarInfoUpdate);
+
+        floatingActionButton =  findViewById(R.id.floatingActionButton);
 
         Menu menu = navigationView.getMenu();
         MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
@@ -154,135 +165,7 @@ public class OrarActivity extends AppCompatActivity {
                 findViewById(R.id.cell_5_1), findViewById(R.id.cell_5_2), findViewById(R.id.cell_5_3), findViewById(R.id.cell_5_4), findViewById(R.id.cell_5_5), findViewById(R.id.cell_5_5), findViewById(R.id.cell_5_6),
                 findViewById(R.id.cell_1_6), findViewById(R.id.cell_2_6), findViewById(R.id.cell_3_6), findViewById(R.id.cell_4_6));
 
-        for(int i = 0; i < tableCells.size(); i ++){
-            int finalI = i;
-            tableCells.get(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (MainActivity.USER_TYPE == 1) {
-                        editOrarInfoTab.setVisibility(View.VISIBLE);
-
-                        subjectModal.getAllSubjects().observe(OrarActivity.this, new Observer<List<Subject>>() {
-                            @Override
-                            public void onChanged(List<Subject> subjects) {
-                                if(subjects != null) {
-                                    materii = subjects.stream()
-                                            .map(subject -> String.valueOf(subject.getDenumire()))
-                                            .toArray(String[]::new);
-                                    materiiIds = subjects.stream()
-                                            .map(Subject::getSubjectId)
-                                            .collect(Collectors.toList());
-
-                                    ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, materii);
-                                    spinnerMaterie.setAdapter(adapterMateriiItems);
-                                }
-                            }
-                        });
-
-//                        professorModal.getAllProfessors().observe(OrarActivity.this, new Observer<List<Professor>>() {
-//                            @Override
-//                            public void onChanged(List<Professor> professors) {
-//                                if(professors != null) {
-//                                    profesori = professors.stream()
-//                                            .map(professor -> String.valueOf(professor.getNume() + " " + professor.getPrenume()))
-//                                            .toArray(String[]::new);
-//                                    professorIds = professors.stream()
-//                                            .map(Professor::getProfessorId)
-//                                            .collect(Collectors.toList());
-//
-//                                    ArrayAdapter<String> adapterProfessorItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, profesori);
-//                                    spinnerProfesor = findViewById(R.id.spinnerProfesor);
-//                                    spinnerProfesor.setAdapter(adapterProfessorItems);
-//                                }
-//                            }
-//                        });
-
-
-                        /**
-                         * randul de jos trebuie on click listener pe spinner
-                          */
-
-
-
-                        subjectModal.getSubjectWithProfessorsById(materiiIds.get((int) spinnerMaterie.getSelectedItemPosition())).observe(OrarActivity.this, new Observer<SubjectWithProfessors>() {
-                            @Override
-                            public void onChanged(SubjectWithProfessors subjectWithProfessors) {
-                                if (subjectWithProfessors != null) {
-                                    List<Professor> professors = subjectWithProfessors.professors;
-                                    profesori = professors.stream()
-                                            .map(professor -> String.valueOf(professor.getNume() + " " + professor.getPrenume()))
-                                            .toArray(String[]::new);
-                                    professorIds = professors.stream()
-                                            .map(Professor::getProfessorId)
-                                            .collect(Collectors.toList());
-                                    ArrayAdapter<String> adapterProfessorItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, profesori);
-                                    spinnerProfesor.setAdapter(adapterProfessorItems);
-                                }
-                            }
-                        });
-
-                        checkbox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                checkbox2.setChecked(false);
-                            }
-                        });
-                        checkbox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                checkbox1.setChecked(false);
-                            }
-                        });
-
-                        ArrayAdapter<String> adapteSemigrupaItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, semigrupe);
-                        spinnerSemigrupa.setAdapter(adapteSemigrupaItems);
-       /////////////////////////////
-
-                    addOrarInfo.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Course course = new Course();
-                            course.setGroupId(grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()));
-                            course.setSubjectId(materiiIds.get(spinnerMaterie.getSelectedItemPosition()));
-                            course.setProfessorId(professorIds.get(spinnerProfesor.getSelectedItemPosition()));
-                            course.setFrecventa(checkbox1.isChecked() && !checkbox2.isChecked() ? 1 : 2);
-                            course.setSemigrupa(spinnerSemigrupa.getSelectedItemPosition());
-
-
-                            course.setZi(String.valueOf(finalI / 6));
-                            course.setIntervalOrar(finalI % 6);
-
-                            courseModal.insert(course);
-                        }
-                    });
-                    }
-                    courseModal.getCourseByGroupIdZiAndIntervalOrar(grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(OrarActivity.this, new Observer<Course>() {
-                        @Override
-                        public void onChanged(Course course) {
-                            if (course != null) {
-                                materieSiGrupaTextView.setText(materieSiGrupaTextView.getText() + " " + materii[Math.toIntExact(course.getSubjectId())] + " ");
-                                if(course.getSemigrupa() != 0)
-                                    materieSiGrupaTextView.setText(materieSiGrupaTextView.getText() + semigrupe[course.getSemigrupa()]);
-                                profesorTextView.setText(profesorTextView.getText() + " " + profesori[Math.toIntExact(course.getSubjectId())]);
-                                saptamanaTextView.setText(saptamanaTextView.getText() + " " + (course.getFrecventa() == 1 ? course.getFrecventa() + "/săpt." : "1/" + course.getFrecventa() + "/săpt."));
-                            }
-                        }
-                    });
-
-                    tableCells.get(finalI).setBackgroundColor(Color.parseColor("#8692f7"));
-
-                }//////////////
-            });
-        }
-
-        orarTabClose = findViewById(R.id.orarTabClose);
-        orarTabClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editOrarInfoTab.setVisibility(View.GONE);
-            }
-        });
-
+        spinnerSelecteazaGrupa = findViewById(R.id.spinnerSelecteazaGrupa);
         groupModal.getAllGroups().observe(this, new Observer<List<Group>>() {
             @Override
             public void onChanged(List<Group> groups) {
@@ -304,22 +187,358 @@ public class OrarActivity extends AppCompatActivity {
                             .collect(Collectors.toList());
 
                     ArrayAdapter<String> adapterGrupaItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, grupe);
-                    spinnerSelecteazaGrupa = findViewById(R.id.spinnerSelecteazaGrupa);
                     spinnerSelecteazaGrupa.setAdapter(adapterGrupaItems);
                 }
             }
         });
 
+        spinnerSelecteazaGrupa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                courseModal.getAllCourses().observe(OrarActivity.this, new Observer<List<Course>>() {
+                    @Override
+                    public void onChanged(List<Course> courses) {
+                        if(courses != null) {
+                            for(int i = 0; i <courses.size(); i ++)
+                                if(courses.get(i).getGroupId() == grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()))
+                                    tableCells.get(Integer.valueOf(courses.get(i).zi) * 6 + courses.get(i).intervalOrar).setBackgroundResource(R.drawable.lavender_border_v4);
+                                else tableCells.get(Integer.valueOf(courses.get(i).zi) * 6 + courses.get(i).intervalOrar).setBackgroundResource(R.drawable.lavender_border_v3);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
 
 
-//        spinnerSelecteazaGrupa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-//            }
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parentView) {
-//            }
-//        });
+        for(int i = 0; i < tableCells.size(); i ++){
+            int finalI = i;
+            tableCells.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickedCellIndex = finalI;
+                    if (MainActivity.USER_TYPE == 1) {
+                        if (tableCells.get(finalI).getBackground().getConstantState() == getResources().getDrawable(R.drawable.lavender_border_v3).getConstantState()) {
+                            editOrarInfoTab.setVisibility(View.VISIBLE);
+                            titluOrarInfoUpdate.setText("ADAUGĂ CURS");
+                            addOrarInfo.setText("Adaugă");
+
+                            subjectModal.getAllSubjects().observe(OrarActivity.this, new Observer<List<Subject>>() {
+                                @Override
+                                public void onChanged(List<Subject> subjects) {
+                                    if (subjects != null) {
+                                        materii = subjects.stream()
+                                                .map(subject -> String.valueOf(subject.getDenumire()))
+                                                .toArray(String[]::new);
+                                        materiiIds = subjects.stream()
+                                                .map(Subject::getSubjectId)
+                                                .collect(Collectors.toList());
+
+                                        ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, materii);
+                                        spinnerMaterie.setAdapter(adapterMateriiItems);
+                                    }
+                                }
+                            });
+
+                            spinnerMaterie.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                                    subjectModal.getSubjectWithProfessorsById(materiiIds.get((int) spinnerMaterie.getSelectedItemPosition())).observe(OrarActivity.this, new Observer<SubjectWithProfessors>() {
+                                        @Override
+                                        public void onChanged(SubjectWithProfessors subjectWithProfessors) {
+                                            if (subjectWithProfessors != null) {
+                                                List<Professor> professors = subjectWithProfessors.professors;
+                                                profesori = professors.stream()
+                                                        .map(professor -> String.valueOf(professor.getNume() + " " + professor.getPrenume()))
+                                                        .toArray(String[]::new);
+                                                professorIds = professors.stream()
+                                                        .map(Professor::getProfessorId)
+                                                        .collect(Collectors.toList());
+                                                ArrayAdapter<String> adapterProfessorItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, profesori);
+                                                spinnerProfesor.setAdapter(adapterProfessorItems);
+                                            }
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parentView) {
+                                }
+                            });
+                            checkbox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                    if (isChecked) {
+                                        checkbox2.setChecked(false);
+                                    }
+                                }
+                            });
+                            checkbox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                    if (isChecked) {
+                                        checkbox1.setChecked(false);
+                                    }
+                                }
+                            });
+
+                            ArrayAdapter<String> adapteSemigrupaItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, semigrupe);
+                            spinnerSemigrupa.setAdapter(adapteSemigrupaItems);
+
+                            addOrarInfo.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    //adaugam curs
+                                    Course course = new Course();
+                                    course.setGroupId(grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()));
+                                    course.setSubjectId(materiiIds.get(spinnerMaterie.getSelectedItemPosition()));
+                                    course.setProfessorId(professorIds.get(spinnerProfesor.getSelectedItemPosition()));
+                                    course.setFrecventa(checkbox1.isChecked() && !checkbox2.isChecked() ? 1 : 2);
+                                    course.setSemigrupa(spinnerSemigrupa.getSelectedItemPosition());
+
+                                    course.setZi(String.valueOf(finalI / 6));
+                                    course.setIntervalOrar(finalI % 6);
+
+                                    courseModal.insert(course);
+
+                                    tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v4);
+                                    editOrarInfoTab.setVisibility(View.GONE);
+
+
+                                }
+                            });
+
+                            courseModal.getCourseByGroupIdZiAndIntervalOrar(
+                                    grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()),
+                                    String.valueOf(finalI / 6),
+                                    finalI % 6
+                            ).observe(OrarActivity.this, new Observer<Course>() {
+                                @Override
+                                public void onChanged(Course insertedCourse) {
+                                    if (insertedCourse != null && finalI == clickedCellIndex) {
+                                        // Fetch the professor and subject data for the newly inserted course
+                                        professorModal.getProfessorById(insertedCourse.getProfessorId()).observe(OrarActivity.this, new Observer<Professor>() {
+                                            @Override
+                                            public void onChanged(Professor professor) {
+                                                if (professor != null && finalI == clickedCellIndex) {
+                                                    final String professorNume = professor.getNume() + " " + professor.getPrenume();
+                                                    // Fetch the subject data
+                                                    subjectModal.getSubjectById(insertedCourse.getSubjectId()).observe(OrarActivity.this, new Observer<Subject>() {
+                                                        @Override
+                                                        public void onChanged(Subject subject) {
+                                                            if (subject != null && finalI == clickedCellIndex) {
+                                                                final String subjectDenumire = subject.getDenumire();
+                                                                // Update the UI with the newly inserted course data
+                                                                processCourseData(insertedCourse, professorNume, subjectDenumire);
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            titluOrarInfoUpdate.setText("EDITEAZĂ CURS");
+                            addOrarInfo.setText("Editează");
+                            floatingActionButton.setVisibility(View.VISIBLE);
+                            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    editOrarInfoTab.setVisibility(View.VISIBLE);
+                                    floatingActionButton.setVisibility(View.GONE);
+                                    subjectModal.getAllSubjects().observe(OrarActivity.this, new Observer<List<Subject>>() {
+                                        @Override
+                                        public void onChanged(List<Subject> subjects) {
+                                            if (subjects != null) {
+                                                materii = subjects.stream()
+                                                        .map(subject -> String.valueOf(subject.getDenumire()))
+                                                        .toArray(String[]::new);
+                                                materiiIds = subjects.stream()
+                                                        .map(Subject::getSubjectId)
+                                                        .collect(Collectors.toList());
+
+                                                ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, materii);
+                                                spinnerMaterie.setAdapter(adapterMateriiItems);
+                                            }
+                                        }
+                                    });
+
+                                    spinnerMaterie.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                        @Override
+                                        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                                            subjectModal.getSubjectWithProfessorsById(materiiIds.get((int) spinnerMaterie.getSelectedItemPosition())).observe(OrarActivity.this, new Observer<SubjectWithProfessors>() {
+                                                @Override
+                                                public void onChanged(SubjectWithProfessors subjectWithProfessors) {
+                                                    if (subjectWithProfessors != null) {
+                                                        List<Professor> professors = subjectWithProfessors.professors;
+                                                        profesori = professors.stream()
+                                                                .map(professor -> String.valueOf(professor.getNume() + " " + professor.getPrenume()))
+                                                                .toArray(String[]::new);
+                                                        professorIds = professors.stream()
+                                                                .map(Professor::getProfessorId)
+                                                                .collect(Collectors.toList());
+                                                        ArrayAdapter<String> adapterProfessorItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, profesori);
+                                                        spinnerProfesor.setAdapter(adapterProfessorItems);
+                                                    }
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onNothingSelected(AdapterView<?> parentView) {
+                                        }
+                                    });
+                                    checkbox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                        @Override
+                                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                            if (isChecked) {
+                                                checkbox2.setChecked(false);
+                                            }
+                                        }
+                                    });
+                                    checkbox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                        @Override
+                                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                            if (isChecked) {
+                                                checkbox1.setChecked(false);
+                                            }
+                                        }
+                                    });
+
+                                    ArrayAdapter<String> adapteSemigrupaItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, semigrupe);
+                                    spinnerSemigrupa.setAdapter(adapteSemigrupaItems);
+
+                                    addOrarInfo.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            //actualizam curs
+                                            courseModal.getCourseByGroupIdZiAndIntervalOrar(grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(OrarActivity.this, new Observer<Course>() {
+                                                @Override
+                                                public void onChanged(Course course) {
+                                                    if (course != null) {
+                                                        course.setSubjectId(materiiIds.get(spinnerMaterie.getSelectedItemPosition()));
+                                                        course.setProfessorId(professorIds.get(spinnerProfesor.getSelectedItemPosition()));
+                                                        course.setFrecventa(checkbox1.isChecked() && !checkbox2.isChecked() ? 1 : 2);
+                                                        course.setSemigrupa(spinnerSemigrupa.getSelectedItemPosition());
+                                                        courseModal.update(course);
+                                                        editOrarInfoTab.setVisibility(View.GONE);
+                                                        floatingActionButton.setVisibility(View.GONE);
+                                                    }
+                                                }
+                                            });
+                                            editOrarInfoTab.setVisibility(View.GONE);
+
+
+                                        }
+                                    });
+                                }
+                            });
+
+                            courseModal.getCourseByGroupIdZiAndIntervalOrar(
+                                    grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()),
+                                    String.valueOf(finalI / 6),
+                                    finalI % 6
+                            ).observe(OrarActivity.this, new Observer<Course>() {
+                                @Override
+                                public void onChanged(Course insertedCourse) {
+                                    if (insertedCourse != null && finalI == clickedCellIndex) {
+                                        // Fetch the professor and subject data for the newly inserted course
+                                        professorModal.getProfessorById(insertedCourse.getProfessorId()).observe(OrarActivity.this, new Observer<Professor>() {
+                                            @Override
+                                            public void onChanged(Professor professor) {
+                                                if (professor != null && finalI == clickedCellIndex) {
+                                                    final String professorNume = professor.getNume() + " " + professor.getPrenume();
+                                                    // Fetch the subject data
+                                                    subjectModal.getSubjectById(insertedCourse.getSubjectId()).observe(OrarActivity.this, new Observer<Subject>() {
+                                                        @Override
+                                                        public void onChanged(Subject subject) {
+                                                            if (subject != null && finalI == clickedCellIndex) {
+                                                                final String subjectDenumire = subject.getDenumire();
+                                                                // Update the UI with the newly inserted course data
+                                                                processCourseData(insertedCourse, professorNume, subjectDenumire);
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                }
+                    final String[] professorNume = new String[1];
+                    final String[] subjectDenumire = new String[1];
+                    courseModal.getCourseByGroupIdZiAndIntervalOrar(grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(OrarActivity.this, new Observer<Course>() {
+                        @Override
+                        public void onChanged(Course course) {
+                            if (course != null && finalI == clickedCellIndex) {
+                                // Fetch the professor and subject data for the newly inserted course
+                                professorModal.getProfessorById(course.getProfessorId()).observe(OrarActivity.this, new Observer<Professor>() {
+                                    @Override
+                                    public void onChanged(Professor professor) {
+                                        if (professor != null && finalI == clickedCellIndex) {
+                                            final String professorNume = professor.getNume() + " " + professor.getPrenume();
+                                            // Fetch the subject data
+                                            subjectModal.getSubjectById(course.getSubjectId()).observe(OrarActivity.this, new Observer<Subject>() {
+                                                @Override
+                                                public void onChanged(Subject subject) {
+                                                    if (subject != null && finalI == clickedCellIndex) {
+                                                        final String subjectDenumire = subject.getDenumire();
+                                                        // Update the UI with the newly inserted course data
+                                                        processCourseData(course, professorNume, subjectDenumire);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+
+//                            if (course != null) {
+//                                professorModal.getProfessorById(course.getProfessorId()).observe(OrarActivity.this, new Observer<Professor>() {
+//                                    @Override
+//                                    public void onChanged(Professor professor) {
+//                                        if (professor != null) {
+//                                            professorNume[0] = professor.getNume() + " " + professor.getPrenume();
+//                                        }
+//                                    }
+//                                });
+//                                subjectModal.getSubjectById(course.getSubjectId()).observe(OrarActivity.this, new Observer<Subject>() {
+//                                    @Override
+//                                    public void onChanged(Subject subject) {
+//                                        if (subject != null) {
+//                                            subjectDenumire[0] = subject.getDenumire();
+//                                        }
+//                                    }
+//                                });
+//                                if(professorNume[0] != null && subjectDenumire[0] != null)
+//                                    processCourseData(course, professorNume[0], subjectDenumire[0]);
+//                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        orarTabClose = findViewById(R.id.orarTabClose);
+        orarTabClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editOrarInfoTab.setVisibility(View.GONE);
+                floatingActionButton.setVisibility(View.GONE);
+            }
+        });
+
+
 
         drawerLayout = findViewById(R.id.activity_dashboard);
         materialToolbar = findViewById(R.id.topAppBar);
@@ -336,11 +555,9 @@ public class OrarActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.carnet) {
-                    Toast.makeText(OrarActivity.this, "Carnet selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.orar) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                 } else if (itemId == R.id.calendar) {
-                    Toast.makeText(OrarActivity.this, "Calendar selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.activitiesAnnouncements) {
                     Intent intent = new Intent(OrarActivity.this, DashboardActivity.class);
                     startActivity(intent);
@@ -350,9 +567,7 @@ public class OrarActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else if (itemId == R.id.cantina) {
-                    Toast.makeText(OrarActivity.this, "Cantina selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.informatii) {
-                    Toast.makeText(OrarActivity.this, "Informatii selected", Toast.LENGTH_SHORT).show();
                 }
                 else if(itemId == R.id.creareContNou) {
                     Intent intent = new Intent(OrarActivity.this, RegisterActivity.class);
@@ -381,6 +596,7 @@ public class OrarActivity extends AppCompatActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("name", "");
+                    editor.putString("emailConectat","");
                     editor.apply();
 
                     Intent intent = new Intent(OrarActivity.this, MainActivity.class);
@@ -390,6 +606,13 @@ public class OrarActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+    public void processCourseData(Course course,  String professorNume, String subjectDenumire){
+            materieSiGrupaTextView.setText("Materie: " + subjectDenumire + " ");
+            if(course.getSemigrupa() != 0)
+                materieSiGrupaTextView.setText(materieSiGrupaTextView.getText() + semigrupe[course.getSemigrupa()]);
+            profesorTextView.setText("Profesor: " + professorNume);
+            saptamanaTextView.setText("Frecventa: " + (course.getFrecventa() == 1 ? course.getFrecventa() + "/sapt." : "1/" + course.getFrecventa() + "/săpt."));
     }
     @Override
     public void onBackPressed() {

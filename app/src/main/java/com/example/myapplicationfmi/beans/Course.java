@@ -6,13 +6,15 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Courses", primaryKeys = {"groupId", "professorId"})
+@Entity(tableName = "Courses", primaryKeys = {"groupId", "professorId", "zi", "intervalOrar"})
 public class Course {
     @NonNull
     public Long groupId; // Foreign key referencing Groups table
     @NonNull
     public Long professorId; // Foreign key referencing Professors table
+    @NonNull
     public String zi;
+    @NonNull
     public Integer intervalOrar;
     public Integer frecventa; // 1 sau 2; 1 = o data pe sapt.; 2 = o data la 2 sapt
     public Integer semigrupa;
@@ -76,9 +78,11 @@ public class Course {
     }
 
     @Ignore
-    public Course(Long groupId, Long professorId) {
+    public Course(Long groupId, Long professorId, String zi, Integer intervalOrar) {
         this.groupId = groupId;
         this.professorId = professorId;
+        this.zi = zi;
+        this.intervalOrar = intervalOrar;
     }
     public Course(){
 

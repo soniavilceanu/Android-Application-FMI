@@ -127,25 +127,19 @@ public class DashboardActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.carnet) {
-                    Toast.makeText(DashboardActivity.this, "Carnet selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.orar) {
-                    Toast.makeText(DashboardActivity.this, "Orar selected", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(DashboardActivity.this, OrarActivity.class);
                     startActivity(intent);
                     finish();
                 } else if (itemId == R.id.calendar) {
-                    Toast.makeText(DashboardActivity.this, "Calendar selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.activitiesAnnouncements) {
-                        Toast.makeText(DashboardActivity.this, "Activities and Announcements selected", Toast.LENGTH_SHORT).show();
                     drawerLayout.closeDrawer(GravityCompat.START);
                 } else if (itemId == R.id.internshipVoluntariat) {
                     Intent intent = new Intent(DashboardActivity.this, ExtracurricularActivity.class);
                     startActivity(intent);
                     finish();
                 } else if (itemId == R.id.cantina) {
-                    Toast.makeText(DashboardActivity.this, "Cantina selected", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.informatii) {
-                    Toast.makeText(DashboardActivity.this, "Informatii selected", Toast.LENGTH_SHORT).show();
                 }
                 else if(itemId == R.id.creareContNou) {
                     Intent intent = new Intent(DashboardActivity.this, RegisterActivity.class);
@@ -247,6 +241,7 @@ public class DashboardActivity extends AppCompatActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("name", "");
+                    editor.putString("emailConectat","");
                     editor.apply();
 
                     Intent intent = new Intent(DashboardActivity.this, MainActivity.class);

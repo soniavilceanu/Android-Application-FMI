@@ -45,5 +45,9 @@ public interface SubjectDAO {
     @Transaction
     @Query("SELECT * FROM Subjects WHERE subjectId = :subjectId")
     SubjectWithCourses getSubjectWithCourses(long subjectId);
+
+    @Query("SELECT * FROM Subjects WHERE subjectId = :subjectId")
+    LiveData<Subject> getSubjectById(long subjectId);
+
 }
 

@@ -54,6 +54,9 @@ public class ProfessorRepository {
     public LiveData<Long> getProfessorIdByEmail(String email) {
         return dao.getProfessorIdByEmail(email);
     }
+    public LiveData<Professor> getProfessorById(long professorId){
+        return dao.getProfessorById(professorId);
+    }
 
     // we are creating a async task method to insert new professor.
     private static class InsertprofessorAsyncTask extends AsyncTask<Professor, Void, Void> {

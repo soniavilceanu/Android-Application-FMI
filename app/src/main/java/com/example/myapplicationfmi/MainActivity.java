@@ -91,10 +91,14 @@ public class MainActivity extends AppCompatActivity {
     private void checkbox() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         String check = sharedPreferences.getString("name", "");
+        String email = sharedPreferences.getString("emailConectat","");
         if(check.equals("true")){
+            if(email.contains("@s.unibuc.ro")) MainActivity.USER_TYPE = 2;
+            else if(!email.contains("admin")) MainActivity.USER_TYPE = 3;
+            else  MainActivity.USER_TYPE = 1;
             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
             // Sending Email to Dashboard Activity using intent.
-            intent.putExtra(UserEmail, EmailHolder);
+            intent.putExtra(UserEmail, email);
             startActivity(intent);
             finish();
         }
@@ -146,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
             if(checkBox.isChecked()) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("name", "true");
+                editor.putString("emailConectat", EmailHolder);
                 editor.apply();
             }
             SharedPreferences.Editor editor = sharedPreferences.edit();

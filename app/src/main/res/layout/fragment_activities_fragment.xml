@@ -124,8 +124,9 @@
                 android:layout_marginBottom="16dp"
                 android:clickable="true"
                 android:contentDescription="Add Event"
-                android:src="@drawable/baseline_today_24"
+                android:src="@drawable/baseline_today_24_white"
                 android:visibility="visible"
+                android:backgroundTint="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 

@@ -39,4 +39,8 @@ public interface ProfessorDAO {
 
     @Query("SELECT professorId FROM Professors WHERE email = :email")
     LiveData<Long> getProfessorIdByEmail(String email);
+
+    @Query("SELECT * FROM Professors WHERE professorId = :professorId")
+    LiveData<Professor> getProfessorById(long professorId);
+
 }
