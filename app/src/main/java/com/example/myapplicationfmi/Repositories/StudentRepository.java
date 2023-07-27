@@ -104,6 +104,9 @@ public class StudentRepository {
     public LiveData<Student> getStudentById(long studentId) {
         return dao.getStudentById(studentId);
     }
+    public LiveData<Student> getStudentByEmail(String email){
+        return dao.getStudentByEmail(email);
+    }
 
     // we are creating a async task method to delete all students.
     private static class DeleteAllstudentsAsyncTask extends AsyncTask<Void, Void, Void> {

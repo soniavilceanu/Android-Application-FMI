@@ -53,4 +53,8 @@ public class StudentModal extends AndroidViewModel {
     public LiveData<List<Student>> getAllStudents() {
         return allstudents;
     }
+
+    public LiveData<Student> getStudentByEmail(String email){
+        return repository.getStudentByEmail(email);
+    }
 }

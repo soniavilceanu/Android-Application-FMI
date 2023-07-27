@@ -52,6 +52,7 @@ import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Professor;
 import com.example.myapplicationfmi.beans.ProfessorSubject;
+import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
 import com.example.myapplicationfmi.beans.SubjectWithProfessors;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -224,12 +225,13 @@ public class OrarActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parentView) {
             }
         });
+        SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.SHARED_PREFS, MODE_PRIVATE);
+        String emailHolder = sharedPreferences.getString("email", "");
+
         if (MainActivity.USER_TYPE != 1) {
             creareContNouItem.setVisible(false);
             if(MainActivity.USER_TYPE == 3) {
                 textOrarProf.setVisibility(View.VISIBLE);
-                SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.SHARED_PREFS, MODE_PRIVATE);
-                String emailHolder = sharedPreferences.getString("email", "");
                 professorModal.getProfessorIdByEmail(emailHolder).observe(this, new Observer<Long>() {
                     @Override
                     public void onChanged(Long professorId) {
@@ -244,7 +246,18 @@ public class OrarActivity extends AppCompatActivity {
                     }
                 });
             }
-            else textOrarProf.setVisibility(View.GONE);
+            else {
+                textOrarProf.setVisibility(View.GONE);
+                studentModal.getStudentByEmail(emailHolder).observe(OrarActivity.this, new Observer<Student>() {
+                    @Override
+                    public void onChanged(Student student) {
+                        if (student != null) {
+                            spinnerSelecteazaGrupa.setSelection(grupeIds.indexOf(student.getGrupaId()));
+                           }
+                    }
+                });
+
+            }
         } else {
             creareContNouItem.setVisible(true);
             textOrarProf.setVisibility(View.GONE);

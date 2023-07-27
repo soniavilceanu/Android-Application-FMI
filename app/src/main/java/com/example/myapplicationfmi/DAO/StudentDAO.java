@@ -36,4 +36,7 @@ public interface StudentDAO {
     @Transaction
     @Query("SELECT * FROM Students WHERE studentId = :studentId")
     StudentWithNotifications getStudentWithNotifications(long studentId);
+
+    @Query("SELECT * FROM Students WHERE email = :email")
+    LiveData<Student> getStudentByEmail(String email);
 }
