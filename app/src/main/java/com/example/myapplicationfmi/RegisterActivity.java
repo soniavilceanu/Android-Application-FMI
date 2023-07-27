@@ -788,7 +788,6 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
             }
-
             professorModal.insert(new Professor(NumeHolder, PrenumeHolder, EmailHolder, PasswordHolder, spinnerProfesorPozitie.getSelectedItem().toString()));
 
             professorModal.getProfessorIdByEmail(EmailHolder).observe(this, new Observer<Long>() {
