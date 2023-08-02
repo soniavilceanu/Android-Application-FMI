@@ -132,6 +132,9 @@ public class DashboardActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else if (itemId == R.id.calendar) {
+                    Intent intent = new Intent(DashboardActivity.this, CalendarAcademicActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else if (itemId == R.id.activitiesAnnouncements) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                 } else if (itemId == R.id.internshipVoluntariat) {

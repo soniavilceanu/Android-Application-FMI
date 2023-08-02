@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.example.myapplicationfmi.DAO.CourseDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
 import com.example.myapplicationfmi.beans.Course;
+import com.example.myapplicationfmi.beans.Subject;
 
 import java.util.List;
 
@@ -38,6 +39,12 @@ public class CourseRepository {
     }
     public LiveData<Course> getCourseByGroupIdZiAndIntervalOrar(long groupId, String zi, int intervalOrar){
         return dao.getCourseByGroupIdZiAndIntervalOrar(groupId, zi, intervalOrar);
+    }
+    public LiveData<List<Long>> getSubjectIdsByGroupIdAndProfessorId(long groupId, long professorId){
+        return dao.getSubjectIdsByGroupIdAndProfessorId(groupId,professorId);
+    }
+    public LiveData<List<Subject>> getSubjectsByGroupIdAndProfessorId(long groupId, long professorId){
+        return dao.getSubjectsByGroupIdAndProfessorId(groupId, professorId);
     }
     private static class InsertcourseAsyncTask extends AsyncTask<Course, Void, Void> {
         private CourseDAO dao;

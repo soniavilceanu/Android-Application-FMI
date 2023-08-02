@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.Repositories.ProfessorRepository;
 import com.example.myapplicationfmi.beans.Professor;
+import com.example.myapplicationfmi.beans.ProfessorWithGroups;
 
 import java.util.List;
 
@@ -46,5 +47,7 @@ public class ProfessorModal extends AndroidViewModel {
     public LiveData<Professor> getProfessorById(long professorId){
         return repository.getProfessorById(professorId);
     }
-
+    public LiveData<ProfessorWithGroups> getProfessorWithGroupsById(long professorId){
+        return repository.getProfessorWithGroupsById(professorId);
+    }
 }

@@ -119,6 +119,9 @@ public class ExtracurricularActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else if (itemId == R.id.calendar) {
+                    Intent intent = new Intent(ExtracurricularActivity.this, CalendarAcademicActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else if (itemId == R.id.activitiesAnnouncements) {
                     Intent intent = new Intent(ExtracurricularActivity.this, DashboardActivity.class);
                     startActivity(intent);

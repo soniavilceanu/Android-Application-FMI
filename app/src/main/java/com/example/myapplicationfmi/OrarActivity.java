@@ -622,6 +622,9 @@ public class OrarActivity extends AppCompatActivity {
                 } else if (itemId == R.id.orar) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                 } else if (itemId == R.id.calendar) {
+                    Intent intent = new Intent(OrarActivity.this, CalendarAcademicActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else if (itemId == R.id.activitiesAnnouncements) {
                     Intent intent = new Intent(OrarActivity.this, DashboardActivity.class);
                     startActivity(intent);

@@ -1,0 +1,925 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".OrarActivity">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/activity_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/topAppBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@color/original_lavender"
+                    app:menu="@menu/top_app_bar" />
+            </com.google.android.material.appbar.AppBarLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@color/original_lavender"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/titluInformatii"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ORAR"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:padding="4dp"
+                    android:paddingStart="40dp"
+                    android:fontFamily="casual"
+                    android:textColor="@color/white" />
+
+                <ImageView
+                    android:id="@+id/logoProfile"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/baseline_dataset_24_white"
+                    android:layout_gravity="end" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:id="@+id/selecteazaGrupa"
+                android:layout_below="@+id/appBarLayout">
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:text="Selectează lună:"
+                    android:textSize="20dp"
+                    android:textColor="@color/original_lavender"
+                    android:textStyle="italic|bold"
+                    android:gravity="start"/>
+                <Spinner
+                    android:id="@+id/spinnerSelecteazaLuna"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textColor="@color/original_lavender"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    />
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/selecteazaGrupa">
+                <TableRow>
+                    <TextView
+                        android:id="@+id/luni"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="10dp"
+                        android:gravity="center"
+                        android:text="Luni"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="10dp" />
+                    <TextView
+                        android:id="@+id/ora08_10"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="10dp"
+                        android:gravity="center"
+                        android:text="Marți"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="10dp" />
+
+                    <TextView
+                        android:id="@+id/ora10_12"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="10dp"
+                        android:text="Miercuri"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="10dp" />
+                    <TextView
+                        android:id="@+id/ora12_14"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="10dp"
+                        android:text="Joi"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="10dp"  />
+
+                    <TextView
+                        android:id="@+id/ora14_16"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="10dp"
+                        android:text="Vineri"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="10dp" />
+                    <TextView
+                        android:id="@+id/ora16_18"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textSize="10dp"
+                        android:text="Sâmb."
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="10dp"  />
+
+                    <TextView
+                        android:id="@+id/ora18_20"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="10dp"
+                        android:gravity="center"
+                        android:text="Dum."
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="10dp"  />
+
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:id="@+id/cell_1_0"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_1_1"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_1_2"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_1_3"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_1_4"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/lavender_border_v3"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_1_5"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/lavender_border_v3"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_1_6"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:id="@+id/cell_2_0"
+                        android:layout_width="0dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_2_1"
+                        android:layout_width="0dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_2_2"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/lavender_border_v3"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_2_3"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_2_4"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_2_5"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_2_6"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:id="@+id/cell_3_0"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_3_1"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_3_2"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/lavender_border_v3"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_3_3"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_3_4"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_3_5"
+                        android:layout_width="0dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_3_6"
+                        android:layout_width="0dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:id="@+id/cell_4_0"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_4_1"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_4_2"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_4_3"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_4_4"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_4_5"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/lavender_border_v3"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_4_6"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/lavender_border_v3"
+                        android:text=""
+                        android:padding="16dp" />
+
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:id="@+id/cell_5_0"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_5_1"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_5_2"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/lavender_border_v3"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_5_3"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_5_4"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_5_5"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_5_6"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+                </TableRow>
+                <TableRow
+                    android:id="@+id/lastRow"
+                    android:visibility="visible">
+                    <TextView
+                        android:id="@+id/cell_6_0"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_6_1"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:background="@drawable/lavender_border_v3"
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_6_2"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/lavender_border_v3"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_6_3"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_6_4"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+                    <TextView
+                        android:id="@+id/cell_6_5"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+
+                    <TextView
+                        android:id="@+id/cell_6_6"
+                        android:layout_width="0dp"
+                        android:layout_height="67dp"
+                        android:background="@drawable/lavender_border_v3"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:padding="16dp" />
+                </TableRow>
+            </TableLayout>
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tableLayout"
+                android:id="@+id/evenimenteScrollView"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/evenimentTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Eveniment: "
+                        android:paddingTop="20dp"
+                        android:fontFamily="casual"
+                        android:paddingBottom="10dp"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_marginEnd="8dp" />
+                    <View
+                        android:layout_width="380dp"
+                        android:layout_height="2dp"
+                        android:background="@color/original_lavender"
+                        android:layout_marginStart="5dp"/>
+
+                    <TextView
+                        android:id="@+id/valabilPentruTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Valabil pentru: "
+                        android:textSize="18sp"
+                        android:fontFamily="casual"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="@color/black"
+                        android:layout_marginEnd="8dp" />
+                    <View
+                        android:layout_width="380dp"
+                        android:layout_height="2dp"
+                        android:background="@color/original_lavender"
+                        android:layout_marginStart="5dp"/>
+                    <View
+                        android:layout_width="380dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/original_lavender"
+                        android:layout_marginStart="5dp"/>
+                    <View
+                        android:layout_width="380dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/original_lavender"
+                        android:layout_marginStart="5dp"/>
+                </LinearLayout>
+            </ScrollView>
+
+
+
+
+
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tableLayout"
+                android:id="@+id/evenimenteScrollViewMultiple"
+                android:visibility="visible">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/evenimenteLinearLayoutMultiple"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:id="@+id/evenimentTab">
+                        <TextView
+                            android:id="@+id/evenimentTextViewMultiple"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Eveniment: "
+                            android:paddingTop="20dp"
+                            android:fontFamily="casual"
+                            android:paddingBottom="10dp"
+                            android:textSize="18sp"
+                            android:textColor="@color/black"
+                            android:layout_marginEnd="8dp" />
+                        <View
+                            android:layout_width="380dp"
+                            android:layout_height="2dp"
+                            android:background="@color/original_lavender"
+                            android:layout_marginStart="5dp"/>
+                        <TextView
+                            android:id="@+id/intervalOrarTextViewMultiple"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Interval Orar: "
+                            android:paddingTop="20dp"
+                            android:fontFamily="casual"
+                            android:paddingBottom="10dp"
+                            android:textSize="18sp"
+                            android:textColor="@color/black"
+                            android:layout_marginEnd="8dp" />
+                        <View
+                            android:layout_width="380dp"
+                            android:layout_height="2dp"
+                            android:background="@color/original_lavender"
+                            android:layout_marginStart="5dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/valabilPentruTextViewMultiple"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Valabil pentru: "
+                                android:textSize="18sp"
+                                android:fontFamily="casual"
+                                android:paddingTop="20dp"
+                                android:paddingBottom="10dp"
+                                android:textColor="@color/black"
+                                android:layout_marginEnd="8dp" />
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+                                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                        android:id="@+id/floatingActionButtonMultiple"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:clickable="true"
+                                        android:contentDescription="Add Event"
+                                        android:src="@drawable/baseline_edit_24"
+                                        android:visibility="visible"
+                                        android:backgroundTint="@color/black"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+                        <View
+                            android:layout_width="380dp"
+                            android:layout_height="2dp"
+                            android:background="@color/original_lavender"
+                            android:layout_marginStart="5dp"/>
+                        <View
+                            android:layout_width="380dp"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="3dp"
+                            android:background="@color/original_lavender"
+                            android:layout_marginStart="5dp"/>
+                        <View
+                            android:layout_width="380dp"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="3dp"
+                            android:background="@color/original_lavender"
+                            android:layout_marginStart="5dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+
+
+
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:orientation="vertical"
+                android:layout_gravity="bottom"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/dashboard_article_background_v2"
+                android:id="@+id/editOrarInfoTab"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="20dp"
+                    android:gravity="center">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/titluOrarInfoUpdate"
+                            android:text=""
+                            android:textSize="20dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/original_lavender"
+                            android:textStyle="italic|bold"
+                            android:layout_marginStart="40dp"
+                            android:gravity="center"/>
+                        <Button
+                            android:id="@+id/orarTabClose"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="40dp"
+                            android:layout_gravity="right"
+                            android:background="@drawable/baseline_close_24"/>
+                    </LinearLayout>
+                    <EditText
+                        android:layout_width="350dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/editEveniment"
+                        android:background="@drawable/lavender_border"
+                        android:layout_marginTop="10dp"
+                        android:padding="8dp"
+                        android:gravity="center"
+                        android:hint="Denumire eveniment"
+                        android:textColorHint="#808080"
+                        android:drawablePadding="8dp"
+                        android:enabled="true"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:paddingStart="20dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Valabil pentru:"
+                            android:textSize="20dp"
+                            android:textColor="@color/original_lavender"
+                            android:textStyle="italic|bold" />
+                        <Spinner
+                            android:id="@+id/spinnerValabilPentru"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:textColor="@color/original_lavender"
+                            android:textStyle="bold"
+                            android:padding="12dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:paddingStart="20dp"
+                        android:id="@+id/layoutMateriiPtProf">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Materie:"
+                            android:textSize="20dp"
+                            android:textColor="@color/original_lavender"
+                            android:textStyle="italic|bold" />
+                        <Spinner
+                            android:id="@+id/spinnerMateriiPtProf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:textColor="@color/original_lavender"
+                            android:textStyle="bold"
+                            android:padding="12dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:paddingStart="20dp"
+                        android:id="@+id/layoutOraInceput">
+
+                        <NumberPicker
+                            android:id="@+id/hourPickerInceput"
+                            android:layout_width="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_height="80dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ora"
+                            android:textSize="18sp" />
+
+                        <NumberPicker
+                            android:id="@+id/minutePickerInceput"
+                            android:layout_width="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_height="80dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="minut"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:paddingStart="20dp"
+                        android:id="@+id/layoutOraFinal">
+
+                        <NumberPicker
+                            android:id="@+id/hourPickerFinal"
+                            android:layout_width="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_height="80dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ora"
+                            android:textSize="18sp" />
+
+                        <NumberPicker
+                            android:id="@+id/minutePickerFinal"
+                            android:layout_width="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_height="80dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="minut"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                    <Button
+                        android:layout_width="180dp"
+                        android:layout_height="70dp"
+                        android:text="Adaugă"
+                        android:textColor="@color/white"
+                        android:id="@+id/addOrarInfo"
+                        android:textSize="18sp"
+                        android:layout_marginTop="10dp"
+                        android:backgroundTint="@color/original_lavender"
+                        android:background="@drawable/lavender_border"/>
+                </LinearLayout>
+            </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:clickable="true"
+                    android:contentDescription="Add Event"
+                    android:src="@drawable/baseline_edit_24"
+                    android:visibility="gone"
+                    android:backgroundTint="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </RelativeLayout>
+        <com.google.android.material.navigation.NavigationView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:headerLayout="@layout/menu_header"
+            app:menu="@menu/main_menu"
+            android:id="@+id/nav_view"
+            android:layout_gravity="start" />
+    </androidx.drawerlayout.widget.DrawerLayout>
+</LinearLayout>

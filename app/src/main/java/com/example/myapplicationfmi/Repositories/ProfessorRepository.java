@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.example.myapplicationfmi.DAO.ProfessorDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
 import com.example.myapplicationfmi.beans.Professor;
+import com.example.myapplicationfmi.beans.ProfessorWithGroups;
 
 import java.util.List;
 
@@ -56,6 +57,9 @@ public class ProfessorRepository {
     }
     public LiveData<Professor> getProfessorById(long professorId){
         return dao.getProfessorById(professorId);
+    }
+    public LiveData<ProfessorWithGroups> getProfessorWithGroupsById(long professorId){
+        return dao.getProfessorWithGroupsById(professorId);
     }
 
     // we are creating a async task method to insert new professor.
