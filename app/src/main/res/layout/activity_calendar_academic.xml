@@ -114,7 +114,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textSize="10dp"
-                        android:text="Miercuri"
+                        android:text="Mierc."
                         android:gravity="center"
                         android:textStyle="bold"
                         android:textColor="@color/black"
@@ -540,16 +540,14 @@
                         android:padding="16dp" />
                 </TableRow>
             </TableLayout>
-            <ScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tableLayout"
-                android:id="@+id/evenimenteScrollView"
-                android:visibility="gone">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_below="@id/tableLayout"
+                    android:id="@+id/eventLinearAfisare"
+                    android:visibility="gone">
                     <TextView
                         android:id="@+id/evenimentTextView"
                         android:layout_width="wrap_content"
@@ -596,11 +594,6 @@
                         android:background="@color/original_lavender"
                         android:layout_marginStart="5dp"/>
                 </LinearLayout>
-            </ScrollView>
-
-
-
-
 
 
             <ScrollView
@@ -608,7 +601,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tableLayout"
                 android:id="@+id/evenimenteScrollViewMultiple"
-                android:visibility="visible">
+                android:visibility="gone">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -618,7 +611,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:id="@+id/evenimentTab">
+                        android:id="@+id/evenimentTab"
+                        android:visibility="gone">
                         <TextView
                             android:id="@+id/evenimentTextViewMultiple"
                             android:layout_width="wrap_content"
@@ -667,6 +661,14 @@
                                 android:textColor="@color/black"
                                 android:layout_marginEnd="8dp" />
 
+                            <Button
+                                android:id="@+id/dashboardTabDeleteMultiple"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginStart="150dp"
+                                android:background="@drawable/baseline_close_24"
+                                android:visibility="visible"/>
+
                                 <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent">
@@ -703,12 +705,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>
-
-
-
-
-
-
 
 
             <LinearLayout
@@ -807,8 +803,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="20dp"
                             android:textColor="@color/original_lavender"
-                            android:textStyle="bold"
-                            android:padding="12dp"/>
+                            android:textStyle="bold"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -898,11 +893,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionButtonAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="140dp"
+                    android:clickable="true"
+                    android:contentDescription="Add Event"
+                    android:src="@drawable/baseline_add_24"
+                    android:visibility="gone"
+                    android:backgroundTint="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                <Button
+                                    android:id="@+id/dashboardTabDelete"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_marginEnd="80dp"
+                                    android:layout_marginBottom="22dp"
+                                    android:background="@drawable/baseline_close_24"
+                                    android:visibility="gone"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/floatingActionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="16dp"
                     android:clickable="true"
                     android:contentDescription="Add Event"

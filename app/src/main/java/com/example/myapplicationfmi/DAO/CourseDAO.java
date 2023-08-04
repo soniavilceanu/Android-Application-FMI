@@ -7,6 +7,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.myapplicationfmi.beans.Course;
+import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
 
@@ -39,6 +40,11 @@ public interface CourseDAO {
             "WHERE Courses.groupId = :groupId AND Courses.professorId = :professorId")
     LiveData<List<Subject>> getSubjectsByGroupIdAndProfessorId(long groupId, long professorId);
 
+    @Query("SELECT Groups.* FROM Groups " +
+            "INNER JOIN Courses ON Groups.groupId = Courses.groupId " +
+            "WHERE Courses.professorId = :professorId " +
+            "GROUP BY Groups.groupId")
+    LiveData<List<Group>> getGroupsByProfessorId(long professorId);
 
 }
 

@@ -24,6 +24,8 @@ public class Calendar {
     @ColumnInfo(name = "materie_id")
     public Long materieId; // Foreign key referencing Subjects table  // daca evenimentul este examen
 
+    public Long professorId; // Foreign key referencing Professors table  // daca evenimentul este examen
+
     @NonNull
     public Long getLunaId() {
         return lunaId;
@@ -100,8 +102,16 @@ public class Calendar {
         this.materieId = materieId;
     }
 
+    public Long getProfessorId() {
+        return professorId;
+    }
+
+    public void setProfessorId(Long professorId) {
+        this.professorId = professorId;
+    }
+
     @Ignore
-    public Calendar(@NonNull Long calendarId, Long lunaId, String saptamana, Integer ziuaSaptamanii, String eveniment, String valabilPentru, LocalTime oraInceput, LocalTime oraFinal, Long materieId) {
+    public Calendar(@NonNull Long calendarId, Long lunaId, String saptamana, Integer ziuaSaptamanii, String eveniment, String valabilPentru, LocalTime oraInceput, LocalTime oraFinal, Long materieId, Long professorId) {
         this.calendarId = calendarId;
         this.lunaId = lunaId;
         this.saptamana = saptamana;
@@ -111,6 +121,7 @@ public class Calendar {
         this.oraInceput = oraInceput;
         this.oraFinal = oraFinal;
         this.materieId = materieId;
+        this.professorId = professorId;
     }
 
     public Calendar(){

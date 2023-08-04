@@ -1,10 +1,12 @@
 package com.example.myapplicationfmi;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -28,6 +30,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
@@ -59,7 +62,10 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CalendarAcademicActivity extends AppCompatActivity {
@@ -72,11 +78,10 @@ public class CalendarAcademicActivity extends AppCompatActivity {
     private Menu menu;
     private Spinner spinnerSelecteazaLuna, spinnerValabilPentru;
     private LinearLayout editOrarInfoTab;
-    private Button orarTabClose, addOrarInfo;
-    private FloatingActionButton floatingActionButton;
+    private Button orarTabClose, addOrarInfo, dashboardTabDelete;
+    private FloatingActionButton floatingActionButton, floatingActionButtonAdd;
     private List<Long> grupeIds;
     private String[] grupe;
-    private String[] materii;
     private List<Long> subjectIds;
     private TextView evenimentTextView, valabilPentruTextView, titluOrarInfoUpdate;
     private MyRoomDatabase myRoomDatabase;
@@ -90,7 +95,6 @@ public class CalendarAcademicActivity extends AppCompatActivity {
     private ProfessorSubjectModal professorSubjectModal;
     private CalendarModal calendarModal;
     private int clickedCellIndex = -1;
-    private Long profId;
     private List<Calendar> allCalendars;
     private List<Long> luniIds;
     private List<Long> valabilPentruIds;
@@ -99,10 +103,15 @@ public class CalendarAcademicActivity extends AppCompatActivity {
     private Year thisYear;
     private LinearLayout layoutMateriiPtProf, layoutOraInceput, layoutOraFinal;
     private Spinner spinnerMateriiPtProf;
-    private NumberPicker hourPicker;
-    private NumberPicker minutePicker;
-    private ScrollView evenimenteScrollView, evenimenteScrollViewMultiple;
-    private LinearLayout parentLinearLayout;
+    private NumberPicker hourPicker, hourPicker2;
+    private NumberPicker minutePicker, minutePicker2;
+    private ScrollView evenimenteScrollViewMultiple;
+    private LinearLayout parentLinearLayout, eventLinearAfisare;
+    private DateTimeFormatter formatter;
+    private String[] valabilPentruArray = {"Licență", "Master", "Restanțieri licență", "Restanțieri master"};
+    private  String[] minuteValues;
+    private  String emailHolder;
+    private List<TextView> tableCells;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -129,7 +138,13 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_academic);
 
-        myRoomDatabase = MyRoomDatabase.getInstance(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            formatter = DateTimeFormatter.ofPattern("HH:mm");
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            myRoomDatabase = MyRoomDatabase.getInstance(this);
+        }
         studentModal = new ViewModelProvider(this).get(StudentModal.class);
         groupModal = new ViewModelProvider(this).get(GroupModal.class);
         courseModal = new ViewModelProvider(this).get(CourseModal.class);
@@ -148,12 +163,14 @@ public class CalendarAcademicActivity extends AppCompatActivity {
 
         spinnerValabilPentru = findViewById(R.id.spinnerValabilPentru);
         addOrarInfo = findViewById(R.id.addOrarInfo);
+        dashboardTabDelete = findViewById(R.id.dashboardTabDelete);
 
         evenimentTextView = findViewById(R.id.evenimentTextView);
         valabilPentruTextView = findViewById(R.id.valabilPentruTextView);
         titluOrarInfoUpdate = findViewById(R.id.titluOrarInfoUpdate);
 
         floatingActionButton =  findViewById(R.id.floatingActionButton);
+        floatingActionButtonAdd = findViewById(R.id.floatingActionButtonAdd);
         lastRow = findViewById(R.id.lastRow);
 
         layoutMateriiPtProf = findViewById(R.id.layoutMateriiPtProf);
@@ -163,15 +180,16 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         hourPicker = findViewById(R.id.hourPickerInceput);
         minutePicker = findViewById(R.id.minutePickerInceput);
 
-        evenimenteScrollView = findViewById(R.id.evenimenteScrollView);
+        eventLinearAfisare = findViewById(R.id.eventLinearAfisare);
         evenimenteScrollViewMultiple = findViewById(R.id.evenimenteScrollViewMultiple);
         parentLinearLayout = findViewById(R.id.evenimenteLinearLayoutMultiple);
 
+        spinnerMateriiPtProf = findViewById(R.id.spinnerMateriiPtProf);
 
         Menu menu = navigationView.getMenu();
         MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
 
-        List<TextView> tableCells = Arrays.asList(findViewById(R.id.cell_1_0), findViewById(R.id.cell_1_1), findViewById(R.id.cell_1_2), findViewById(R.id.cell_1_3), findViewById(R.id.cell_1_4), findViewById(R.id.cell_1_5), findViewById(R.id.cell_1_6), findViewById(R.id.cell_2_0), findViewById(R.id.cell_2_1),
+        tableCells = Arrays.asList(findViewById(R.id.cell_1_0), findViewById(R.id.cell_1_1), findViewById(R.id.cell_1_2), findViewById(R.id.cell_1_3), findViewById(R.id.cell_1_4), findViewById(R.id.cell_1_5), findViewById(R.id.cell_1_6), findViewById(R.id.cell_2_0), findViewById(R.id.cell_2_1),
                 findViewById(R.id.cell_2_2), findViewById(R.id.cell_2_3), findViewById(R.id.cell_2_4), findViewById(R.id.cell_2_5), findViewById(R.id.cell_2_6), findViewById(R.id.cell_3_0), findViewById(R.id.cell_3_1), findViewById(R.id.cell_3_2), findViewById(R.id.cell_3_3),
                 findViewById(R.id.cell_3_4), findViewById(R.id.cell_3_5),  findViewById(R.id.cell_3_6), findViewById(R.id.cell_4_0), findViewById(R.id.cell_4_1), findViewById(R.id.cell_4_2), findViewById(R.id.cell_4_3), findViewById(R.id.cell_4_4), findViewById(R.id.cell_4_5), findViewById(R.id.cell_4_6), findViewById(R.id.cell_5_0),
                 findViewById(R.id.cell_5_1), findViewById(R.id.cell_5_2), findViewById(R.id.cell_5_3), findViewById(R.id.cell_5_4), findViewById(R.id.cell_5_5), findViewById(R.id.cell_5_6),
@@ -194,17 +212,19 @@ public class CalendarAcademicActivity extends AppCompatActivity {
 
         hourPicker.setMinValue(8);
         hourPicker.setMaxValue(19);
-        String[] minuteValues = new String[12]; // We want to allow increments of 5 minutes (12 intervals)
+        Map<Integer, Integer> minuteValueMap = new HashMap<>();
+        minuteValues = new String[12]; // We want to allow increments of 5 minutes (12 intervals)
         for (int i = 0; i < 12; i++) {
             int minuteValue = i * 5;
             minuteValues[i] = String.format("%02d", minuteValue); // Format the minutes to have leading zeros
+            minuteValueMap.put(minuteValue, i);
         }
         minutePicker.setMinValue(0);
         minutePicker.setMaxValue(minuteValues.length - 1);
         minutePicker.setDisplayedValues(minuteValues);
 
-        NumberPicker hourPicker2 = findViewById(R.id.hourPickerFinal);
-        NumberPicker minutePicker2 = findViewById(R.id.minutePickerFinal);
+        hourPicker2 = findViewById(R.id.hourPickerFinal);
+        minutePicker2 = findViewById(R.id.minutePickerFinal);
         hourPicker2.setMinValue(8);
         hourPicker2.setMaxValue(19);
         String[] minuteValues2 = new String[12];
@@ -242,6 +262,14 @@ public class CalendarAcademicActivity extends AppCompatActivity {
             currentM = currentDate.getMonthValue();
         }
         spinnerSelecteazaLuna.setSelection(currentM - 1);
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) floatingActionButtonAdd.getLayoutParams();
+        if (lastRow.getVisibility() == View.VISIBLE) {
+            layoutParams.bottomMargin = dpToPx(CalendarAcademicActivity.this, 140);
+            floatingActionButtonAdd.setLayoutParams(layoutParams);
+        } else {
+            layoutParams.bottomMargin = dpToPx(CalendarAcademicActivity.this, 205);
+            floatingActionButtonAdd.setLayoutParams(layoutParams);
+        }
 
         spinnerSelecteazaLuna.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -264,6 +292,14 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                         }
 
                     calcutateCalendarDaysForYear(tableCells, thisYear, spinnerSelecteazaLuna.getSelectedItemPosition());
+                    ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) floatingActionButtonAdd.getLayoutParams();
+                    if (lastRow.getVisibility() == View.VISIBLE) {
+                        layoutParams.bottomMargin = dpToPx(CalendarAcademicActivity.this, 140);
+                        floatingActionButtonAdd.setLayoutParams(layoutParams);
+                    } else {
+                        layoutParams.bottomMargin = dpToPx(CalendarAcademicActivity.this, 205);
+                        floatingActionButtonAdd.setLayoutParams(layoutParams);
+                    }
                 }
             }
             @Override
@@ -271,7 +307,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
             }
         });
         SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.SHARED_PREFS, MODE_PRIVATE);
-        String emailHolder = sharedPreferences.getString("email", "");
+        emailHolder = sharedPreferences.getString("email", "");
 
         if (MainActivity.USER_TYPE != 1) {
             creareContNouItem.setVisible(false);
@@ -279,7 +315,6 @@ public class CalendarAcademicActivity extends AppCompatActivity {
             creareContNouItem.setVisible(true);
         }
 
-        String[] valabilPentruArray = {"Licență", "Master", "Restanțieri licență", "Restanțieri master"};
         valabilPentruIds = new ArrayList<>();
         valabilPentruIds.add(1L);
         valabilPentruIds.add(2L);
@@ -293,21 +328,43 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     clickedCellIndex = finalI;
                     if (MainActivity.USER_TYPE == 1) {
-                        editOrarInfoTab.getLayoutParams().height = 280;
+                        editOrarInfoTab.getLayoutParams().height = 800;
                         editOrarInfoTab.requestLayout();
-                        evenimenteScrollView.setVisibility(View.VISIBLE);
+                        eventLinearAfisare.setVisibility(View.VISIBLE);
                         evenimenteScrollViewMultiple.setVisibility(View.GONE);
                         layoutMateriiPtProf.setVisibility(View.GONE);
                         layoutOraInceput.setVisibility(View.GONE);
                         layoutOraFinal.setVisibility(View.GONE);
+                        floatingActionButtonAdd.setVisibility(View.GONE);
                         eveniment.setVisibility(View.VISIBLE);
                         ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(CalendarAcademicActivity.this, android.R.layout.simple_spinner_dropdown_item, valabilPentruArray);
                         spinnerValabilPentru.setAdapter(adapterMateriiItems);
 
                         if (tableCells.get(finalI).getBackground().getConstantState() == getResources().getDrawable(R.drawable.lavender_border_v3).getConstantState()) {
                             editOrarInfoTab.setVisibility(View.VISIBLE);
+                            floatingActionButton.setVisibility(View.GONE);
+                            dashboardTabDelete.setVisibility(View.GONE);
                             titluOrarInfoUpdate.setText("ADAUGĂ EVENIMENT");
+                            eveniment.setText("");
                             addOrarInfo.setText("Adaugă");
+
+
+                            dashboardTabDelete.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    calendarModal.getCalendarByLunaIdSaptamanaAndZiuaSaptamaniiForAdmin(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
+                                        @Override
+                                        public void onChanged(Calendar calendar) {
+                                            if (calendar != null) {
+                                                calendarModal.delete(calendar);
+                                                parentLinearLayout.removeView((View) v.getParent().getParent());
+                                                tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v3);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+
 
                             addOrarInfo.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -324,31 +381,35 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                     calendar.setOraFinal(null);
                                     calendar.setOraInceput(null);
                                     calendar.setMaterieId(null);
+                                    calendar.setProfessorId(-1L);
 
                                     calendarModal.insert(calendar);
 
                                     tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v4);
                                     editOrarInfoTab.setVisibility(View.GONE);
+                                    processCourseData(calendar, spinnerValabilPentru.getSelectedItem().toString(), eveniment.getText().toString());
 
 
                                 }
                             });
-                        }
-                        else {
+                        } else {
                             titluOrarInfoUpdate.setText("EDITEAZĂ EVENIMENT");
                             addOrarInfo.setText("Editează");
                             floatingActionButton.setVisibility(View.VISIBLE);
+                            dashboardTabDelete.setVisibility(View.VISIBLE);
                             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     editOrarInfoTab.setVisibility(View.VISIBLE);
+                                    floatingActionButtonAdd.setVisibility(View.GONE);
                                     floatingActionButton.setVisibility(View.GONE);
+                                    dashboardTabDelete.setVisibility(View.GONE);
 
                                     calendarModal.getCalendarByLunaIdSaptamanaAndZiuaSaptamaniiForAdmin(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
                                         @Override
                                         public void onChanged(Calendar calendar) {
                                             if (calendar != null) {
-                                                spinnerValabilPentru.setSelection(valabilPentruIds.indexOf(calendar.getValabilPentru()));
+                                                spinnerValabilPentru.setSelection(Arrays.asList(valabilPentruArray).indexOf(calendar.getValabilPentru()));
                                                 eveniment.setText(calendar.getEveniment());
 
                                                 addOrarInfo.setOnClickListener(new View.OnClickListener() {
@@ -359,6 +420,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                                         calendar.setValabilPentru(spinnerValabilPentru.getSelectedItem().toString());
                                                         calendar.setEveniment(eveniment.getText().toString());
                                                         calendarModal.update(calendar);
+                                                        processCourseData(calendar, spinnerValabilPentru.getSelectedItem().toString(), eveniment.getText().toString());
 
                                                         editOrarInfoTab.setVisibility(View.GONE);
                                                     }
@@ -372,35 +434,66 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                         }
                         final String[] professorNume = new String[1];
                         final String[] subjectDenumire = new String[1];
-                        calendarModal.getCalendarByLunaIdSaptamanaAndZiuaSaptamaniiForAdmin(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
-                            @Override
-                            public void onChanged(Calendar calendar) {
-                                if (calendar != null && finalI == clickedCellIndex) {
-                                    processCourseData(calendar, calendar.getValabilPentru(), calendar.getEveniment());
+//                        calendarModal.getCalendarByLunaIdSaptamanaAndZiuaSaptamaniiForAdmin(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
+//                            @Override
+//                            public void onChanged(Calendar calendar) {
+//                                if (calendar != null && finalI == clickedCellIndex) {
+//                                    processCourseData(calendar, calendar.getValabilPentru(), calendar.getEveniment());
+//                                }
+//                            }
+//                        });
+
+                        parentLinearLayout.removeAllViews();
+
+                        List<Calendar> allCalendarsDinData = new ArrayList<>();
+                        for (int l = 0; l < allCalendars.size(); l++) {
+                            if (allCalendars.get(l).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) && allCalendars.get(l).getSaptamana().equals(String.valueOf(finalI / 6)) && allCalendars.get(l).getZiuaSaptamanii() == finalI % 6)
+                                allCalendarsDinData.add(allCalendars.get(l));
+                        }
+                        if (allCalendarsDinData != null && allCalendarsDinData.size() > 0 && finalI == clickedCellIndex) {
+                            if (allCalendarsDinData.get(0).getOraFinal() == null && allCalendarsDinData.get(0).getOraInceput() == null) {
+                                editOrarInfoTab.setVisibility(View.GONE);
+                                eventLinearAfisare.setVisibility(View.VISIBLE);
+                                evenimenteScrollViewMultiple.setVisibility(View.GONE);
+                                floatingActionButton.setVisibility(View.VISIBLE);
+                                dashboardTabDelete.setVisibility(View.VISIBLE);
+                                processCourseData(allCalendarsDinData.get(0), allCalendarsDinData.get(0).getValabilPentru(), allCalendarsDinData.get(0).getEveniment());
+                            } else for (int j = 0; j < allCalendarsDinData.size(); j++) {
+                                evenimenteScrollViewMultiple.setVisibility(View.VISIBLE);
+                                eventLinearAfisare.setVisibility(View.GONE);
+                                floatingActionButton.setVisibility(View.GONE);
+                                dashboardTabDelete.setVisibility(View.GONE);
+                                if (allCalendarsDinData.get(j).getOraFinal() != null && allCalendarsDinData.get(j).getOraInceput() != null) {
+                                    addEvenimentTab(allCalendarsDinData.get(j).getEveniment(), allCalendarsDinData.get(j).getValabilPentru(), finalI, allCalendarsDinData.get(j).getOraInceput(), allCalendarsDinData.get(j).getOraFinal());
                                 }
                             }
-                        });
-                    }
-                    else if(MainActivity.USER_TYPE == 3){
-                        editOrarInfoTab.getLayoutParams().height = 500;
-                        editOrarInfoTab.requestLayout();
-                        evenimenteScrollView.setVisibility(View.GONE);
+
+                        }
+                    } else if (MainActivity.USER_TYPE == 3) {
+
+                        eventLinearAfisare.setVisibility(View.GONE);
                         evenimenteScrollViewMultiple.setVisibility(View.VISIBLE);
-                        layoutMateriiPtProf.setVisibility(View.VISIBLE);
-                        layoutOraInceput.setVisibility(View.VISIBLE);
-                        layoutOraFinal.setVisibility(View.VISIBLE);
-                        eveniment.setVisibility(View.GONE);
-                        titluOrarInfoUpdate.setText("ADAUGĂ EXAMEN");
-                        //if (tableCells.get(finalI).getBackground().getConstantState() == getResources().getDrawable(R.drawable.lavender_border_v3).getConstantState()) {
+
+                        if (tableCells.get(finalI).getBackground().getConstantState() == getResources().getDrawable(R.drawable.lavender_border_v3).getConstantState()) {
+
+                            floatingActionButtonAdd.setVisibility(View.GONE);
+                            layoutMateriiPtProf.setVisibility(View.VISIBLE);
+                            layoutOraInceput.setVisibility(View.VISIBLE);
+                            layoutOraFinal.setVisibility(View.VISIBLE);
+                            eveniment.setVisibility(View.GONE);
+                            titluOrarInfoUpdate.setText("ADAUGĂ EXAMEN");
+
+                            editOrarInfoTab.setVisibility(View.VISIBLE);
+                            editOrarInfoTab.getLayoutParams().height = 1200;
+                            editOrarInfoTab.requestLayout();
                             professorModal.getProfessorIdByEmail(emailHolder).observe(CalendarAcademicActivity.this, new Observer<Long>() {
                                 @Override
                                 public void onChanged(Long professorId) {
                                     if (professorId != null) {
-                                        professorModal.getProfessorWithGroupsById(professorId).observe(CalendarAcademicActivity.this, new Observer<ProfessorWithGroups>() {
+                                        courseModal.getGroupsByProfessorId(professorId).observe(CalendarAcademicActivity.this, new Observer<List<Group>>() {
                                             @Override
-                                            public void onChanged(ProfessorWithGroups professorWithGroups) {
-                                                if (professorWithGroups != null) {
-                                                    List<Group> groups = professorWithGroups.groups;
+                                            public void onChanged(List<Group> groups) {
+                                                if (groups != null) {;
                                                     grupe = groups.stream()
                                                             .map(group -> String.valueOf(group.getNumar()))
                                                             .toArray(String[]::new);
@@ -416,12 +509,12 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                         spinnerValabilPentru.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                             @Override
                                             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                                                courseModal.getSubjectsByGroupIdAndProfessorId(grupeIds.get(spinnerValabilPentru.getSelectedItemPosition()),professorId).observe(CalendarAcademicActivity.this, new Observer<List<Subject>>() {
+                                                courseModal.getSubjectsByGroupIdAndProfessorId(grupeIds.get(spinnerValabilPentru.getSelectedItemPosition()), professorId).observe(CalendarAcademicActivity.this, new Observer<List<Subject>>() {
                                                     @Override
                                                     public void onChanged(List<Subject> subjects) {
                                                         String[] denumiresArray = new String[subjects.size()];
                                                         subjectIds = new ArrayList<>();
-                                                        for(int k = 0; k < subjects.size(); k ++){
+                                                        for (int k = 0; k < subjects.size(); k++) {
                                                             denumiresArray[k] = subjects.get(k).getDenumire();
                                                             subjectIds.add(subjects.get(k).getSubjectId());
                                                         }
@@ -430,6 +523,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                                     }
                                                 });
                                             }
+
                                             @Override
                                             public void onNothingSelected(AdapterView<?> parentView) {
                                             }
@@ -444,158 +538,240 @@ public class CalendarAcademicActivity extends AppCompatActivity {
 
                                     LocalTime oraFinala = null;
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        oraFinala = LocalTime.parse(hourPicker2.getValue() + ":" + minutePicker2.getValue(), DateTimeFormatter.ofPattern("HH:mm"));
+                                        oraFinala = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker2.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker2.getValue()])), DateTimeFormatter.ofPattern("HH:mm"));
                                     }
                                     LocalTime oraInceputa = null;
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        oraInceputa = LocalTime.parse(hourPicker.getValue() + ":" + minutePicker.getValue(), DateTimeFormatter.ofPattern("HH:mm"));
+                                        oraInceputa = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker.getValue()])), DateTimeFormatter.ofPattern("HH:mm"));
                                     }
                                     boolean validDeAdaugat = true;
                                     for (int j = 0; j < allCalendars.size(); j++) {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                             if (allCalendars.get(j).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) &&
-                                                    allCalendars.get(j).getSaptamana() == String.valueOf(finalI / 6) && allCalendars.get(j).getZiuaSaptamanii() == (finalI % 6)
+                                                    allCalendars.get(j).getSaptamana().equals(String.valueOf(finalI / 6)) && allCalendars.get(j).getZiuaSaptamanii() == (finalI % 6)
                                                     && !(oraInceputa.compareTo(allCalendars.get(j).getOraFinal()) > 0 && oraFinala.compareTo(allCalendars.get(j).getOraInceput()) < 0)
                                                     && allCalendars.get(j).getEveniment().equals("Examen")
-                                                    && allCalendars.get(j).getValabilPentru().equals(spinnerValabilPentru.getSelectedItem().toString())){
-                                                Toast.makeText(CalendarAcademicActivity.this,"Această grupă mai are un examen în același interval orar!", Toast.LENGTH_LONG).show();
+                                                    && allCalendars.get(j).getValabilPentru().equals(spinnerValabilPentru.getSelectedItem().toString())) {
+                                                Toast.makeText(CalendarAcademicActivity.this, "Această grupă mai are un examen în același interval orar!", Toast.LENGTH_LONG).show();
                                                 validDeAdaugat = false;
                                             }
                                             /**
                                              * sa facem 2 mesaje pt. cele 2 cazuri in care trebuie prevenita adaugarea unui examen. Grupa mai are un examen (deja facut mai sus)sau proful mai are un examen in acelasi interval orar
                                              */
-//                                            if (allCalendars.get(j).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) &&
-//                                                    allCalendars.get(j).getSaptamana() == String.valueOf(finalI / 6) && allCalendars.get(j).getZiuaSaptamanii() == (finalI % 6)
-//                                                    && !(oraInceputa.compareTo(allCalendars.get(j).getOraFinal()) > 0 && oraFinala.compareTo(allCalendars.get(j).getOraInceput()) < 0)
-//                                                    && ){
-//                                                Toast.makeText(CalendarAcademicActivity.this,"", Toast.LENGTH_LONG).show();
-//                                            }
+                                            //                                            if (allCalendars.get(j).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) &&
+                                            //                                                    allCalendars.get(j).getSaptamana() == String.valueOf(finalI / 6) && allCalendars.get(j).getZiuaSaptamanii() == (finalI % 6)
+                                            //                                                    && !(oraInceputa.compareTo(allCalendars.get(j).getOraFinal()) > 0 && oraFinala.compareTo(allCalendars.get(j).getOraInceput()) < 0)
+                                            //                                                    && ){
+                                            //                                                Toast.makeText(CalendarAcademicActivity.this,"", Toast.LENGTH_LONG).show();
+                                            //                                            }
                                         }
                                     }
-                                    if(validDeAdaugat){
-                                        Calendar calendar = new Calendar();
-                                        calendar.setLunaId(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()));
-                                        calendar.setValabilPentru(spinnerValabilPentru.getSelectedItem().toString());
-
-                                        calendar.setSaptamana(String.valueOf(finalI / 6));
-                                        calendar.setZiuaSaptamanii(finalI % 6);
-                                        calendar.setEveniment("Examen");
-                                        calendar.setOraFinal(oraFinala);
-                                        calendar.setOraInceput(oraInceputa);
-                                        calendar.setMaterieId(subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
-
-                                        calendarModal.insert(calendar);
-
-                                        tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v4);
-                                        editOrarInfoTab.setVisibility(View.GONE);
-
-
-                                       addEvenimentTab("Examen", hourPicker.getValue() + ":" + minutePicker.getValue() + " - " + hourPicker2.getValue() + ":" + minutePicker2.getValue(), spinnerValabilPentru.getSelectedItem().toString());
-
-
-                                        /**
-                                         * ori aici onClickListener or in addEvenimentTab
-                                         */
-                                        floatingActionButton.setVisibility(View.VISIBLE);
-                                        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                                    if (validDeAdaugat) {
+                                        LocalTime finalOraFinala = oraFinala;
+                                        LocalTime finalOraInceputa = oraInceputa;
+                                        professorModal.getProfessorIdByEmail(emailHolder).observe(CalendarAcademicActivity.this, new Observer<Long>() {
                                             @Override
-                                            public void onClick(View v) {
-                                                titluOrarInfoUpdate.setText("EDITEAZĂ EVENIMENT");
-                                                addOrarInfo.setText("Editează");
-                                                editOrarInfoTab.setVisibility(View.VISIBLE);
-                                                floatingActionButton.setVisibility(View.GONE);
+                                            public void onChanged(Long professorId) {
+                                                if (professorId != null) {
+                                                    Calendar calendar = new Calendar();
+                                                    calendar.setLunaId(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()));
+                                                    calendar.setValabilPentru(spinnerValabilPentru.getSelectedItem().toString());
 
-                                                calendarModal.getCalendarByLunaIdSaptamanaAndZiuaSaptamaniiForAdmin(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
-                                                    @Override
-                                                    public void onChanged(Calendar calendar) {
-                                                        if (calendar != null) {
-                                                            spinnerValabilPentru.setSelection(valabilPentruIds.indexOf(calendar.getValabilPentru()));
-                                                            eveniment.setText(calendar.getEveniment());
+                                                    calendar.setSaptamana(String.valueOf(finalI / 6));
+                                                    calendar.setZiuaSaptamanii(finalI % 6);
+                                                    calendar.setEveniment("Examen");
+                                                    calendar.setOraFinal(finalOraFinala);
+                                                    calendar.setOraInceput(finalOraInceputa);
+                                                    calendar.setMaterieId(subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
+                                                    calendar.setProfessorId(professorId);
 
-                                                            addOrarInfo.setOnClickListener(new View.OnClickListener() {
-                                                                @Override
-                                                                public void onClick(View v) {
+                                                    calendarModal.insert(calendar);
 
-                                                                    //actualizam curs
-                                                                    calendar.setValabilPentru(spinnerValabilPentru.getSelectedItem().toString());
-                                                                    calendar.setEveniment(eveniment.getText().toString());
-                                                                    calendarModal.update(calendar);
+                                                    tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v4);
+                                                    editOrarInfoTab.setVisibility(View.GONE);
 
-                                                                    editOrarInfoTab.setVisibility(View.GONE);
-                                                                }
-                                                            });
-                                                        }
+                                                    LocalTime localTimeInceput = null;
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                        localTimeInceput = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker.getValue()])), formatter);
                                                     }
-                                                });
+                                                    LocalTime localTimeFinal = null;
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                        localTimeFinal = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker2.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker2.getValue()])), formatter);
+                                                    }
+                                                    parentLinearLayout.removeAllViews();
+                                                    addEvenimentTab("Examen", spinnerValabilPentru.getSelectedItem().toString(), finalI, localTimeInceput, localTimeFinal);
+                                                    floatingActionButtonAdd.setVisibility(View.GONE);
+                                                }
                                             }
                                         });
                                     }
                                 }
                             });
-                        //}
-                        //else{
-//                            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//                                    editOrarInfoTab.setVisibility(View.VISIBLE);
-//                                    titluOrarInfoUpdate.setText("EDITEAZĂ EXAMEN");
-//
-//                                    calendarModal.getCalendarByLunaIdSaptamanaAndZiuaSaptamaniiForProfessor(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
-//                                        @Override
-//                                        public void onChanged(Calendar calendar) {
-//                                            if (calendar != null) {
-//                                                spinnerValabilPentru.setSelection(valabilPentruIds.indexOf(calendar.getValabilPentru()));
-//                                                eveniment.setText(calendar.getEveniment());
-//
-//                                                addOrarInfo.setOnClickListener(new View.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(View v) {
-//
-//                                                        //actualizam curs
-//                                                        calendar.setValabilPentru(spinnerValabilPentru.getSelectedItem().toString());
-//                                                        calendar.setEveniment(eveniment.getText().toString());
-//                                                        calendarModal.update(calendar);
-//
-//                                                        editOrarInfoTab.setVisibility(View.GONE);
-//                                                    }
-//                                                });
-//                                            }
-//                                        }
-//                                    });
-//                                }
-//                            });
-                        //}
+                        }else {
 
-                        parentLinearLayout.removeAllViews();
-                        calendarModal.getCalendarsByLunaIdSaptamanaAndZiuaSaptamanii(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(CalendarAcademicActivity.this, new Observer<List<Calendar>>() {
-                            @Override
-                            public void onChanged(List<Calendar> calendars) {
-                                if (calendars != null && finalI == clickedCellIndex) {
-                                    for(int j = 0; j< calendars.size(); j ++){
-                                        if(calendars.get(j).getOraFinal() == null && calendars.get(j).getOraInceput() == null){
-                                            DateTimeFormatter formatter = null;
-                                            String oraInceput = null;
-                                            String oraFinal = null;
+                            floatingActionButtonAdd.setVisibility(View.VISIBLE);
 
-                                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                                formatter = DateTimeFormatter.ofPattern("HH:mm");
+                            floatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    floatingActionButtonAdd.setVisibility(View.GONE);
+                                    layoutMateriiPtProf.setVisibility(View.VISIBLE);
+                                    layoutOraInceput.setVisibility(View.VISIBLE);
+                                    layoutOraFinal.setVisibility(View.VISIBLE);
+                                    eveniment.setVisibility(View.GONE);
+                                    titluOrarInfoUpdate.setText("ADAUGĂ EXAMEN");
+
+                                    editOrarInfoTab.setVisibility(View.VISIBLE);
+                                    editOrarInfoTab.getLayoutParams().height = 1200;
+                                    editOrarInfoTab.requestLayout();
+                                    professorModal.getProfessorIdByEmail(emailHolder).observe(CalendarAcademicActivity.this, new Observer<Long>() {
+                                        @Override
+                                        public void onChanged(Long professorId) {
+                                            if (professorId != null) {
+                                                courseModal.getGroupsByProfessorId(professorId).observe(CalendarAcademicActivity.this, new Observer<List<Group>>() {
+                                                    @Override
+                                                    public void onChanged(List<Group> groups) {
+                                                        if (groups != null) {
+                                                            grupe = groups.stream()
+                                                                    .map(group -> String.valueOf(group.getNumar()))
+                                                                    .toArray(String[]::new);
+                                                            grupeIds = groups.stream()
+                                                                    .map(Group::getGroupId)
+                                                                    .collect(Collectors.toList());
+                                                            ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(CalendarAcademicActivity.this, android.R.layout.simple_spinner_dropdown_item, grupe);
+                                                            spinnerValabilPentru.setAdapter(adapterMateriiItems);
+                                                        }
+                                                    }
+                                                });
+
+                                                spinnerValabilPentru.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                    @Override
+                                                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                                                        courseModal.getSubjectsByGroupIdAndProfessorId(grupeIds.get(spinnerValabilPentru.getSelectedItemPosition()), professorId).observe(CalendarAcademicActivity.this, new Observer<List<Subject>>() {
+                                                            @Override
+                                                            public void onChanged(List<Subject> subjects) {
+                                                                String[] denumiresArray = new String[subjects.size()];
+                                                                subjectIds = new ArrayList<>();
+                                                                for (int k = 0; k < subjects.size(); k++) {
+                                                                    denumiresArray[k] = subjects.get(k).getDenumire();
+                                                                    subjectIds.add(subjects.get(k).getSubjectId());
+                                                                }
+                                                                ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(CalendarAcademicActivity.this, android.R.layout.simple_spinner_dropdown_item, denumiresArray);
+                                                                spinnerMateriiPtProf.setAdapter(adapterMateriiItems);
+                                                            }
+                                                        });
+                                                    }
+
+                                                    @Override
+                                                    public void onNothingSelected(AdapterView<?> parentView) {
+                                                    }
+                                                });
                                             }
-                                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                                oraInceput = calendars.get(j).getOraInceput().format(formatter);
-                                            }
-                                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                                formatter = DateTimeFormatter.ofPattern("HH:mm");
-                                            }
-                                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                                oraFinal = calendars.get(j).getOraFinal().format(formatter);
-                                            }
-                                            addEvenimentTab(calendars.get(j).getEveniment(), oraInceput + "-" + oraFinal, calendars.get(j).getValabilPentru());
                                         }
+                                    });
+
+                                    addOrarInfo.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            LocalTime oraFinala = null;
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                oraFinala = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker2.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker2.getValue()])), DateTimeFormatter.ofPattern("HH:mm"));
+                                            }
+                                            LocalTime oraInceputa = null;
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                oraInceputa = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker.getValue()])), DateTimeFormatter.ofPattern("HH:mm"));
+                                            }
+                                            boolean validDeAdaugat = true;
+                                            for (int j = 0; j < allCalendars.size(); j++) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    if (allCalendars.get(j).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) &&
+                                                            allCalendars.get(j).getSaptamana().equals(String.valueOf(finalI / 6)) && allCalendars.get(j).getZiuaSaptamanii() == (finalI % 6)
+                                                            && !(oraInceputa.compareTo(allCalendars.get(j).getOraFinal()) > 0 || oraFinala.compareTo(allCalendars.get(j).getOraInceput()) < 0)
+                                                            && allCalendars.get(j).getEveniment().equals("Examen")
+                                                            && allCalendars.get(j).getValabilPentru().equals(spinnerValabilPentru.getSelectedItem().toString())) {
+                                                        Toast.makeText(CalendarAcademicActivity.this, "Această grupă mai are un examen în același interval orar!", Toast.LENGTH_LONG).show();
+                                                        validDeAdaugat = false;
+                                                    }
+                                                    /**
+                                                     * sa facem 2 mesaje pt. cele 2 cazuri in care trebuie prevenita adaugarea unui examen. Grupa mai are un examen (deja facut mai sus)sau proful mai are un examen in acelasi interval orar
+                                                     */
+                                                    //                                            if (allCalendars.get(j).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) &&
+                                                    //                                                    allCalendars.get(j).getSaptamana() == String.valueOf(finalI / 6) && allCalendars.get(j).getZiuaSaptamanii() == (finalI % 6)
+                                                    //                                                    && !(oraInceputa.compareTo(allCalendars.get(j).getOraFinal()) > 0 && oraFinala.compareTo(allCalendars.get(j).getOraInceput()) < 0)
+                                                    //                                                    && ){
+                                                    //                                                Toast.makeText(CalendarAcademicActivity.this,"", Toast.LENGTH_LONG).show();
+                                                    //                                            }
+                                                }
+                                            }
+                                            if (validDeAdaugat) {
+                                                LocalTime finalOraInceputa = oraInceputa;
+                                                LocalTime finalOraFinala = oraFinala;
+                                                professorModal.getProfessorIdByEmail(emailHolder).observe(CalendarAcademicActivity.this, new Observer<Long>() {
+                                                    @Override
+                                                    public void onChanged(Long professorId) {
+                                                        if (professorId != null) {
+                                                            Calendar calendar = new Calendar();
+                                                            calendar.setLunaId(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()));
+                                                            calendar.setValabilPentru(spinnerValabilPentru.getSelectedItem().toString());
+
+                                                            calendar.setSaptamana(String.valueOf(finalI / 6));
+                                                            calendar.setZiuaSaptamanii(finalI % 6);
+                                                            calendar.setEveniment("Examen");
+                                                            calendar.setOraFinal(finalOraFinala);
+                                                            calendar.setOraInceput(finalOraInceputa);
+                                                            calendar.setMaterieId(subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
+                                                            calendar.setProfessorId(professorId);
+
+                                                            calendarModal.insert(calendar);
+
+                                                            tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v4);
+                                                            editOrarInfoTab.setVisibility(View.GONE);
+
+                                                            LocalTime localTimeInceput = null;
+                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                                localTimeInceput = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker.getValue()])), formatter);
+                                                            }
+                                                            LocalTime localTimeFinal = null;
+                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                                localTimeFinal = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker2.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker2.getValue()])), formatter);
+                                                            }
+                                                            parentLinearLayout.removeAllViews();
+                                                            addEvenimentTab("Examen", spinnerValabilPentru.getSelectedItem().toString(), finalI, localTimeInceput, localTimeFinal);
+                                                            floatingActionButtonAdd.setVisibility(View.GONE);
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                        if (tableCells.get(finalI).getBackground().getConstantState() == getResources().getDrawable(R.drawable.lavender_border_v4).getConstantState()) {
+
+                            parentLinearLayout.removeAllViews();
+
+                            List<Calendar> allCalendarsDinData = new ArrayList<>();
+                            for (int l = 0; l < allCalendars.size(); l++) {
+                                if (allCalendars.get(l).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) && allCalendars.get(l).getSaptamana().equals(String.valueOf(finalI / 6)) && allCalendars.get(l).getZiuaSaptamanii() == finalI % 6)
+                                    allCalendarsDinData.add(allCalendars.get(l));
+                            }
+                            if (allCalendarsDinData != null && allCalendarsDinData.size() > 0 && finalI == clickedCellIndex) {
+                                if (allCalendarsDinData.get(0).getOraFinal() == null && allCalendarsDinData.get(0).getOraInceput() == null) {
+                                    editOrarInfoTab.setVisibility(View.GONE);
+                                    eventLinearAfisare.setVisibility(View.VISIBLE);
+                                    processCourseData(allCalendarsDinData.get(0), allCalendarsDinData.get(0).getValabilPentru(), allCalendarsDinData.get(0).getEveniment());
+                                } else for (int j = 0; j < allCalendarsDinData.size(); j++) {
+                                    if (allCalendarsDinData.get(j).getOraFinal() != null && allCalendarsDinData.get(j).getOraInceput() != null) {
+                                        addEvenimentTab(allCalendarsDinData.get(j).getEveniment(), allCalendarsDinData.get(j).getValabilPentru(), finalI, allCalendarsDinData.get(j).getOraInceput(), allCalendarsDinData.get(j).getOraFinal());
                                     }
                                 }
+
                             }
-                        });
-                    }
+                        }
+                }
                 }
             });
         }
@@ -606,6 +782,8 @@ public class CalendarAcademicActivity extends AppCompatActivity {
             public void onClick(View v) {
                 editOrarInfoTab.setVisibility(View.GONE);
                 floatingActionButton.setVisibility(View.GONE);
+                dashboardTabDelete.setVisibility(View.GONE);
+                floatingActionButtonAdd.setVisibility(View.GONE);
                 eveniment.setText("");
             }
         });
@@ -681,8 +859,8 @@ public class CalendarAcademicActivity extends AppCompatActivity {
             }
         });
     }
-    public void processCourseData(Calendar calendar,  String valabilPentru, String eveniment){
-        evenimentTextView.setText("Eveniment: " + eveniment + " ");
+    public void processCourseData(Calendar calendar,  String valabilPentru, String event){
+        evenimentTextView.setText("Eveniment: " + event + " ");
         valabilPentruTextView.setText("Valabil pentru: " + valabilPentru);
         }
     @Override
@@ -747,7 +925,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
 
 
 
-    private void addEvenimentTab(String eveniment, String intervalOrar, String valabilPentru) {
+    private void addEvenimentTab(String event, String valabilPentru, int finalI, LocalTime oraInceput, LocalTime oraFinal) {
         LinearLayout evenimentTab = new LinearLayout(this);
         evenimentTab.setId(View.generateViewId());
 
@@ -756,33 +934,57 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         evenimentTab.setLayoutParams(layoutParams);
 
         TextView evenimentTextView = new TextView(this);
-        evenimentTextView.setLayoutParams(new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams evenimentParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-        ));
-        evenimentTextView.setText("Eveniment: " + eveniment);
-        evenimentTab.addView(evenimentTextView);
+        );
+
+        evenimentParams.rightMargin = 8;
+
+        evenimentTextView.setLayoutParams(evenimentParams);
+        evenimentTextView.setPadding(dpToPx(this,0), dpToPx(CalendarAcademicActivity.this,20),dpToPx(CalendarAcademicActivity.this,0),dpToPx(CalendarAcademicActivity.this,10));
+        //evenimentParams.setMargins(0, 20, 8, 10);
+        evenimentTextView.setText("Eveniment: " + event);
+        evenimentTextView.setTextSize(18);
+        evenimentTextView.setTextColor(getResources().getColor(R.color.black));
+        evenimentTextView.setTypeface(Typeface.create("casual", Typeface.NORMAL));
+
 
         View view = new View(this);
-        LinearLayout.LayoutParams viewLayoutParams = new LinearLayout.LayoutParams(380,2);
-        viewLayoutParams.setMargins(5, 3, 0, 0);
+        LinearLayout.LayoutParams viewLayoutParams = new LinearLayout.LayoutParams(dpToPx(this,380),dpToPx(this,2));
+        viewLayoutParams.setMargins(dpToPx(this,5), 0, 0, 0);
         view.setLayoutParams(viewLayoutParams);
         view.setBackgroundResource(R.color.original_lavender);
-        evenimentTab.addView(view);
-
 
         TextView intervalOrarTextView = new TextView(this);
-        intervalOrarTextView.setLayoutParams(new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams intervalParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-        ));
-        intervalOrarTextView.setText("Interval Orar: " + intervalOrar);
-        evenimentTab.addView(intervalOrarTextView);
+        );
+        intervalParams.rightMargin = 8;
+
+        intervalOrarTextView.setLayoutParams(intervalParams);
+        intervalOrarTextView.setPadding(dpToPx(this,0), dpToPx(CalendarAcademicActivity.this,20),dpToPx(CalendarAcademicActivity.this,0),dpToPx(CalendarAcademicActivity.this,10));
+        intervalOrarTextView.setTextSize(18);
+        intervalOrarTextView.setTextColor(getResources().getColor(R.color.black));
+        intervalOrarTextView.setTypeface(Typeface.create("casual", Typeface.NORMAL));
+
+        String oraInceputa = null;
+        String oraFinala = null;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            oraInceputa = oraInceput.format(formatter);
+        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            oraFinala = oraFinal.format(formatter);
+        }
+
+        intervalOrarTextView.setText("Interval Orar: " + oraInceputa + "-" + oraFinala);
+
 
         View view2 = new View(this);
         view2.setLayoutParams(viewLayoutParams);
         view2.setBackgroundResource(R.color.original_lavender);
-        evenimentTab.addView(view2);
 
 
         // Enclosing LinearLayout for "Valabil pentru:" TextView and ConstraintLayout
@@ -794,12 +996,45 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         valabilPentruLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         TextView valabilPentruTextView = new TextView(this);
-        valabilPentruTextView.setLayoutParams(new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams valabilPentruParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-        ));
+        );
+        valabilPentruParams.rightMargin = 8;
+
+        valabilPentruTextView.setLayoutParams(valabilPentruParams);
+        valabilPentruTextView.setPadding(dpToPx(this,0), dpToPx(CalendarAcademicActivity.this,20),dpToPx(CalendarAcademicActivity.this,0),dpToPx(CalendarAcademicActivity.this,10));
+
         valabilPentruTextView.setText("Valabil pentru: " + valabilPentru);
-        valabilPentruLayout.addView(valabilPentruTextView);
+        valabilPentruTextView.setTextSize(18);
+        valabilPentruTextView.setTextColor(getResources().getColor(R.color.black));
+        valabilPentruTextView.setTypeface(Typeface.create("casual", Typeface.NORMAL));
+
+
+        Button dashboardTabDeleteMultiple = new Button(this);
+        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(dpToPx(this, 40), dpToPx(this, 40));
+        layoutParams2.setMarginStart(dpToPx(this, 140));
+        dashboardTabDeleteMultiple.setLayoutParams(layoutParams2);
+
+        dashboardTabDeleteMultiple.setBackgroundResource(R.drawable.baseline_close_24);
+        dashboardTabDeleteMultiple.setVisibility(View.GONE);
+
+        dashboardTabDeleteMultiple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendarModal.getCalendarByLunaIdSaptamanaAndZiuaSaptamaniiForProfessor(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6, oraInceput, oraFinal).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
+                    @Override
+                    public void onChanged(Calendar calendar) {
+                        if (calendar != null) {
+                           calendarModal.delete(calendar);
+                           parentLinearLayout.removeView((View) v.getParent().getParent());
+                           tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v3);
+                        }
+                    }
+                });
+            }
+        });
+
 
 
         ConstraintLayout constraintLayout = new ConstraintLayout(this);
@@ -807,8 +1042,8 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
         );
+        constraintLayoutParams.setMargins(0,0,10,0);
         constraintLayout.setLayoutParams(constraintLayoutParams);
-
 
         FloatingActionButton fab = new FloatingActionButton(this);
         fab.setId(View.generateViewId());
@@ -820,29 +1055,192 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         fab.setClickable(true);
         fab.setContentDescription("Add Event");
         fab.setImageResource(R.drawable.baseline_edit_24);
-        fab.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.GONE);
         fab.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
 
+        ConstraintLayout.LayoutParams fabConstraints = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+        );
+        fabConstraints.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+        fabConstraints.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        fab.setLayoutParams(fabConstraints);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titluOrarInfoUpdate.setText("EDITEAZĂ EVENIMENT");
+                addOrarInfo.setText("Editează");
+                editOrarInfoTab.setVisibility(View.VISIBLE);
+                floatingActionButtonAdd.setVisibility(View.GONE);
+                eveniment.setVisibility(View.GONE);
+                fab.setVisibility(View.GONE);
+                dashboardTabDeleteMultiple.setVisibility(View.GONE);
+
+                calendarModal.getCalendarByLunaIdSaptamanaAndZiuaSaptamaniiForProfessor(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6, oraInceput, oraFinal).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
+                    @Override
+                    public void onChanged(Calendar calendar) {
+                                if (calendar != null) {
+
+                                    professorModal.getProfessorIdByEmail(emailHolder).observe(CalendarAcademicActivity.this, new Observer<Long>() {
+                                        @Override
+                                        public void onChanged(Long professorId) {
+                                            if (professorId != null) {
+                                                courseModal.getGroupsByProfessorId(professorId).observe(CalendarAcademicActivity.this, new Observer<List<Group>>() {
+                                                    @Override
+                                                    public void onChanged(List<Group> groups) {
+                                                        if (groups != null) {;
+                                                            grupe = groups.stream()
+                                                                    .map(group -> String.valueOf(group.getNumar()))
+                                                                    .toArray(String[]::new);
+                                                            grupeIds = groups.stream()
+                                                                    .map(Group::getGroupId)
+                                                                    .collect(Collectors.toList());
+                                                            ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(CalendarAcademicActivity.this, android.R.layout.simple_spinner_dropdown_item, grupe);
+                                                            spinnerValabilPentru.setAdapter(adapterMateriiItems);
+
+
+                                    spinnerValabilPentru.setSelection(Arrays.asList(grupe).indexOf(calendar.getValabilPentru()));
+                                    eveniment.setText(calendar.getEveniment());
+
+
+                                                            spinnerValabilPentru.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                                @Override
+                                                                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                                                                    courseModal.getSubjectsByGroupIdAndProfessorId(grupeIds.get(spinnerValabilPentru.getSelectedItemPosition()), professorId).observe(CalendarAcademicActivity.this, new Observer<List<Subject>>() {
+                                                                        @Override
+                                                                        public void onChanged(List<Subject> subjects) {
+                                                                            String[] denumiresArray = new String[subjects.size()];
+                                                                            subjectIds = new ArrayList<>();
+                                                                            for (int k = 0; k < subjects.size(); k++) {
+                                                                                denumiresArray[k] = subjects.get(k).getDenumire();
+                                                                                subjectIds.add(subjects.get(k).getSubjectId());
+                                                                            }
+                                                                            ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(CalendarAcademicActivity.this, android.R.layout.simple_spinner_dropdown_item, denumiresArray);
+                                                                            spinnerMateriiPtProf.setAdapter(adapterMateriiItems);
+                                                                        }
+                                                                    });
+                                                                }
+
+                                                                @Override
+                                                                public void onNothingSelected(AdapterView<?> parentView) {
+                                                                }
+                                                            });
+
+
+                                    addOrarInfo.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            //actualizam curs
+                                            calendar.setValabilPentru(spinnerValabilPentru.getSelectedItem().toString());
+                                            calendar.setEveniment(eveniment.getText().toString());
+
+                                            LocalTime oraF = null;
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                oraF = LocalTime.parse(String.format(Locale.US, "%02d",hourPicker2.getValue()) + ":" + String.format(Locale.US, "%02d",Integer.parseInt(minuteValues[minutePicker2.getValue()])), DateTimeFormatter.ofPattern("HH:mm"));
+                                            }
+                                            LocalTime oraI = null;
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                oraI = LocalTime.parse(String.format(Locale.US, "%02d",hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d",Integer.parseInt(minuteValues[minutePicker.getValue()])), DateTimeFormatter.ofPattern("HH:mm"));
+                                            }
+
+                                            calendar.setOraFinal(oraF);
+                                            calendar.setOraInceput(oraI);
+                                            calendar.setMaterieId(subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
+
+                                            calendarModal.update(calendar);
+                                            editOrarInfoTab.setVisibility(View.GONE);
+
+                                            intervalOrarTextView.setText("Interval Orar: " + String.format(Locale.US, "%02d",hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d",Integer.parseInt(minuteValues[minutePicker.getValue()])) + "-" + String.format(Locale.US, "%02d",hourPicker2.getValue()) + ":" + String.format(Locale.US, "%02d",Integer.parseInt(minuteValues[minutePicker2.getValue()])));
+                                            valabilPentruTextView.setText("Valabil pentru: " + calendar.getValabilPentru());
+
+        //                                    parentLinearLayout.removeAllViews();
+        //                                    addEvenimentTab("Examen", spinnerValabilPentru.getSelectedItem().toString(), finalI, oraI, oraF);
+                                            //floatingActionButtonAdd.setVisibility(View.GONE);
+                                        }
+                                    });
+
+
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+
+
+
+                                }
+                    }
+                });
+            }
+        });
+
+        professorModal.getProfessorIdByEmail(emailHolder).observe(CalendarAcademicActivity.this, new Observer<Long>() {
+                    @Override
+                    public void onChanged(Long professorId) {
+                        if (professorId != null) {
+                            calendarModal.getCalendarsByLunaIdSaptamanaAndZiuaSaptamanii(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(CalendarAcademicActivity.this, new Observer<List<Calendar>>() {
+                                @Override
+                                public void onChanged(List<Calendar> calendars) {
+                                    if (calendars != null) {
+                                        for(int k = 0; k < calendars.size(); k ++)
+                                            if(calendars.get(k).getProfessorId() == professorId){
+                                                dashboardTabDeleteMultiple.setVisibility(View.VISIBLE);
+                                                fab.setVisibility(View.VISIBLE);
+                                            }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+
+        evenimentTab.addView(evenimentTextView);
+        evenimentTab.addView(view);
+        evenimentTab.addView(intervalOrarTextView);
+        evenimentTab.addView(view2);
+        valabilPentruLayout.addView(valabilPentruTextView);
         constraintLayout.addView(fab);
+        valabilPentruLayout.addView(dashboardTabDeleteMultiple);
         valabilPentruLayout.addView(constraintLayout);
         evenimentTab.addView(valabilPentruLayout);
 
         View view3 = new View(this);
         view3.setLayoutParams(viewLayoutParams);
         view3.setBackgroundResource(R.color.original_lavender);
+        view3.setPadding(0, dpToPx(this,5), 0, 0);
         evenimentTab.addView(view3);
+
+        View viewPadding = new View(this);
+        viewPadding.setLayoutParams(viewLayoutParams);
+        viewPadding.setPadding(0, dpToPx(this,5), 0, 0);
+        evenimentTab.addView(viewPadding);
 
         View view4 = new View(this);
         view4.setLayoutParams(viewLayoutParams);
         view4.setBackgroundResource(R.color.original_lavender);
+        view4.setPadding(0, dpToPx(this,5), 0, 0);
         evenimentTab.addView(view4);
+
+        View viewPadding2 = new View(this);
+        viewPadding2.setLayoutParams(viewLayoutParams);
+        viewPadding2.setPadding(0, dpToPx(this,5), 0, 0);
+        evenimentTab.addView(viewPadding2);
 
         View view5 = new View(this);
         view5.setLayoutParams(viewLayoutParams);
         view5.setBackgroundResource(R.color.original_lavender);
+        view5.setPadding(0, dpToPx(this,5), 0, 0);
         evenimentTab.addView(view5);
 
 
         parentLinearLayout.addView(evenimentTab);
+    }
+
+    public static int dpToPx(Context context, float dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 }

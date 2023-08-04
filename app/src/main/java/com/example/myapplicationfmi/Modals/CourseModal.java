@@ -1,13 +1,16 @@
 package com.example.myapplicationfmi.Modals;
 
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.Repositories.CourseRepository;
 import com.example.myapplicationfmi.beans.Course;
+import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Subject;
 
 import java.util.List;
@@ -19,6 +22,7 @@ public class CourseModal extends AndroidViewModel {
 
     private LiveData<List<Course>> allcourses;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public CourseModal(@NonNull Application application) {
         super(application);
         repository = new CourseRepository(application);
@@ -52,5 +56,8 @@ public class CourseModal extends AndroidViewModel {
     }
     public LiveData<List<Subject>> getSubjectsByGroupIdAndProfessorId(long groupId, long professorId){
         return repository.getSubjectsByGroupIdAndProfessorId(groupId,professorId);
+    }
+    public LiveData<List<Group>> getGroupsByProfessorId(long professorId){
+        return repository.getGroupsByProfessorId(professorId);
     }
 }

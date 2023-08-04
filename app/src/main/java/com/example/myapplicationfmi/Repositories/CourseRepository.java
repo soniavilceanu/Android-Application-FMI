@@ -2,12 +2,15 @@ package com.example.myapplicationfmi.Repositories;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.DAO.CourseDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
 import com.example.myapplicationfmi.beans.Course;
+import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Subject;
 
 import java.util.List;
@@ -16,6 +19,7 @@ public class CourseRepository {
 
     private CourseDAO dao;
     private LiveData<List<Course>> allcourses;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public CourseRepository(Application application) {
         MyRoomDatabase database = MyRoomDatabase.getInstance(application);
         dao = database.courseDao();
@@ -45,6 +49,9 @@ public class CourseRepository {
     }
     public LiveData<List<Subject>> getSubjectsByGroupIdAndProfessorId(long groupId, long professorId){
         return dao.getSubjectsByGroupIdAndProfessorId(groupId, professorId);
+    }
+    public LiveData<List<Group>> getGroupsByProfessorId(long professorId){
+        return dao.getGroupsByProfessorId(professorId);
     }
     private static class InsertcourseAsyncTask extends AsyncTask<Course, Void, Void> {
         private CourseDAO dao;
