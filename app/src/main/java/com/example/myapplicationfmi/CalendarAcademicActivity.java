@@ -112,6 +112,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
     private  String[] minuteValues;
     private  String emailHolder;
     private List<TextView> tableCells;
+    private Long profId;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -629,6 +630,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                         @Override
                                         public void onChanged(Long professorId) {
                                             if (professorId != null) {
+                                                profId = professorId;
                                                 courseModal.getGroupsByProfessorId(professorId).observe(CalendarAcademicActivity.this, new Observer<List<Group>>() {
                                                     @Override
                                                     public void onChanged(List<Group> groups) {
@@ -683,7 +685,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                                 oraInceputa = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker.getValue()])), DateTimeFormatter.ofPattern("HH:mm"));
                                             }
-                                            boolean validDeAdaugat = true;
+                                            final boolean[] validDeAdaugat = {true};
                                             for (int j = 0; j < allCalendars.size(); j++) {
                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                                     if (allCalendars.get(j).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) &&
@@ -692,20 +694,26 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                                             && allCalendars.get(j).getEveniment().equals("Examen")
                                                             && allCalendars.get(j).getValabilPentru().equals(spinnerValabilPentru.getSelectedItem().toString())) {
                                                         Toast.makeText(CalendarAcademicActivity.this, "Această grupă mai are un examen în același interval orar!", Toast.LENGTH_LONG).show();
-                                                        validDeAdaugat = false;
+                                                        validDeAdaugat[0] = false;
+                                                        break;
                                                     }
-                                                    /**
-                                                     * sa facem 2 mesaje pt. cele 2 cazuri in care trebuie prevenita adaugarea unui examen. Grupa mai are un examen (deja facut mai sus)sau proful mai are un examen in acelasi interval orar
-                                                     */
-                                                    //                                            if (allCalendars.get(j).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) &&
-                                                    //                                                    allCalendars.get(j).getSaptamana() == String.valueOf(finalI / 6) && allCalendars.get(j).getZiuaSaptamanii() == (finalI % 6)
-                                                    //                                                    && !(oraInceputa.compareTo(allCalendars.get(j).getOraFinal()) > 0 && oraFinala.compareTo(allCalendars.get(j).getOraInceput()) < 0)
-                                                    //                                                    && ){
-                                                    //                                                Toast.makeText(CalendarAcademicActivity.this,"", Toast.LENGTH_LONG).show();
-                                                    //                                            }
+                                                    else {
+                                                        int finalJ = j;
+                                                        LocalTime finalOraInceputa1 = oraInceputa;
+                                                        LocalTime finalOraFinala1 = oraFinala;
+
+                                                        if (allCalendars.get(finalJ).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) &&
+                                                                allCalendars.get(finalJ).getSaptamana().equals(String.valueOf(finalI / 6)) && allCalendars.get(finalJ).getZiuaSaptamanii() == (finalI % 6)
+                                                                && !(finalOraInceputa1.compareTo(allCalendars.get(finalJ).getOraFinal()) > 0 && finalOraFinala1.compareTo(allCalendars.get(finalJ).getOraInceput()) < 0)
+                                                                && allCalendars.get(finalJ).getProfessorId() == profId) {
+                                                            validDeAdaugat[0] = false;
+                                                            Toast.makeText(CalendarAcademicActivity.this, "Mai aveți un examen în același interval orar!", Toast.LENGTH_LONG).show();
+                                                            break;
+                                                        }
+                                                    }
                                                 }
                                             }
-                                            if (validDeAdaugat) {
+                                            if (validDeAdaugat[0]) {
                                                 LocalTime finalOraInceputa = oraInceputa;
                                                 LocalTime finalOraFinala = oraFinala;
                                                 professorModal.getProfessorIdByEmail(emailHolder).observe(CalendarAcademicActivity.this, new Observer<Long>() {
@@ -772,6 +780,35 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                             }
                         }
                 }
+                    else if(MainActivity.USER_TYPE == 2){
+                        editOrarInfoTab.setVisibility(View.GONE);
+                        floatingActionButton.setVisibility(View.GONE);
+                        dashboardTabDelete.setVisibility(View.GONE);
+                        if (tableCells.get(finalI).getBackground().getConstantState() == getResources().getDrawable(R.drawable.lavender_border_v4).getConstantState()) {
+
+                            parentLinearLayout.removeAllViews();
+
+                            List<Calendar> allCalendarsDinData = new ArrayList<>();
+                            for (int l = 0; l < allCalendars.size(); l++) {
+                                if (allCalendars.get(l).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) && allCalendars.get(l).getSaptamana().equals(String.valueOf(finalI / 6)) && allCalendars.get(l).getZiuaSaptamanii() == finalI % 6)
+                                    allCalendarsDinData.add(allCalendars.get(l));
+                            }
+                            if (allCalendarsDinData != null && allCalendarsDinData.size() > 0 && finalI == clickedCellIndex) {
+                                if (allCalendarsDinData.get(0).getOraFinal() == null && allCalendarsDinData.get(0).getOraInceput() == null) {
+                                    eventLinearAfisare.setVisibility(View.VISIBLE);
+                                    evenimenteScrollViewMultiple.setVisibility(View.GONE);
+                                    processCourseData(allCalendarsDinData.get(0), allCalendarsDinData.get(0).getValabilPentru(), allCalendarsDinData.get(0).getEveniment());
+                                } else for (int j = 0; j < allCalendarsDinData.size(); j++) {
+                                    if (allCalendarsDinData.get(j).getOraFinal() != null && allCalendarsDinData.get(j).getOraInceput() != null) {
+                                        evenimenteScrollViewMultiple.setVisibility(View.VISIBLE);
+                                        eventLinearAfisare.setVisibility(View.GONE);
+                                        addEvenimentTab(allCalendarsDinData.get(j).getEveniment(), allCalendarsDinData.get(j).getValabilPentru(), finalI, allCalendarsDinData.get(j).getOraInceput(), allCalendarsDinData.get(j).getOraFinal());
+                                    }
+                                }
+
+                            }
+                        }
+                    }
                 }
             });
         }
@@ -1028,6 +1065,13 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                         if (calendar != null) {
                            calendarModal.delete(calendar);
                            parentLinearLayout.removeView((View) v.getParent().getParent());
+
+                            List<Calendar> allCalendarsDinData = new ArrayList<>();
+                            for (int l = 0; l < allCalendars.size(); l++) {
+                                if (allCalendars.get(l).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) && allCalendars.get(l).getSaptamana().equals(String.valueOf(finalI / 6)) && allCalendars.get(l).getZiuaSaptamanii() == finalI % 6)
+                                    allCalendarsDinData.add(allCalendars.get(l));
+                            }
+                            if(allCalendarsDinData.size() == 0)
                            tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v3);
                         }
                     }
@@ -1145,19 +1189,50 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                                 oraI = LocalTime.parse(String.format(Locale.US, "%02d",hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d",Integer.parseInt(minuteValues[minutePicker.getValue()])), DateTimeFormatter.ofPattern("HH:mm"));
                                             }
 
-                                            calendar.setOraFinal(oraF);
-                                            calendar.setOraInceput(oraI);
-                                            calendar.setMaterieId(subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
+                                            boolean validDeAdaugat = true;
+                                            for (int j = 0; j < allCalendars.size(); j++) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    if (allCalendars.get(j).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) &&
+                                                            allCalendars.get(j).getSaptamana().equals(String.valueOf(finalI / 6)) && allCalendars.get(j).getZiuaSaptamanii() == (finalI % 6)
+                                                            && !(oraI.compareTo(allCalendars.get(j).getOraFinal()) > 0 || oraF.compareTo(allCalendars.get(j).getOraInceput()) < 0)
+                                                            && allCalendars.get(j).getEveniment().equals("Examen")
+                                                            && allCalendars.get(j).getValabilPentru().equals(spinnerValabilPentru.getSelectedItem().toString())) {
+                                                        Toast.makeText(CalendarAcademicActivity.this, "Această grupă mai are un examen în același interval orar!", Toast.LENGTH_LONG).show();
+                                                        validDeAdaugat = false;
+                                                        break;
+                                                    }
+                                                    else {
+                                                        int finalJ = j;
+                                                        LocalTime finalOraInceputa1 = oraI;
+                                                        LocalTime finalOraFinala1 = oraF;
 
-                                            calendarModal.update(calendar);
-                                            editOrarInfoTab.setVisibility(View.GONE);
+                                                        if (allCalendars.get(finalJ).getLunaId() == luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()) &&
+                                                                allCalendars.get(finalJ).getSaptamana().equals(String.valueOf(finalI / 6)) && allCalendars.get(finalJ).getZiuaSaptamanii() == (finalI % 6)
+                                                                && !(finalOraInceputa1.compareTo(allCalendars.get(finalJ).getOraFinal()) > 0 && finalOraFinala1.compareTo(allCalendars.get(finalJ).getOraInceput()) < 0)
+                                                                && allCalendars.get(finalJ).getProfessorId() == profId) {
+                                                            validDeAdaugat = false;
+                                                            Toast.makeText(CalendarAcademicActivity.this, "Mai aveți un examen în același interval orar!", Toast.LENGTH_LONG).show();
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
 
-                                            intervalOrarTextView.setText("Interval Orar: " + String.format(Locale.US, "%02d",hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d",Integer.parseInt(minuteValues[minutePicker.getValue()])) + "-" + String.format(Locale.US, "%02d",hourPicker2.getValue()) + ":" + String.format(Locale.US, "%02d",Integer.parseInt(minuteValues[minutePicker2.getValue()])));
-                                            valabilPentruTextView.setText("Valabil pentru: " + calendar.getValabilPentru());
+                                            if(validDeAdaugat) {
+                                                calendar.setOraFinal(oraF);
+                                                calendar.setOraInceput(oraI);
+                                                calendar.setMaterieId(subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
 
-        //                                    parentLinearLayout.removeAllViews();
-        //                                    addEvenimentTab("Examen", spinnerValabilPentru.getSelectedItem().toString(), finalI, oraI, oraF);
-                                            //floatingActionButtonAdd.setVisibility(View.GONE);
+                                                calendarModal.update(calendar);
+                                                editOrarInfoTab.setVisibility(View.GONE);
+
+                                                intervalOrarTextView.setText("Interval Orar: " + String.format(Locale.US, "%02d", hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker.getValue()])) + "-" + String.format(Locale.US, "%02d", hourPicker2.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker2.getValue()])));
+                                                valabilPentruTextView.setText("Valabil pentru: " + calendar.getValabilPentru());
+
+                                                //                                    parentLinearLayout.removeAllViews();
+                                                //                                    addEvenimentTab("Examen", spinnerValabilPentru.getSelectedItem().toString(), finalI, oraI, oraF);
+                                                //floatingActionButtonAdd.setVisibility(View.GONE);
+                                            }
                                         }
                                     });
 
