@@ -87,6 +87,19 @@
                     android:background="@drawable/lavender_border_v4"
                     android:textColor="@color/white"
                     android:textStyle="bold"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/dummyView"/>
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/buttonCuratareOrar"
+                    android:background="@drawable/lavender_border_v4"
+                    android:text="X"
+                    android:textSize="30dp"
+                    android:layout_gravity="end"/>
             </LinearLayout>
 
             <TableLayout

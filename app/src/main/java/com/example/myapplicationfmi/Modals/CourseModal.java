@@ -60,4 +60,10 @@ public class CourseModal extends AndroidViewModel {
     public LiveData<List<Group>> getGroupsByProfessorId(long professorId){
         return repository.getGroupsByProfessorId(professorId);
     }
+    public LiveData<List<Group>> getGroupsBySubjectIdAndProfessorId(long subjectId, long professorId){
+        return repository.getGroupsBySubjectIdAndProfessorId(subjectId,professorId);
+    }
+    public void deleteCoursesByGroupId(Long groupId) {
+        repository.deleteCoursesByGroupId(groupId);
+    }
 }

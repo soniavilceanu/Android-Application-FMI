@@ -46,5 +46,12 @@ public interface CourseDAO {
             "GROUP BY Groups.groupId")
     LiveData<List<Group>> getGroupsByProfessorId(long professorId);
 
+    @Query("SELECT Groups.* FROM Groups " +
+            "INNER JOIN Courses ON Groups.groupId = Courses.groupId " +
+            "WHERE Courses.subject_id = :subjectId AND Courses.professorId = :professorId")
+    LiveData<List<Group>> getGroupsBySubjectIdAndProfessorId(long subjectId, long professorId);
+
+    @Query("DELETE FROM Courses WHERE groupId = :groupId")
+    void deleteCoursesByGroupId(Long groupId);
 }
 

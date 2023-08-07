@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.example.myapplicationfmi.DAO.GroupDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
 import com.example.myapplicationfmi.beans.Group;
+import com.example.myapplicationfmi.beans.GroupWithStudents;
 
 import java.util.List;
 
@@ -57,6 +58,9 @@ public class GroupRepository {
 
     public LiveData<Long> getGroupIdByNumarAndForma(int numar, String formaDeInvatamant) {
         return dao.getGroupIdByNumarAndForma(numar, formaDeInvatamant);
+    }
+    public LiveData<GroupWithStudents> getGroupWithStudentsById(long groupId){
+        return dao.getGroupWithStudentsById(groupId);
     }
 
     // we are creating a async task method to insert new group.

@@ -127,6 +127,9 @@ public class DashboardActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.carnet) {
+                    Intent intent = new Intent(DashboardActivity.this, CarnetActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else if (itemId == R.id.orar) {
                     Intent intent = new Intent(DashboardActivity.this, OrarActivity.class);
                     startActivity(intent);

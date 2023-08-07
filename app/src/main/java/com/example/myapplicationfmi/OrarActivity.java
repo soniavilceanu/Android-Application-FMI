@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -97,6 +99,8 @@ public class OrarActivity extends AppCompatActivity {
     private int clickedCellIndex = -1;
     private Long profId;
     private List<Course> allCourses;
+    private Button  buttonCuratareOrar;
+    private View dummyView;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -118,6 +122,7 @@ public class OrarActivity extends AppCompatActivity {
         }
         return true;
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,7 +157,9 @@ public class OrarActivity extends AppCompatActivity {
         titluOrarInfoUpdate = findViewById(R.id.titluOrarInfoUpdate);
         textOrarProf = findViewById(R.id.textOrarProf);
 
-        floatingActionButton =  findViewById(R.id.floatingActionButton);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
+        buttonCuratareOrar = findViewById(R.id.buttonCuratareOrar);
+        dummyView = findViewById(R.id.dummyView);
 
         Menu menu = navigationView.getMenu();
         MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
@@ -230,6 +237,8 @@ public class OrarActivity extends AppCompatActivity {
 
         if (MainActivity.USER_TYPE != 1) {
             creareContNouItem.setVisible(false);
+            buttonCuratareOrar.setVisibility(View.GONE);
+            dummyView.setVisibility(View.GONE);
             if(MainActivity.USER_TYPE == 3) {
                 textOrarProf.setVisibility(View.VISIBLE);
                 professorModal.getProfessorIdByEmail(emailHolder).observe(this, new Observer<Long>() {
@@ -259,9 +268,27 @@ public class OrarActivity extends AppCompatActivity {
 
             }
         } else {
+            buttonCuratareOrar.setVisibility(View.VISIBLE);
+            dummyView.setVisibility(View.VISIBLE);
             creareContNouItem.setVisible(true);
             textOrarProf.setVisibility(View.GONE);
         }
+
+        buttonCuratareOrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                courseModal.deleteCoursesByGroupId(grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()));
+                for(int i = 0; i < tableCells.size(); i ++)
+                    tableCells.get(i).setBackgroundResource(R.drawable.lavender_border_v3);
+
+//                if (allCourses != null) {
+//                    for (int i = 0; i < allCourses.size(); i++)
+//                        if (allCourses.get(i).getGroupId() == grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()))
+//                            tableCells.get(Integer.valueOf(allCourses.get(i).getZi()) * 6 + allCourses.get(i).getIntervalOrar()).setBackgroundResource(R.drawable.lavender_border_v3);
+//                }
+            }
+        });
+
         textOrarProf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -619,6 +646,9 @@ public class OrarActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.carnet) {
+                    Intent intent = new Intent(OrarActivity.this, CarnetActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else if (itemId == R.id.orar) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                 } else if (itemId == R.id.calendar) {

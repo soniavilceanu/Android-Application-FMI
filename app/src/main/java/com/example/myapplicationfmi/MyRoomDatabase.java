@@ -17,6 +17,7 @@ import com.example.myapplicationfmi.DAO.CalendarDAO;
 import com.example.myapplicationfmi.DAO.CourseDAO;
 import com.example.myapplicationfmi.DAO.DashTabDAO;
 import com.example.myapplicationfmi.DAO.GroupDAO;
+import com.example.myapplicationfmi.DAO.NoteDAO;
 import com.example.myapplicationfmi.DAO.NotificationDAO;
 import com.example.myapplicationfmi.DAO.ProfessorDAO;
 import com.example.myapplicationfmi.DAO.ProfessorSubjectDAO;
@@ -30,10 +31,12 @@ import com.example.myapplicationfmi.ModalFactory.Migration_4_5;
 import com.example.myapplicationfmi.ModalFactory.Migration_5_6;
 import com.example.myapplicationfmi.ModalFactory.Migration_6_7;
 import com.example.myapplicationfmi.ModalFactory.Migration_7_8;
+import com.example.myapplicationfmi.ModalFactory.Migration_8_9;
 import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.DashTab;
 import com.example.myapplicationfmi.beans.Group;
+import com.example.myapplicationfmi.beans.Note;
 import com.example.myapplicationfmi.beans.Notification;
 import com.example.myapplicationfmi.beans.Professor;
 import com.example.myapplicationfmi.beans.ProfessorSubject;
@@ -41,7 +44,7 @@ import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-@Database(entities = {DashTab.class, Notification.class, Student.class, Group.class, Course.class, Professor.class, Subject.class, ProfessorSubject.class, Calendar.class}, version = 8)
+@Database(entities = {DashTab.class, Notification.class, Student.class, Group.class, Course.class, Professor.class, Subject.class, ProfessorSubject.class, Calendar.class, Note.class}, version = 9)
 @TypeConverters({LocalTimeConverter.class})
 public abstract class MyRoomDatabase extends RoomDatabase {
     public abstract DashTabDAO dashTabDao();
@@ -53,7 +56,8 @@ public abstract class MyRoomDatabase extends RoomDatabase {
     public abstract SubjectDAO subjectDao();
     public abstract ProfessorSubjectDAO professorSubjectDao();
     public abstract CalendarDAO calendarDao();
-    static final Migration[] MIGRATIONS = {new Migration_1_2(), new Migration_2_3(), new Migration_3_4(), new Migration_4_5(), new Migration_5_6(), new Migration_6_7(), new Migration_7_8()};
+    public abstract NoteDAO noteDao();
+    static final Migration[] MIGRATIONS = {new Migration_1_2(), new Migration_2_3(), new Migration_3_4(), new Migration_4_5(), new Migration_5_6(), new Migration_6_7(), new Migration_7_8(), new Migration_8_9()};
 
     private static MyRoomDatabase instance;
 
@@ -86,6 +90,7 @@ public abstract class MyRoomDatabase extends RoomDatabase {
             DashTabDAO dashTabDAO = instance.dashTabDao();
             ProfessorSubjectDAO professorSubjectDAO = instance.professorSubjectDao();
             CalendarDAO calendarDAO = instance.calendarDao();
+            NoteDAO noteDAO = instance.noteDao();
         }
         @Override
         protected Void doInBackground(Void... voids) {

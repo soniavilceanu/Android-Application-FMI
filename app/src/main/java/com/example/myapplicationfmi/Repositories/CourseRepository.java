@@ -38,6 +38,9 @@ public class CourseRepository {
     public void deleteAllcourses() {
         new DeleteAllcoursesAsyncTask(dao).execute();
     }
+    public void deleteCoursesByGroupId(Long groupId) {
+        new DeleteCoursesByGroupIdAsyncTask(dao).execute(groupId);
+    }
     public LiveData<List<Course>> getAllCourses() {
         return allcourses;
     }
@@ -53,6 +56,10 @@ public class CourseRepository {
     public LiveData<List<Group>> getGroupsByProfessorId(long professorId){
         return dao.getGroupsByProfessorId(professorId);
     }
+    public LiveData<List<Group>> getGroupsBySubjectIdAndProfessorId(long subjectId, long professorId){
+        return dao.getGroupsBySubjectIdAndProfessorId(subjectId,professorId);
+    }
+
     private static class InsertcourseAsyncTask extends AsyncTask<Course, Void, Void> {
         private CourseDAO dao;
 
@@ -101,6 +108,20 @@ public class CourseRepository {
         @Override
         protected Void doInBackground(Void... voids) {
             dao.deleteAllCourses();
+            return null;
+        }
+    }
+
+    private static class DeleteCoursesByGroupIdAsyncTask extends AsyncTask<Long, Void, Void> {
+        private CourseDAO dao;
+
+        private DeleteCoursesByGroupIdAsyncTask(CourseDAO dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Long... groupIds) {
+            dao.deleteCoursesByGroupId(groupIds[0]);
             return null;
         }
     }

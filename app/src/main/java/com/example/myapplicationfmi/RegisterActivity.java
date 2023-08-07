@@ -6,10 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,9 +26,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.myapplicationfmi.DAO.ProfessorDAO;
-import com.example.myapplicationfmi.DAO.StudentDAO;
-import com.example.myapplicationfmi.ModalFactory.StudentModalFactory;
 import com.example.myapplicationfmi.Modals.CourseModal;
 import com.example.myapplicationfmi.Modals.DashTabModal;
 import com.example.myapplicationfmi.Modals.GroupModal;
@@ -38,7 +34,6 @@ import com.example.myapplicationfmi.Modals.ProfessorModal;
 import com.example.myapplicationfmi.Modals.ProfessorSubjectModal;
 import com.example.myapplicationfmi.Modals.StudentModal;
 import com.example.myapplicationfmi.Modals.SubjectModal;
-import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Professor;
 import com.example.myapplicationfmi.beans.ProfessorSubject;
@@ -98,7 +93,9 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        myRoomDatabase = MyRoomDatabase.getInstance(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            myRoomDatabase = MyRoomDatabase.getInstance(this);
+        }
         studentModal = new ViewModelProvider(this).get(StudentModal.class);
         groupModal = new ViewModelProvider(this).get(GroupModal.class);
         courseModal = new ViewModelProvider(this).get(CourseModal.class);
@@ -107,24 +104,6 @@ public class RegisterActivity extends AppCompatActivity {
         professorModal = new ViewModelProvider(this).get(ProfessorModal.class);
         subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
         professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
-
-        //studentDao = myRoomDatabase.studentDao();
-        //studentModal.deleteAllstudents();
-        //StudentModalFactory factory = new StudentModalFactory(getApplication());
-        //studentModal = new ViewModelProvider(this, factory).get(StudentModal.class);
-
-
-//        studentModal.getAllStudents().observe(this, new Observer<List<Student>>() {
-//            @Override
-//            public void onChanged(List<Student> students) {
-//               }
-//        });
-//
-
-
-
-//        Student newStudent2 = new Student("orina", "carina", "email1@s.unibuc.ro", "pass1", 2, true, false, 2020, "licenta", null);
-//        studentModal.insert(newStudent2);
 
         groupModal.getAllGroups().observe(this, new Observer<List<Group>>() {
             @Override

@@ -97,7 +97,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -269,6 +269,76 @@
             android:layout_height="2dp"
             android:background="@color/white"
             android:layout_marginStart="5dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profesorInfoForms"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <View
+            android:layout_width="380dp"
+            android:layout_height="2dp"
+            android:background="@color/white"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/pozitie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Functie: "
+            android:textSize="22sp"
+            android:fontFamily="casual"
+            android:paddingTop="20dp"
+            android:textColor="@color/black"
+            android:layout_marginEnd="8dp" />
+        <View
+            android:layout_width="380dp"
+            android:layout_height="2dp"
+            android:background="@color/white"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/grupe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Grupe: "
+            android:textSize="22sp"
+            android:fontFamily="casual"
+            android:paddingTop="20dp"
+            android:textColor="@color/black"
+            android:layout_marginEnd="8dp" />
+        <View
+            android:layout_width="380dp"
+            android:layout_height="2dp"
+            android:background="@color/white"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/materii"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="  MATERII"
+            android:textSize="22sp"
+            android:fontFamily="casual"
+            android:paddingTop="20dp"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_marginEnd="8dp" />
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="2dp"
+            android:background="@color/white"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"/>
+
     </LinearLayout>
 
 </LinearLayout>

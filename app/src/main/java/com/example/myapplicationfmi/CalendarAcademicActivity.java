@@ -499,7 +499,6 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                             @Override
                                             public void onChanged(List<Group> groups) {
                                                 if (groups != null) {
-                                                    ;
                                                     grupe = groups.stream()
                                                             .map(group -> String.valueOf(group.getNumar()))
                                                             .toArray(String[]::new);
@@ -845,6 +844,9 @@ public class CalendarAcademicActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.carnet) {
+                    Intent intent = new Intent(CalendarAcademicActivity.this, CarnetActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else if (itemId == R.id.orar) {
                     Intent intent = new Intent(CalendarAcademicActivity.this, OrarActivity.class);
                     startActivity(intent);

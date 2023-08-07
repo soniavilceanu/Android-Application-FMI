@@ -45,6 +45,10 @@ public interface GroupDAO {
 
     @Query("SELECT groupId FROM Groups WHERE numar = :numar AND formaDeInvatamant = :formaDeInvatamant")
     LiveData<Long> getGroupIdByNumarAndForma(int numar, String formaDeInvatamant);
+
+    @Transaction
+    @Query("SELECT * FROM Groups WHERE groupId = :groupId")
+    LiveData<GroupWithStudents> getGroupWithStudentsById(long groupId);
 }
 
 

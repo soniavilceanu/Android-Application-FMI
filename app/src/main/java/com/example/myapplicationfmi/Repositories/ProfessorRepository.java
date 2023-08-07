@@ -9,6 +9,7 @@ import com.example.myapplicationfmi.DAO.ProfessorDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
 import com.example.myapplicationfmi.beans.Professor;
 import com.example.myapplicationfmi.beans.ProfessorWithGroups;
+import com.example.myapplicationfmi.beans.ProfessorWithSubjects;
 
 import java.util.List;
 
@@ -60,6 +61,12 @@ public class ProfessorRepository {
     }
     public LiveData<ProfessorWithGroups> getProfessorWithGroupsById(long professorId){
         return dao.getProfessorWithGroupsById(professorId);
+    }
+    public LiveData<ProfessorWithSubjects> getProfessorWithSubjectsById(Long professorId){
+        return dao.getProfessorWithSubjectsById(professorId);
+    }
+    public LiveData<Professor> getProfessorByEmail(String email){
+        return dao.getProfessorByEmail(email);
     }
 
     // we are creating a async task method to insert new professor.

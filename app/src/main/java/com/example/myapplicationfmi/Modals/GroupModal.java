@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.Repositories.GroupRepository;
 import com.example.myapplicationfmi.beans.Group;
+import com.example.myapplicationfmi.beans.GroupWithStudents;
 
 import java.util.List;
 
@@ -51,6 +52,10 @@ public class GroupModal extends AndroidViewModel {
 
     public LiveData<Long> getGroupIdByNumarAndForma(int numar, String formaDeInvatamant) {
         return repository.getGroupIdByNumarAndForma(numar, formaDeInvatamant);
+    }
+
+    public LiveData<GroupWithStudents> getGroupWithStudentsById(long groupId){
+        return repository.getGroupWithStudentsById(groupId);
     }
 
     // below method is to get all the groups in our list.

@@ -47,4 +47,11 @@ public interface ProfessorDAO {
     @Query("SELECT * FROM Professors WHERE professorId = :professorId")
     LiveData<ProfessorWithGroups> getProfessorWithGroupsById(long professorId);
 
+    @Transaction
+    @Query("SELECT * FROM Professors WHERE professorId = :professorId")
+    public LiveData<ProfessorWithSubjects> getProfessorWithSubjectsById(Long professorId);
+
+    @Query("SELECT * FROM Professors WHERE email = :email")
+    LiveData<Professor> getProfessorByEmail(String email);
+
 }
