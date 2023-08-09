@@ -79,12 +79,23 @@
             </LinearLayout>
 
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textMissingGrupa"
+                android:layout_below="@+id/selecteazaGrupa"
+                android:text="Această materie nu o predați la nicio grupă!"
+                android:textStyle="bold|italic"
+                android:gravity="center"
+                android:textSize="22dp"
+                android:visibility="gone"/>
 
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="450dp"
                 android:layout_below="@+id/selecteazaGrupa"
-                android:id="@+id/tableLayoutScrollable">
+                android:id="@+id/tableLayoutScrollable"
+                android:visibility="visible">
             <TableLayout
                 android:id="@+id/tableLayout"
                 android:layout_width="match_parent"
@@ -120,48 +131,13 @@
 <!--                        android:layout_width="0dp"-->
 <!--                        android:layout_height="match_parent"-->
 <!--                        android:layout_weight="1"-->
-<!--                        android:text=""-->
+<!--                        android:text="cccccc"-->
 <!--                        android:background="@drawable/lavender_border_v3"-->
 <!--                        android:padding="16dp" />-->
 <!--                    <EditText-->
 <!--                        android:id="@+id/cell_1_1"-->
 <!--                        android:layout_width="100dp"-->
 <!--                        android:layout_height="match_parent"-->
-<!--                        android:text=""-->
-<!--                        android:background="@drawable/lavender_border_v3"-->
-<!--                        android:padding="16dp" />-->
-<!--                </TableRow>-->
-<!--                <TableRow>-->
-<!--                    <TextView-->
-<!--                        android:id="@+id/cell_2_0"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:background="@drawable/lavender_border_v3"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:text=""-->
-<!--                        android:padding="16dp" />-->
-<!--                    <EditText-->
-<!--                        android:id="@+id/cell_2_1"-->
-<!--                        android:background="@drawable/lavender_border_v3"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_width="100dp"-->
-<!--                        android:text=""-->
-<!--                        android:padding="16dp" />-->
-<!--                </TableRow>-->
-<!--                <TableRow>-->
-<!--                    <TextView-->
-<!--                        android:id="@+id/cell_3_0"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:text=""-->
-<!--                        android:background="@drawable/lavender_border_v3"-->
-<!--                        android:padding="16dp" />-->
-<!--                    <EditText-->
-<!--                        android:id="@+id/cell_3_1"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_width="100dp"-->
-<!--                        android:text=""-->
 <!--                        android:background="@drawable/lavender_border_v3"-->
 <!--                        android:padding="16dp" />-->
 <!--                </TableRow>-->
@@ -169,20 +145,120 @@
             </ScrollView>
 
             <Button
+                android:id="@+id/buttonAdaugaNote"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/tableLayoutScrollable"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/lavender_border"
+                android:backgroundTint="@color/original_lavender"
+                android:gravity="center"
                 android:text="Adaugă"
                 android:textColor="@color/white"
-                android:id="@+id/buttonAdaugaNote"
                 android:textSize="15sp"
-                android:layout_marginTop="30dp"
-                android:backgroundTint="@color/original_lavender"
-                android:background="@drawable/lavender_border"
-                android:gravity="center"
-                android:layout_centerInParent="true"
-                android:layout_below="@+id/tableLayoutScrollable"/>
+                android:visibility="visible" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:orientation="vertical"
+                android:layout_gravity="bottom"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/dashboard_article_background_v2"
+                android:id="@+id/editContestatii"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="20dp"
+                    android:gravity="center">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/titluContestatii"
+                            android:text="Adaugă data contestației"
+                            android:textSize="20dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/original_lavender"
+                            android:textStyle="italic|bold"
+                            android:layout_marginStart="40dp"
+                            android:gravity="center"/>
+                        <Button
+                            android:id="@+id/contestatieTabClose"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="40dp"
+                            android:layout_gravity="right"
+                            android:background="@drawable/baseline_close_24"/>
+                    </LinearLayout>
+                    <EditText
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/editDataContestatii"
+                        android:background="@drawable/lavender_border"
+                        android:layout_marginTop="10dp"
+                        android:padding="8dp"
+                        android:gravity="center"
+                        android:hint="DD.MM.YYYY"
+                        android:textColorHint="#808080"
+                        android:drawablePadding="8dp"
+                        android:enabled="true"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:paddingStart="20dp"
+                        android:id="@+id/layoutOra">
 
+                        <NumberPicker
+                            android:id="@+id/hourPicker"
+                            android:layout_width="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_height="80dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ora"
+                            android:textSize="18sp" />
+
+                        <NumberPicker
+                            android:id="@+id/minutePicker"
+                            android:layout_width="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_height="80dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="minut"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                    <Button
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="Adaugă"
+                        android:textColor="@color/white"
+                        android:id="@+id/addContestatie"
+                        android:textSize="18sp"
+                        android:layout_marginTop="10dp"
+                        android:backgroundTint="@color/original_lavender"
+                        android:background="@drawable/lavender_border"/>
+                </LinearLayout>
+            </LinearLayout>
 
         </RelativeLayout>
         <com.google.android.material.navigation.NavigationView

@@ -4,12 +4,9 @@ package com.example.myapplicationfmi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,13 +23,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
@@ -47,28 +41,21 @@ import com.example.myapplicationfmi.Modals.ProfessorModal;
 import com.example.myapplicationfmi.Modals.ProfessorSubjectModal;
 import com.example.myapplicationfmi.Modals.StudentModal;
 import com.example.myapplicationfmi.Modals.SubjectModal;
-import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.GroupWithStudents;
 import com.example.myapplicationfmi.beans.Note;
-import com.example.myapplicationfmi.beans.Professor;
-import com.example.myapplicationfmi.beans.ProfessorWithGroups;
 import com.example.myapplicationfmi.beans.ProfessorWithSubjects;
 import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
-import com.example.myapplicationfmi.beans.SubjectWithProfessors;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -94,18 +81,21 @@ public class CarnetActivity extends AppCompatActivity {
     private ProfessorSubjectModal professorSubjectModal;
     private CalendarModal calendarModal;
     private NoteModal noteModal;
-    private DateTimeFormatter formatter;
+    private DateTimeFormatter formatter, dateFormatter;
     private String emailHolder;
     private TableLayout tableLayout;
-    private Spinner spinnerSelecteazaGrupa;
-    private Spinner spinnerSelecteazaMateria;
+    private Spinner spinnerSelecteazaGrupa, spinnerSelecteazaMateria;
     private List<Long> grupeIds;
-    private String[] materii;
-    private String[] grupe;
+    private String[] materii, grupe, minuteValues;
     private List<Long> subjectIds;
-    private List<Integer> tableRowEditTextIds;
-    private Button buttonAdaugaNote;
+    private Button buttonAdaugaNote, addContestatie, contestatieTabClose;
     private  List<Student> students;
+    private EditText editDataContestatii;
+    private TextView textMissingGrupa;
+    private NumberPicker hourPicker, minutePicker;
+    private LinearLayout editContestatii;
+    private ScrollView tableLayoutScrollable;
+    private List<Boolean> contestatiiActive;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -134,6 +124,7 @@ public class CarnetActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             formatter = DateTimeFormatter.ofPattern("HH:mm");
+            dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -150,6 +141,8 @@ public class CarnetActivity extends AppCompatActivity {
         calendarModal = new ViewModelProvider(this).get(CalendarModal.class);
         noteModal = new ViewModelProvider(this).get(NoteModal.class);
 
+        //noteModal.deleteAllnotes();
+
         navigationView = findViewById(R.id.nav_view);
         topAppBar = findViewById(R.id.topAppBar);
 
@@ -161,6 +154,15 @@ public class CarnetActivity extends AppCompatActivity {
         spinnerSelecteazaGrupa = findViewById(R.id.spinnerSelecteazaGrupa);
         buttonAdaugaNote = findViewById(R.id.buttonAdaugaNote);
 
+        addContestatie = findViewById(R.id.addContestatie);
+        editDataContestatii = findViewById(R.id.editDataContestatii);
+        hourPicker = findViewById(R.id.hourPicker);
+        minutePicker = findViewById(R.id.minutePicker);
+        editContestatii = findViewById(R.id.editContestatii);
+        contestatieTabClose = findViewById(R.id.contestatieTabClose);
+        tableLayoutScrollable = findViewById(R.id.tableLayoutScrollable);
+        textMissingGrupa = findViewById(R.id.textMissingGrupa);
+
         SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.SHARED_PREFS, MODE_PRIVATE);
         emailHolder = sharedPreferences.getString("email", "");
 
@@ -170,6 +172,20 @@ public class CarnetActivity extends AppCompatActivity {
             creareContNouItem.setVisible(true);
         }
 
+        hourPicker.setMinValue(8);
+        hourPicker.setMaxValue(19);
+        Map<Integer, Integer> minuteValueMap = new HashMap<>();
+        minuteValues = new String[12]; // We want to allow increments of 5 minutes (12 intervals)
+        for (int i = 0; i < 12; i++) {
+            int minuteValue = i * 5;
+            minuteValues[i] = String.format("%02d", minuteValue); // Format the minutes to have leading zeros
+            minuteValueMap.put(minuteValue, i);
+        }
+        minutePicker.setMinValue(0);
+        minutePicker.setMaxValue(minuteValues.length - 1);
+        minutePicker.setDisplayedValues(minuteValues);
+
+        contestatiiActive = new ArrayList<>();
 
         professorModal.getProfessorIdByEmail(emailHolder).observe(CarnetActivity.this, new Observer<Long>() {
             @Override
@@ -196,6 +212,12 @@ public class CarnetActivity extends AppCompatActivity {
                         @Override
                         public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
+                            if((materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Practică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Limba engleză") ||
+                                    materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Deontologie academică") ||
+                                    materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de disertație")))
+                                ((TextView)((TableRow) tableLayout.getChildAt(0)).getChildAt(1)).setText("CALIFICATIV");
+                            else ((TextView)((TableRow) tableLayout.getChildAt(0)).getChildAt(1)).setText("NOTĂ");
+
                             courseModal.getGroupsBySubjectIdAndProfessorId(subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition()), professorId).observe(CarnetActivity.this, new Observer<List<Group>>() {
                                 @Override
                                 public void onChanged(List<Group> groups) {
@@ -208,6 +230,27 @@ public class CarnetActivity extends AppCompatActivity {
                                                 .collect(Collectors.toList());
                                         ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(CarnetActivity.this, android.R.layout.simple_spinner_dropdown_item, grupe);
                                         spinnerSelecteazaGrupa.setAdapter(adapterMateriiItems);
+
+                                        for(int i = 0; i < grupeIds.size(); i ++)
+                                            contestatiiActive.add(false);
+
+                                        if(groups.size() == 0){
+                                            int childCount = tableLayout.getChildCount();
+                                            for (int i = childCount - 1; i > 0; i--) {
+                                                View child = tableLayout.getChildAt(i);
+                                                if (child instanceof TableRow) {
+                                                    tableLayout.removeViewAt(i);
+                                                }
+                                            }
+                                            tableLayoutScrollable.setVisibility(View.GONE);
+                                            buttonAdaugaNote.setVisibility(View.GONE);
+                                            textMissingGrupa.setVisibility(View.VISIBLE);
+                                        }
+                                        else{
+                                            tableLayoutScrollable.setVisibility(View.VISIBLE);
+                                            buttonAdaugaNote.setVisibility(View.VISIBLE);
+                                            textMissingGrupa.setVisibility(View.GONE);
+                                        }
                                     }
                                 }
                             });
@@ -225,7 +268,7 @@ public class CarnetActivity extends AppCompatActivity {
                                 public void onChanged(GroupWithStudents groupWithStudents) {
 
                                     int childCount = tableLayout.getChildCount();
-                                    for (int i = 1; i < childCount; i++) {
+                                    for (int i = childCount - 1; i > 0; i--) {
                                         View child = tableLayout.getChildAt(i);
                                         if (child instanceof TableRow) {
                                             tableLayout.removeViewAt(i);
@@ -233,9 +276,36 @@ public class CarnetActivity extends AppCompatActivity {
                                     }
                                     if (groupWithStudents != null) {
                                         students = groupWithStudents.students;
+                                        Collections.sort(students);
                                         for(int i = 0; i < students.size(); i ++){
-                                            addTableRow(students.get(i).getNume() + " " + students.get(i).getPrenume());
+                                            int finalI = i;
+                                            addTableRow(students.get(finalI).getNume() + " " + students.get(finalI).getPrenume(), "");
+
+
+                                            noteModal.getNoteByStudentAndSubjectIds(students.get(i).getStudentId(), subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition())).observe(CarnetActivity.this, note -> {
+                                                if (note != null) {
+                                                    //((EditText)((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setText(note.getValoare());
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                        updateNoteAndUI(note, finalI);
+                                                    }
+                                                }
+                                            });
+
+//                                            noteModal.getNoteByStudentAndSubjectIds(students.get(i).getStudentId(), subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition())).observe(CarnetActivity.this, new Observer<Note>() {
+//                                                @Override
+//                                                public void onChanged(Note note) {
+//                                                    if(note != null){
+//                                                        //addTableRow(students.get(finalI).getNume() + " " + students.get(finalI).getPrenume(), note.getValoare());
+//                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                                                            updateNoteAndUI(note, finalI);
+//
+//                                                        }
+//                                                    }
+//                                                }
+//                                            });
                                         }
+
+
                                     }
                                 }
                             });
@@ -249,149 +319,153 @@ public class CarnetActivity extends AppCompatActivity {
                     buttonAdaugaNote.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            int i;
-                            Integer semestru = -1;
-                            LocalDate currentDate = null;
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                currentDate = LocalDate.now();
-                                Month[] monthsToCheck = {Month.OCTOBER, Month.NOVEMBER, Month.DECEMBER, Month.JANUARY, Month.FEBRUARY};
-                                if (containsMonth(currentDate.getMonth(), monthsToCheck)) {
-                                    semestru = 1;
-                                } else {
-                                    semestru = 2;
+                            if(contestatiiActive.get(spinnerSelecteazaGrupa.getSelectedItemPosition())){
+                                List<String> notes = new ArrayList<>();
+                                boolean validDeAdaugat = true;
+                                for (int i = 1; i < tableLayout.getChildCount(); i++) {
+                                    View view = tableLayout.getChildAt(i);
+                                    if (view instanceof TableRow) {
+                                        TableRow row = (TableRow) view;
+                                        if ("".equals(((EditText) row.getChildAt(1)).getText().toString())) {
+                                            validDeAdaugat = false;
+                                            Toast.makeText(CarnetActivity.this, "Nu ați completat toate notele!", Toast.LENGTH_LONG).show();
+                                            break;
+                                        }
+                                        if ((materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Practică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Limba engleză") ||
+                                                materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Deontologie academică") ||
+                                                materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de disertație"))
+                                                && !((EditText) row.getChildAt(1)).getText().toString().equals("Admis") && !((EditText) row.getChildAt(1)).getText().toString().equals("Respins")) {
+                                            validDeAdaugat = false;
+                                            Toast.makeText(CarnetActivity.this, "Calificativele sunt de forma ADMIS/RESPINS!", Toast.LENGTH_LONG).show();
+                                            break;
+                                        } else if (!(materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Practică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Limba engleză") ||
+                                                materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Deontologie academică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de disertație"))
+                                                && !((EditText) row.getChildAt(1)).getText().toString().matches("\\d+")) {
+                                            validDeAdaugat = false;
+                                            Toast.makeText(CarnetActivity.this, "Notele sunt de forma 1 - 10!", Toast.LENGTH_LONG).show();
+                                            break;
+                                        } else if (!(materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Practică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Limba engleză") ||
+                                                materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Deontologie academică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de disertație"))
+                                                && ((EditText) row.getChildAt(1)).getText().toString().matches("\\d+") && Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) > 10 || Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) <= 0) {
+                                            validDeAdaugat = false;
+                                            Toast.makeText(CarnetActivity.this, "Notele trebuie cuprinse in intervalul [1, 10]!", Toast.LENGTH_LONG).show();
+                                            break;
+                                        } else
+                                            notes.add(((EditText) row.getChildAt(1)).getText().toString());
+                                    }
                                 }
+                                if (validDeAdaugat)
+                                    for (int i = 0; i < notes.size(); i++) {
+                                        int finalI = i;
+
+                                        noteModal.getNoteByStudentAndSubjectIds(students.get(i).getStudentId(), subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition())).observe(CarnetActivity.this, note -> {
+                                            if (note != null) {
+                                                updateNote(note, finalI, notes);
+                                            }
+                                        });
+//                                        noteModal.getNoteByStudentAndSubjectIds(students.get(i).getStudentId(), subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition())).observe(CarnetActivity.this, new Observer<Note>() {
+//                                                    @Override
+//                                                    public void onChanged(Note note) {
+//                                                        if (note != null) {
+//                                                            updateNote(note, finalI, notes);
+//                                                            }
+//                                                    }
+//                                                });
+                                    }
                             }
-                            for (i = 1; i < tableLayout.getChildCount(); i++) {
-                                View view = tableLayout.getChildAt(i);
-                                if (view instanceof TableRow) {
-                                    TableRow row = (TableRow) view;
+                            else
+                            if(((EditText) ((TableRow) tableLayout.getChildAt(1)).getChildAt(1)).getBackground().getConstantState() != getResources().getDrawable(R.drawable.lavender_border_v6).getConstantState()){
+                            buttonAdaugaNote.setVisibility(View.GONE);
+                            editContestatii.setVisibility(View.VISIBLE);
+                            addContestatie.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Integer semestru = -1;
+                                    LocalDate currentDate = null;
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        currentDate = LocalDate.now();
+                                        Month[] monthsToCheck = {Month.OCTOBER, Month.NOVEMBER, Month.DECEMBER, Month.JANUARY, Month.FEBRUARY};
+                                        if (containsMonth(currentDate.getMonth(), monthsToCheck)) {
+                                            semestru = 1;
+                                        } else {
+                                            semestru = 2;
+                                        }
+                                    }
+                                    List<String> notes = new ArrayList<>();
+                                    boolean validDeAdaugat = true;
+                                    for (int i = 1; i < tableLayout.getChildCount(); i++) {
+                                        View view = tableLayout.getChildAt(i);
+                                        if (view instanceof TableRow) {
+                                            TableRow row = (TableRow) view;
+                                            if ("".equals(((EditText) row.getChildAt(1)).getText().toString())) {
+                                                validDeAdaugat = false;
+                                                Toast.makeText(CarnetActivity.this, "Nu ați completat toate notele!", Toast.LENGTH_LONG).show();
+                                                break;
+                                            }
+                                            if ((materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Practică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Limba engleză") ||
+                                                    materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Deontologie academică") ||
+                                                    materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de disertație"))
+                                                    && !((EditText) row.getChildAt(1)).getText().toString().equals("Admis") && !((EditText) row.getChildAt(1)).getText().toString().equals("Respins")) {
+                                                validDeAdaugat = false;
+                                                Toast.makeText(CarnetActivity.this, "Calificativele sunt de forma ADMIS/RESPINS!", Toast.LENGTH_LONG).show();
+                                                break;
+                                            } else if (!(materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Practică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Limba engleză") ||
+                                                    materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Deontologie academică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de disertație"))
+                                                    && !((EditText) row.getChildAt(1)).getText().toString().matches("\\d+")) {
+                                                validDeAdaugat = false;
+                                                Toast.makeText(CarnetActivity.this, "Notele sunt de forma 1 - 10!", Toast.LENGTH_LONG).show();
+                                                break;
+                                            } else if (!(materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Practică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Limba engleză") ||
+                                                    materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Deontologie academică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de disertație"))
+                                                    && ((EditText) row.getChildAt(1)).getText().toString().matches("\\d+") && Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) > 10 || Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) <= 0) {
+                                                validDeAdaugat = false;
+                                                Toast.makeText(CarnetActivity.this, "Notele trebuie cuprinse in intervalul [1, 10]!", Toast.LENGTH_LONG).show();
+                                                break;
+                                            } else
+                                                notes.add(((EditText) row.getChildAt(1)).getText().toString());
+                                        }
+                                    }
+                                    if (validDeAdaugat)
+                                        for (int i = 0; i < notes.size(); i++) {
+                                            Note note = new Note();
+                                            note.setAn(students.get(i).getAn());
+                                            note.setSemestru(semestru);
+                                            note.setValoare(notes.get(i));
+                                            note.setEditat(false);
+                                            note.setSubjectId(subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition()));
+                                            note.setStudentId(students.get(i).getStudentId());
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                note.setDataContestatie(LocalDate.parse(editDataContestatii.getText().toString(), dateFormatter));
+                                            }
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                note.setOraContestatie(LocalTime.parse(String.format(Locale.US, "%02d", hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker.getValue()])), formatter));
+                                            }
+                                            note.setLocked(true);
+                                            noteModal.insert(note);
+                                            editContestatii.setVisibility(View.GONE);
+                                            buttonAdaugaNote.setVisibility(View.VISIBLE);
 
-                                    Note note = new Note();
-                                    note.setAn(students.get(i).getAn());
-                                    note.setSemestru(semestru);
-                                    note.setValoare(((EditText) row.getChildAt(1)).getText().toString());
-                                    note.setSubjectId(subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition()));
-                                    note.setStudentId(students.get(i - 1).getStudentId());
-
-                                    noteModal.insert(note);
+                                            ((EditText) ((TableRow) tableLayout.getChildAt(i + 1)).getChildAt(1)).setBackgroundResource(R.drawable.lavender_border_v6);
+                                            ((EditText) ((TableRow) tableLayout.getChildAt(i + 1)).getChildAt(1)).setFocusable(false);
+                                            ((EditText) ((TableRow) tableLayout.getChildAt(i + 1)).getChildAt(1)).setFocusableInTouchMode(false);
+                                            ((EditText) ((TableRow) tableLayout.getChildAt(i + 1)).getChildAt(1)).setTextColor(Color.parseColor("#a3a3a3"));
+                                        }
                                 }
-                            }
+                            });
+                        }
                         }
                     });
                 }
             }
         });
 
-
-
-
-
-
-
-
-
-
-//        professorModal.getProfessorIdByEmail(emailHolder).observe(CarnetActivity.this, new Observer<Long>() {
-//            @Override
-//            public void onChanged(Long professorId) {
-//                if (professorId != null) {
-//                    courseModal.getGroupsByProfessorId(professorId).observe(CarnetActivity.this, new Observer<List<Group>>() {
-//                        @Override
-//                        public void onChanged(List<Group> groups) {
-//                            if (groups != null) {
-//                                grupe = groups.stream()
-//                                        .map(group -> String.valueOf(group.getNumar()))
-//                                        .toArray(String[]::new);
-//                                grupeIds = groups.stream()
-//                                        .map(Group::getGroupId)
-//                                        .collect(Collectors.toList());
-//                                ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(CarnetActivity.this, android.R.layout.simple_spinner_dropdown_item, grupe);
-//                                spinnerSelecteazaGrupa.setAdapter(adapterMateriiItems);
-//                            }
-//                        }
-//                    });
-//
-//                    spinnerSelecteazaGrupa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                        @Override
-//                        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-//                            courseModal.getSubjectsByGroupIdAndProfessorId(grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()), professorId).observe(CarnetActivity.this, new Observer<List<Subject>>() {
-//                                @Override
-//                                public void onChanged(List<Subject> subjects) {
-//                                    String[] denumiresArray = new String[subjects.size()];
-//                                    subjectIds = new ArrayList<>();
-//                                    for (int k = 0; k < subjects.size(); k++) {
-//                                        denumiresArray[k] = subjects.get(k).getDenumire();
-//                                        subjectIds.add(subjects.get(k).getSubjectId());
-//                                    }
-//                                    ArrayAdapter<String> adapterMateriiItems = new ArrayAdapter<>(CarnetActivity.this, android.R.layout.simple_spinner_dropdown_item, denumiresArray);
-//                                    spinnerSelecteazaMateria.setAdapter(adapterMateriiItems);
-//                                }
-//                            });
-//
-//                            groupModal.getGroupWithStudentsById(grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition())).observe(CarnetActivity.this, new Observer<GroupWithStudents>() {
-//                                @Override
-//                                public void onChanged(GroupWithStudents groupWithStudents) {
-//                                    if (groupWithStudents != null) {
-//                                      students = groupWithStudents.students;
-//                                      for(int i = 0; i < students.size(); i ++){
-//                                          addTableRow(students.get(i).getNume() + " " + students.get(i).getPrenume());
-//                                      }
-//                                    }
-//                                }
-//                            });
-//                        }
-//
-//                        @Override
-//                        public void onNothingSelected(AdapterView<?> parentView) {
-//                        }
-//                    });
-//
-//
-//                    buttonAdaugaNote.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            int i;
-//                            Integer semestru = -1;
-//                            LocalDate currentDate = null;
-//                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//                                currentDate = LocalDate.now();
-//                                Month[] monthsToCheck = {Month.OCTOBER, Month.NOVEMBER, Month.DECEMBER, Month.JANUARY, Month.FEBRUARY};
-//                                if (containsMonth(currentDate.getMonth(), monthsToCheck)) {
-//                                    semestru = 1;
-//                                } else {
-//                                    semestru = 2;
-//                                }
-//                            }
-//                            for (i = 1; i < tableLayout.getChildCount(); i++) {
-//                                View view = tableLayout.getChildAt(i);
-//                                if (view instanceof TableRow) {
-//                                    TableRow row = (TableRow) view;
-//
-//                                    Note note = new Note();
-//                                    note.setAn(students.get(i).getAn());
-//                                    note.setSemestru(semestru);
-//                                    note.setValoare(((EditText) row.getChildAt(1)).getText().toString());
-//                                    note.setSubjectId(subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition()));
-//                                    note.setStudentId(students.get(i - 1).getStudentId());
-//
-//                                    noteModal.insert(note);
-//                                }
-//                            }
-////                            if(i == tableLayout.getChildCount()){
-////                                Note note = new Note();
-////                                note.setAn(students.get(i).getAn());
-////                                note.setSemestru(semestru);
-////                                note.setValoare(((EditText) ((TableRow)tableLayout.getChildAt(i)).getChildAt(1)).getText().toString());
-////                                note.setSubjectId(subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition()));
-////                                note.setStudentId(students.get(i - 1).getStudentId());
-////
-////                                noteModal.insert(note);
-////                            }
-//                        }
-//                    });
-//                }
-//            }
-//        });
+        contestatieTabClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editContestatii.setVisibility(View.GONE);
+                editDataContestatii.setText("");
+            }
+        });
 
         drawerLayout = findViewById(R.id.activity_dashboard);
         materialToolbar = findViewById(R.id.topAppBar);
@@ -466,7 +540,49 @@ public class CarnetActivity extends AppCompatActivity {
         });
     }
 
-    public void addTableRow(String nume){
+    public void updateNote(Note note, int finalI, List<String> notes){
+        note.setValoare(notes.get(finalI));
+        note.setLocked(true);
+        note.setEditat(true);
+        noteModal.update(note);
+
+        ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setBackgroundResource(R.drawable.lavender_border_v6);
+        ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setFocusable(false);
+        ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setFocusableInTouchMode(false);
+        ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setTextColor(Color.parseColor("#a3a3a3"));
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void updateNoteAndUI(Note note, int finalI){
+        if((TableRow) tableLayout.getChildAt(finalI + 1) != null)
+            ((EditText)((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setText(note.getValoare());
+        if(!note.isLocked() && LocalDate.now().compareTo(note.getDataContestatie()) >= 0 && LocalTime.now().compareTo(note.getOraContestatie()) >= 0 && ChronoUnit.DAYS.between(note.getDataContestatie(), LocalDate.now()) < 2){
+            //a venit data contestatiilor dar in caz ca se inchide interfata si contestatiiActive devine false
+            contestatiiActive.set(spinnerSelecteazaGrupa.getSelectedItemPosition(), true);
+        }
+        if(note.isLocked() && !note.isEditat() && LocalDate.now().compareTo(note.getDataContestatie()) >= 0 && LocalTime.now().compareTo(note.getOraContestatie()) >= 0 && ChronoUnit.DAYS.between(note.getDataContestatie(), LocalDate.now()) < 2){
+            //a venit data contestatiilor
+            contestatiiActive.set(spinnerSelecteazaGrupa.getSelectedItemPosition(), true);
+            note.setLocked(false);
+            noteModal.update(note);
+        }
+        else if(contestatiiActive.get(spinnerSelecteazaGrupa.getSelectedItemPosition()) && ChronoUnit.DAYS.between(note.getDataContestatie(), LocalDate.now()) >= 2 && LocalTime.now().compareTo(note.getOraContestatie()) >= 0){
+            //mai mult de doua zile au trecut de la contestatii
+            contestatiiActive.set(spinnerSelecteazaGrupa.getSelectedItemPosition(), false);
+            note.setLocked(true);
+            noteModal.update(note);
+        }
+        else if(note.isLocked()){
+            if(note.isEditat() || !contestatiiActive.get(spinnerSelecteazaGrupa.getSelectedItemPosition())){
+                ((EditText)((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setBackgroundResource(R.drawable.lavender_border_v6);
+                ((EditText)((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setFocusable(false);
+                ((EditText)((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setFocusableInTouchMode(false);
+                ((EditText)((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setTextColor(Color.parseColor("#a3a3a3"));
+            }
+        }
+    }
+
+    public void addTableRow(String nume, String nota){
 
 
         TableRow tableRow = new TableRow(this);
@@ -489,6 +605,7 @@ public class CarnetActivity extends AppCompatActivity {
         editText.setLayoutParams(editTextParams);
         editText.setBackgroundResource(R.drawable.lavender_border_v3);
         editText.setPadding(16, 16, 16, 16);
+        editText.setText(nota);
         editText.setGravity(Gravity.CENTER);
 
         tableRow.addView(textView);

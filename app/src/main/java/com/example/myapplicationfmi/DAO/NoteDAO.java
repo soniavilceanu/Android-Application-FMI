@@ -28,4 +28,7 @@ public interface NoteDAO {
     @Query("DELETE FROM Notes")
     void deleteAllNotes();
 
+    @Query("SELECT * FROM Notes WHERE student_id = :studentId AND subject_id = :subjectId")
+    LiveData<Note> getNoteByStudentAndSubjectIds(long studentId, long subjectId);
+
 }

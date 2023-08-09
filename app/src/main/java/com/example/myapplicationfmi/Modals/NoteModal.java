@@ -1,8 +1,10 @@
 package com.example.myapplicationfmi.Modals;
 
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
@@ -20,6 +22,7 @@ public class NoteModal extends AndroidViewModel {
     private LiveData<List<Note>> allnotes;
 
     // constructor for our view modal.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public NoteModal(@NonNull Application application) {
         super(application);
         repository = new NoteRepository(application);
@@ -49,5 +52,9 @@ public class NoteModal extends AndroidViewModel {
     // below method is to get all the notes in our list.
     public LiveData<List<Note>> getAllNotes() {
         return allnotes;
+    }
+
+    public LiveData<Note> getNoteByStudentAndSubjectIds(long studentId, long subjectId){
+        return repository.getNoteByStudentAndSubjectIds(studentId,subjectId);
     }
 }

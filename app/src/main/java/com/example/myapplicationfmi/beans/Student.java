@@ -7,7 +7,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Students")
-public class Student {
+public class Student implements Comparable<Student>{
     @PrimaryKey(autoGenerate = true)
     @NonNull
     public Long studentId;
@@ -128,5 +128,9 @@ public class Student {
     }
 
     public Student() {
+    }
+    @Override
+    public int compareTo(Student otherStudent) {
+        return (this.nume + " " + this.prenume).compareTo(otherStudent.nume + " " + otherStudent.prenume);
     }
 }

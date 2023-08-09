@@ -5,6 +5,9 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Entity(tableName = "Notes")
 public class Note {
     @PrimaryKey(autoGenerate = true)
@@ -20,6 +23,10 @@ public class Note {
 
     @ColumnInfo(name = "student_id")
     public Long studentId; // Foreign key referencing Students table
+    public LocalDate dataContestatie;
+    public LocalTime oraContestatie;
+    public Boolean locked;
+    public Boolean editat;
 
     @NonNull
     public Long getNoteId() {
@@ -70,16 +77,50 @@ public class Note {
         this.studentId = studentId;
     }
 
+    public LocalDate getDataContestatie() {
+        return dataContestatie;
+    }
+
+    public void setDataContestatie(LocalDate dataContestatie) {
+        this.dataContestatie = dataContestatie;
+    }
+
+    public LocalTime getOraContestatie() {
+        return oraContestatie;
+    }
+
+    public void setOraContestatie(LocalTime oraContestatie) {
+        this.oraContestatie = oraContestatie;
+    }
+
+    public Boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public Boolean isEditat() {
+        return editat;
+    }
+
+    public void setEditat(Boolean editat) {
+        this.editat = editat;
+    }
+
     @Ignore
-    public Note(@NonNull Long noteId, Integer an, Integer semestru, String valoare, Long subjectId, Long studentId) {
+    public Note(@NonNull Long noteId, Integer an, Integer semestru, String valoare, Long subjectId, Long studentId, LocalDate dataContestatie, LocalTime oraContestatie, boolean locked) {
         this.noteId = noteId;
         this.an = an;
         this.semestru = semestru;
         this.valoare = valoare;
         this.subjectId = subjectId;
         this.studentId = studentId;
+        this.dataContestatie = dataContestatie;
+        this.oraContestatie = oraContestatie;
+        this.locked = locked;
     }
-
     public Note() {
     }
 }

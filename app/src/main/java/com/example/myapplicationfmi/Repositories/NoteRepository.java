@@ -54,6 +54,10 @@ public class NoteRepository {
         return allnotes;
     }
 
+    public LiveData<Note> getNoteByStudentAndSubjectIds(long studentId, long subjectId){
+        return dao.getNoteByStudentAndSubjectIds(studentId,subjectId);
+    }
+
     // we are creating a async task method to insert new note.
     private static class InsertnoteAsyncTask extends AsyncTask<Note, Void, Void> {
         private NoteDAO dao;
