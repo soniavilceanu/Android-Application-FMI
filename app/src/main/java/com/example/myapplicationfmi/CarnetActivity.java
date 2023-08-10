@@ -1,9 +1,12 @@
 package com.example.myapplicationfmi;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -141,8 +144,6 @@ public class CarnetActivity extends AppCompatActivity {
         calendarModal = new ViewModelProvider(this).get(CalendarModal.class);
         noteModal = new ViewModelProvider(this).get(NoteModal.class);
 
-        //noteModal.deleteAllnotes();
-
         navigationView = findViewById(R.id.nav_view);
         topAppBar = findViewById(R.id.topAppBar);
 
@@ -163,6 +164,9 @@ public class CarnetActivity extends AppCompatActivity {
         tableLayoutScrollable = findViewById(R.id.tableLayoutScrollable);
         textMissingGrupa = findViewById(R.id.textMissingGrupa);
 
+        NotesSQLiteHelper dbHelper = new NotesSQLiteHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
         SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.SHARED_PREFS, MODE_PRIVATE);
         emailHolder = sharedPreferences.getString("email", "");
 
@@ -172,8 +176,8 @@ public class CarnetActivity extends AppCompatActivity {
             creareContNouItem.setVisible(true);
         }
 
-        hourPicker.setMinValue(8);
-        hourPicker.setMaxValue(19);
+        hourPicker.setMinValue(0);
+        hourPicker.setMaxValue(23);
         Map<Integer, Integer> minuteValueMap = new HashMap<>();
         minuteValues = new String[12]; // We want to allow increments of 5 minutes (12 intervals)
         for (int i = 0; i < 12; i++) {
@@ -184,8 +188,6 @@ public class CarnetActivity extends AppCompatActivity {
         minutePicker.setMinValue(0);
         minutePicker.setMaxValue(minuteValues.length - 1);
         minutePicker.setDisplayedValues(minuteValues);
-
-        contestatiiActive = new ArrayList<>();
 
         professorModal.getProfessorIdByEmail(emailHolder).observe(CarnetActivity.this, new Observer<Long>() {
             @Override
@@ -211,6 +213,7 @@ public class CarnetActivity extends AppCompatActivity {
                     spinnerSelecteazaMateria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                            contestatiiActive = new ArrayList<>();
 
                             if((materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Practică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Limba engleză") ||
                                     materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Deontologie academică") ||
@@ -264,6 +267,7 @@ public class CarnetActivity extends AppCompatActivity {
                         @Override
                         public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                             groupModal.getGroupWithStudentsById(grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition())).observe(CarnetActivity.this, new Observer<GroupWithStudents>() {
+                                @RequiresApi(api = Build.VERSION_CODES.O)
                                 @Override
                                 public void onChanged(GroupWithStudents groupWithStudents) {
 
@@ -282,24 +286,71 @@ public class CarnetActivity extends AppCompatActivity {
                                             addTableRow(students.get(finalI).getNume() + " " + students.get(finalI).getPrenume(), "");
 
 
-                                            noteModal.getNoteByStudentAndSubjectIds(students.get(i).getStudentId(), subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition())).observe(CarnetActivity.this, note -> {
-                                                if (note != null) {
-                                                    //((EditText)((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setText(note.getValoare());
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                                        updateNoteAndUI(note, finalI);
+                                            String[] projection = {
+                                                    NotesSQLiteHelper.COLUMN_NAME_ID,
+                                                    NotesSQLiteHelper.COLUMN_NAME_STUDENT_ID,
+                                                    NotesSQLiteHelper.COLUMN_NAME_VALUE,
+                                                    NotesSQLiteHelper.COLUMN_NAME_LOCKED,
+                                                    NotesSQLiteHelper.COLUMN_NAME_EDITED,
+                                                    NotesSQLiteHelper.COLUMN_NAME_DATA_CONTESTATIE,
+                                                    NotesSQLiteHelper.COLUMN_NAME_ORA_CONTESTATIE
+                                            };
+                                            String selection = NotesSQLiteHelper.COLUMN_NAME_STUDENT_ID + " = ? AND " + NotesSQLiteHelper.COLUMN_NAME_SUBJECT_ID + " = ?";
+                                            String[] selectionArgs = {String.valueOf(students.get(finalI).getStudentId()), String.valueOf(subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition()))};
+
+                                            Cursor cursor = db.query(NotesSQLiteHelper.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+
+                                            if (cursor != null && cursor.moveToFirst()) {
+                                                long noteId = cursor.getLong(cursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_NAME_ID));
+                                                String value = cursor.getString(cursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_NAME_VALUE));
+                                                boolean locked = cursor.getInt(cursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_NAME_LOCKED)) == 1;
+                                                boolean edited = cursor.getInt(cursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_NAME_EDITED)) == 1;
+                                                LocalDate dataContestatie = LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_NAME_DATA_CONTESTATIE)));
+                                                LocalTime oraContestatie = LocalTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(NotesSQLiteHelper.COLUMN_NAME_ORA_CONTESTATIE)));
+
+                                                if ((TableRow) tableLayout.getChildAt(finalI + 1) != null) {
+                                                    ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setText(value);
+                                                    if (!locked && LocalDate.now().compareTo(dataContestatie) >= 0 && LocalTime.now().compareTo(oraContestatie) >= 0 && ChronoUnit.DAYS.between(dataContestatie, LocalDate.now()) < 2) {
+                                                        contestatiiActive.set(spinnerSelecteazaGrupa.getSelectedItemPosition(), true);
+                                                    }
+                                                    if (locked && !edited && LocalDate.now().compareTo(dataContestatie) >= 0 && LocalTime.now().compareTo(oraContestatie) >= 0 && ChronoUnit.DAYS.between(dataContestatie, LocalDate.now()) < 2) {
+                                                        contestatiiActive.set(spinnerSelecteazaGrupa.getSelectedItemPosition(), true);
+                                                        ContentValues contentValues = new ContentValues();
+                                                        contentValues.put(NotesSQLiteHelper.COLUMN_NAME_LOCKED, 0);
+
+                                                        String updateSelection = NotesSQLiteHelper.COLUMN_NAME_ID + " = ?";
+                                                        String[] updateSelectionArgs = {String.valueOf(noteId)};
+
+                                                        db.update(NotesSQLiteHelper.TABLE_NAME, contentValues, updateSelection, updateSelectionArgs);
+
+                                                    } else if (contestatiiActive.get(spinnerSelecteazaGrupa.getSelectedItemPosition()) && ChronoUnit.DAYS.between(dataContestatie, LocalDate.now()) >= 2 && LocalTime.now().compareTo(oraContestatie) >= 0) {
+                                                        contestatiiActive.set(spinnerSelecteazaGrupa.getSelectedItemPosition(), false);
+                                                        ContentValues contentValues = new ContentValues();
+                                                        contentValues.put(NotesSQLiteHelper.COLUMN_NAME_LOCKED, 1);
+
+                                                        String updateSelection = NotesSQLiteHelper.COLUMN_NAME_ID + " = ?";
+                                                        String[] updateSelectionArgs = {String.valueOf(noteId)};
+
+                                                        db.update(NotesSQLiteHelper.TABLE_NAME, contentValues, updateSelection, updateSelectionArgs);
+                                                    } else if (locked) {
+                                                        if (edited || !contestatiiActive.get(spinnerSelecteazaGrupa.getSelectedItemPosition())) {
+                                                            ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setBackgroundResource(R.drawable.lavender_border_v6);
+                                                            ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setFocusable(false);
+                                                            ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setFocusableInTouchMode(false);
+                                                            ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setTextColor(Color.parseColor("#a3a3a3"));
+                                                        }
                                                     }
                                                 }
-                                            });
+                                            }
+                                            if (cursor != null) {
+                                                cursor.close();
+                                            }
 
-//                                            noteModal.getNoteByStudentAndSubjectIds(students.get(i).getStudentId(), subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition())).observe(CarnetActivity.this, new Observer<Note>() {
-//                                                @Override
-//                                                public void onChanged(Note note) {
-//                                                    if(note != null){
-//                                                        //addTableRow(students.get(finalI).getNume() + " " + students.get(finalI).getPrenume(), note.getValoare());
-//                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                                                            updateNoteAndUI(note, finalI);
-//
-//                                                        }
+//                                            noteModal.getNoteByStudentAndSubjectIds(students.get(i).getStudentId(), subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition())).observe(CarnetActivity.this, note -> {
+//                                                if (note != null) {
+//                                                    //((EditText)((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1)).setText(note.getValoare());
+//                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                                                        updateNoteAndUI(note, finalI);
 //                                                    }
 //                                                }
 //                                            });
@@ -358,19 +409,71 @@ public class CarnetActivity extends AppCompatActivity {
                                     for (int i = 0; i < notes.size(); i++) {
                                         int finalI = i;
 
-                                        noteModal.getNoteByStudentAndSubjectIds(students.get(i).getStudentId(), subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition())).observe(CarnetActivity.this, note -> {
-                                            if (note != null) {
-                                                updateNote(note, finalI, notes);
+
+                                        String[] projection = {
+                                                NotesSQLiteHelper.COLUMN_NAME_ID,
+                                                NotesSQLiteHelper.COLUMN_NAME_STUDENT_ID,
+                                                NotesSQLiteHelper.COLUMN_NAME_VALUE,
+                                                NotesSQLiteHelper.COLUMN_NAME_LOCKED,
+                                                NotesSQLiteHelper.COLUMN_NAME_EDITED,
+                                                NotesSQLiteHelper.COLUMN_NAME_DATA_CONTESTATIE,
+                                                NotesSQLiteHelper.COLUMN_NAME_ORA_CONTESTATIE
+                                        };
+                                        String selection = NotesSQLiteHelper.COLUMN_NAME_STUDENT_ID + " = ? AND " +
+                                                NotesSQLiteHelper.COLUMN_NAME_SUBJECT_ID + " = ?";
+                                String[] selectionArgs = {String.valueOf(students.get(i).getStudentId()), String.valueOf(subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition()))};
+
+                                Cursor cursor = db.query(
+                                                NotesSQLiteHelper.TABLE_NAME,
+                                                projection,
+                                                selection,
+                                                selectionArgs,
+                                                null,
+                                                null,
+                                                null
+                                        );
+
+                                        if (cursor != null && cursor.moveToFirst()) {
+                                            int idIndex = cursor.getColumnIndex(NotesSQLiteHelper.COLUMN_NAME_ID);
+                                            int valueIndex = cursor.getColumnIndex(NotesSQLiteHelper.COLUMN_NAME_VALUE);
+
+                                            if (idIndex >= 0 && valueIndex >= 0) {
+                                                long noteId = cursor.getLong(idIndex);
+                                                String valoare = cursor.getString(valueIndex);
+                                                ContentValues values = new ContentValues();
+                                                values.put(NotesSQLiteHelper.COLUMN_NAME_VALUE, notes.get(finalI));
+                                                values.put(NotesSQLiteHelper.COLUMN_NAME_LOCKED, true);
+                                                values.put(NotesSQLiteHelper.COLUMN_NAME_EDITED, true);
+
+                                                String updateSelection = NotesSQLiteHelper.COLUMN_NAME_ID + " = ?";
+                                                String[] updateSelectionArgs = {String.valueOf(noteId)};
+
+                                                db.update(
+                                                        NotesSQLiteHelper.TABLE_NAME,
+                                                        values,
+                                                        updateSelection,
+                                                        updateSelectionArgs
+                                                );
+
+                                                if ((TableRow) tableLayout.getChildAt(finalI + 1) != null) {
+                                                    ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1))
+                                                            .setBackgroundResource(R.drawable.lavender_border_v6);
+                                                    ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1))
+                                                            .setFocusable(false);
+                                                    ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1))
+                                                            .setFocusableInTouchMode(false);
+                                                    ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1))
+                                                            .setTextColor(Color.parseColor("#a3a3a3"));
+                                                }
                                             }
-                                        });
-//                                        noteModal.getNoteByStudentAndSubjectIds(students.get(i).getStudentId(), subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition())).observe(CarnetActivity.this, new Observer<Note>() {
-//                                                    @Override
-//                                                    public void onChanged(Note note) {
-//                                                        if (note != null) {
-//                                                            updateNote(note, finalI, notes);
-//                                                            }
-//                                                    }
-//                                                });
+                                        }
+
+
+//                                        noteModal.getNoteByStudentAndSubjectIds(students.get(i).getStudentId(), subjectIds.get(spinnerSelecteazaMateria.getSelectedItemPosition())).observe(CarnetActivity.this, note -> {
+//                                            if (note != null) {
+//                                                updateNote(note, finalI, notes);
+//                                            }
+//                                        });
                                     }
                             }
                             else
