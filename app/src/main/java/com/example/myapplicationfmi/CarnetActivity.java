@@ -146,23 +146,6 @@ public class CarnetActivity extends AppCompatActivity {
         calendarModal = new ViewModelProvider(this).get(CalendarModal.class);
         noteModal = new ViewModelProvider(this).get(NoteModal.class);
 
-        Subject subject = new Subject();
-        subject.setDenumire("Practică");
-        subjectModal.insert(subject);
-
-        Subject subject1 = new Subject();
-        subject1.setDenumire("Limba engleză");
-        subjectModal.insert(subject1);
-
-        Subject subject2 = new Subject();
-        subject2.setDenumire("Pregătirea proiectului și a tezei de disertație");
-        subjectModal.insert(subject2);
-
-        Subject subject3 = new Subject();
-        subject3.setDenumire("Pregătirea proiectului și a tezei de licență");
-        subjectModal.insert(subject3);
-
-
         navigationView = findViewById(R.id.nav_view);
         topAppBar = findViewById(R.id.topAppBar);
 
@@ -214,8 +197,6 @@ public class CarnetActivity extends AppCompatActivity {
 
         if(MainActivity.USER_TYPE == 3){
             selecteazaProful.setVisibility(View.GONE);
-//            selecteazaMateria.setVisibility(View.VISIBLE);
-//            selecteazaGrupa.setVisibility(View.VISIBLE);
             ((TextView)selecteazaMateria.getChildAt(0)).setText("Alege materia");
             ((TextView)selecteazaGrupa.getChildAt(0)).setText("Alege grupa");
             textMissingGrupa.setText("Această materie nu o predați la nicio grupă");
@@ -433,7 +414,7 @@ public class CarnetActivity extends AppCompatActivity {
                                             break;
                                         } else if (!(materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Practică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de licență")  || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Limba engleză") ||
                                                 materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Deontologie academică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de disertație"))
-                                                && ((EditText) row.getChildAt(1)).getText().toString().matches("\\d+") && Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) > 10 || Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) <= 0) {
+                                                && ((EditText) row.getChildAt(1)).getText().toString().matches("\\d+") && (Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) > 10 || Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) <= 0)) {
                                             validDeAdaugat = false;
                                             Toast.makeText(CarnetActivity.this, "Notele trebuie cuprinse in intervalul [1, 10]!", Toast.LENGTH_LONG).show();
                                             break;
@@ -540,7 +521,7 @@ public class CarnetActivity extends AppCompatActivity {
                                             break;
                                         } else if (!(materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Practică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de licență")  || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Limba engleză") ||
                                                 materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Deontologie academică") || materii[spinnerSelecteazaMateria.getSelectedItemPosition()].equals("Pregătirea proiectului și a tezei de disertație"))
-                                                && ((EditText) row.getChildAt(1)).getText().toString().matches("\\d+") && Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) > 10 || Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) <= 0) {
+                                                && ((EditText) row.getChildAt(1)).getText().toString().matches("\\d+") && (Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) > 10 || Integer.valueOf(((EditText) row.getChildAt(1)).getText().toString()) <= 0)) {
                                             validDeAdaugat = false;
                                             Toast.makeText(CarnetActivity.this, "Notele trebuie cuprinse in intervalul [1, 10]!", Toast.LENGTH_LONG).show();
                                             break;
@@ -604,8 +585,6 @@ public class CarnetActivity extends AppCompatActivity {
         }
         else if(MainActivity.USER_TYPE == 2){
             selecteazaProful.setVisibility(View.GONE);
-            //selecteazaMateria.setVisibility(View.GONE);
-            //selecteazaGrupa.setVisibility(View.GONE);
             buttonAdaugaNote.setVisibility(View.GONE);
             ((TextView)selecteazaMateria.getChildAt(0)).setText("Alege anul");
             ((TextView)selecteazaGrupa.getChildAt(0)).setText("Alege semestrul");
@@ -719,8 +698,6 @@ public class CarnetActivity extends AppCompatActivity {
             selecteazaProful.setVisibility(View.VISIBLE);
             buttonAdaugaNote.setVisibility(View.VISIBLE);
             buttonAdaugaNote.setText("Deblochează");
-//            selecteazaMateria.setVisibility(View.VISIBLE);
-//            selecteazaGrupa.setVisibility(View.VISIBLE);
             ((TextView)selecteazaMateria.getChildAt(0)).setText("Alege materia");
             ((TextView)selecteazaGrupa.getChildAt(0)).setText("Alege grupa");
             professorModal.getAllProfessors().observe(CarnetActivity.this, new Observer<List<Professor>>() {

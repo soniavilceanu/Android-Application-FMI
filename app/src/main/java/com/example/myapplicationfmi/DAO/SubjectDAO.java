@@ -49,5 +49,8 @@ public interface SubjectDAO {
     @Query("SELECT * FROM Subjects WHERE subjectId = :subjectId")
     LiveData<Subject> getSubjectById(long subjectId);
 
+    @Query("DELETE FROM Subjects WHERE subjectId = :subjectId")
+    void deleteSubjectById(long subjectId);
+
 }
 

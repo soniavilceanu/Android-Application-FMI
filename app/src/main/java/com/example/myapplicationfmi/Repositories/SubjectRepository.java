@@ -4,7 +4,9 @@ package com.example.myapplicationfmi.Repositories;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.DAO.SubjectDAO;
@@ -23,6 +25,7 @@ public class SubjectRepository {
 
     // creating a constructor for our variables
     // and passing the variables to it.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public SubjectRepository(Application application) {
         MyRoomDatabase database = MyRoomDatabase.getInstance(application);
         dao = database.subjectDao();
@@ -48,6 +51,10 @@ public class SubjectRepository {
     public void deleteAllsubjects() {
         new DeleteAllsubjectsAsyncTask(dao).execute();
     }
+    public void deleteSubjectById(Long subjectId) {
+        new DeleteSubjectByIdAsyncTask(dao).execute(subjectId);
+    }
+
 
     // below method is to read all the subjects.
     public LiveData<List<Subject>> getAllSubjects() {
@@ -128,4 +135,20 @@ public class SubjectRepository {
             return null;
         }
     }
+
+    private static class DeleteSubjectByIdAsyncTask extends AsyncTask<Long, Void, Void> {
+        private SubjectDAO dao;
+
+        private DeleteSubjectByIdAsyncTask(SubjectDAO dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Long... subjectIds) {
+            dao.deleteSubjectById(subjectIds[0]);
+            return null;
+        }
+    }
+
+
 }

@@ -1,8 +1,10 @@
 package com.example.myapplicationfmi.Modals;
 
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
@@ -21,6 +23,7 @@ public class SubjectModal extends AndroidViewModel {
     private LiveData<List<Subject>> allsubjects;
 
     // constructor for our view modal.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public SubjectModal(@NonNull Application application) {
         super(application);
         repository = new SubjectRepository(application);
@@ -60,4 +63,8 @@ public class SubjectModal extends AndroidViewModel {
     public LiveData<Subject> getSubjectById(long subjectId){
         return repository.getSubjectById(subjectId);
     }
+    public void deleteSubjectById(Long subjectId) {
+        repository.deleteSubjectById(subjectId);
+    }
+
 }
