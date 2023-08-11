@@ -60,6 +60,10 @@ public class CourseRepository {
         return dao.getGroupsBySubjectIdAndProfessorId(subjectId,professorId);
     }
 
+    public LiveData<List<Subject>> getSubjectsByGroupId(long groupId){
+        return dao.getSubjectsByGroupId(groupId);
+    }
+
     private static class InsertcourseAsyncTask extends AsyncTask<Course, Void, Void> {
         private CourseDAO dao;
 

@@ -34,4 +34,8 @@ public interface NoteDAO {
     @Query("SELECT * FROM notes WHERE subject_id = :subjectId")
     LiveData<List<Note>> getNotesForSubjectAndGroup(long subjectId);
 
+    @Query("SELECT * FROM Notes WHERE student_id = :studentId AND subject_id = :subjectId AND an = :an AND semestru = :semestru")
+    LiveData<Note> getNoteByStudentAndSubjectIdAndAnAndSemestru(long studentId, long subjectId, Integer an, Integer semestru);
+
+
 }

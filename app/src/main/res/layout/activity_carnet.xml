@@ -31,8 +31,35 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingStart="5dp"
+                android:id="@+id/selecteazaProful"
+                android:layout_below="@+id/appBarLayout"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:text="Alege profesorul:"
+                    android:textSize="20dp"
+                    android:textColor="@color/original_lavender"
+                    android:textStyle="italic|bold"
+                    android:gravity="start"/>
+                <Spinner
+                    android:id="@+id/spinnerSelecteazaProful"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textColor="@color/original_lavender"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:padding="5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
                 android:id="@+id/selecteazaMateria"
-                android:layout_below="@+id/appBarLayout">
+                android:layout_below="@+id/selecteazaProful">
                 <TextView
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
@@ -56,7 +83,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingStart="5dp"
-                android:paddingTop="10dp"
                 android:id="@+id/selecteazaGrupa"
                 android:layout_below="@+id/selecteazaMateria">
                 <TextView
@@ -84,8 +110,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textMissingGrupa"
                 android:layout_below="@+id/selecteazaGrupa"
-                android:text="Această materie nu o predați la nicio grupă!"
+                android:text="Această materie nu o predați la nicio grupă"
                 android:textStyle="bold|italic"
+                android:paddingTop="10dp"
                 android:gravity="center"
                 android:textSize="22dp"
                 android:visibility="gone"/>

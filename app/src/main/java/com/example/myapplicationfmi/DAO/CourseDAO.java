@@ -40,6 +40,11 @@ public interface CourseDAO {
             "WHERE Courses.groupId = :groupId AND Courses.professorId = :professorId")
     LiveData<List<Subject>> getSubjectsByGroupIdAndProfessorId(long groupId, long professorId);
 
+    @Query("SELECT Subjects.* FROM Subjects " +
+            "INNER JOIN Courses ON Subjects.subjectId = Courses.subject_id " +
+            "WHERE Courses.groupId = :groupId")
+    LiveData<List<Subject>> getSubjectsByGroupId(long groupId);
+
     @Query("SELECT Groups.* FROM Groups " +
             "INNER JOIN Courses ON Groups.groupId = Courses.groupId " +
             "WHERE Courses.professorId = :professorId " +

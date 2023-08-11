@@ -203,9 +203,7 @@ public class OrarActivity extends AppCompatActivity {
 
                     ArrayAdapter<String> adapterGrupaItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, grupe);
                     spinnerSelecteazaGrupa.setAdapter(adapterGrupaItems);
-                }
-            }
-        });
+
 
         spinnerSelecteazaGrupa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -241,7 +239,7 @@ public class OrarActivity extends AppCompatActivity {
             dummyView.setVisibility(View.GONE);
             if(MainActivity.USER_TYPE == 3) {
                 textOrarProf.setVisibility(View.VISIBLE);
-                professorModal.getProfessorIdByEmail(emailHolder).observe(this, new Observer<Long>() {
+                professorModal.getProfessorIdByEmail(emailHolder).observe(OrarActivity.this, new Observer<Long>() {
                     @Override
                     public void onChanged(Long professorId) {
                         if (professorId != null) {
@@ -273,6 +271,10 @@ public class OrarActivity extends AppCompatActivity {
             creareContNouItem.setVisible(true);
             textOrarProf.setVisibility(View.GONE);
         }
+
+                }
+            }
+        });
 
         buttonCuratareOrar.setOnClickListener(new View.OnClickListener() {
             @Override

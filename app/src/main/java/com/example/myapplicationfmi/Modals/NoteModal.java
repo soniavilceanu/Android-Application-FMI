@@ -60,5 +60,7 @@ public class NoteModal extends AndroidViewModel {
     public LiveData<List<Note>> getNotesForSubjectAndGroup(long subjectId) {
         return repository.getNotesForSubjectAndGroup(subjectId);
     }
-
+    public LiveData<Note> getNoteByStudentAndSubjectIdAndAnAndSemestru(long studentId, long subjectId, Integer an, Integer semestru){
+        return repository.getNoteByStudentAndSubjectIdAndAnAndSemestru(studentId,subjectId,an,semestru);
+    }
 }
