@@ -8,7 +8,6 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.myapplicationfmi.beans.Student;
-import com.example.myapplicationfmi.beans.StudentWithNotifications;
 import com.example.myapplicationfmi.beans.Subject;
 import com.example.myapplicationfmi.beans.SubjectWithCourses;
 import com.example.myapplicationfmi.beans.SubjectWithProfessors;

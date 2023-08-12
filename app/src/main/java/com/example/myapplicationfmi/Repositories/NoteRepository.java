@@ -9,9 +9,11 @@ import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.DAO.NoteDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
+import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.Note;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class NoteRepository {
 
@@ -30,10 +32,17 @@ public class NoteRepository {
     }
 
     // creating a method to insert the data to our database.
-    public void insert(Note model) {
-        new InsertnoteAsyncTask(dao).execute(model);
+//    public void insert(Note model) {
+//        new InsertnoteAsyncTask(dao).execute(model);
+//    }
+    public long insert(Note model) {
+        try {
+            return new NoteRepository.InsertnoteAsyncTask(dao).execute(model).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
-
     // creating a method to update data in database.
     public void update(Note model) {
         new UpdatenoteAsyncTask(dao).execute(model);
@@ -66,9 +75,12 @@ public class NoteRepository {
         return dao.getNoteByStudentAndSubjectIdAndAnAndSemestru(studentId,subjectId,an,semestru);
     }
 
+    public LiveData<Note> getNoteByNoteId(long noteId){
+        return dao.getNoteByNoteId(noteId);
+    }
 
     // we are creating a async task method to insert new note.
-    private static class InsertnoteAsyncTask extends AsyncTask<Note, Void, Void> {
+    private static class InsertnoteAsyncTask extends AsyncTask<Note, Void, Long> {
         private NoteDAO dao;
 
         private InsertnoteAsyncTask(NoteDAO dao) {
@@ -76,10 +88,9 @@ public class NoteRepository {
         }
 
         @Override
-        protected Void doInBackground(Note... model) {
+        protected Long doInBackground(Note... model) {
             // below line is use to insert our modal in dao.
-            dao.insertNote(model[0]);
-            return null;
+            return dao.insertNote(model[0]);
         }
     }
 

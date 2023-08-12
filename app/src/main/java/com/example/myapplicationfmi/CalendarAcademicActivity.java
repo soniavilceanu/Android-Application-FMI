@@ -28,16 +28,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplicationfmi.Modals.CalendarModal;
 import com.example.myapplicationfmi.Modals.CourseModal;
-import com.example.myapplicationfmi.Modals.DashTabModal;
 import com.example.myapplicationfmi.Modals.GroupModal;
 import com.example.myapplicationfmi.Modals.NotificationModal;
 import com.example.myapplicationfmi.Modals.ProfessorModal;
@@ -46,10 +43,9 @@ import com.example.myapplicationfmi.Modals.StudentModal;
 import com.example.myapplicationfmi.Modals.SubjectModal;
 import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Group;
-import com.example.myapplicationfmi.beans.Professor;
-import com.example.myapplicationfmi.beans.ProfessorWithGroups;
+import com.example.myapplicationfmi.beans.Notification;
+import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
-import com.example.myapplicationfmi.beans.SubjectWithProfessors;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -57,7 +53,6 @@ import com.google.android.material.navigation.NavigationView;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -88,7 +83,6 @@ public class CalendarAcademicActivity extends AppCompatActivity {
     private StudentModal studentModal;
     private GroupModal groupModal;
     private CourseModal courseModal;
-    private DashTabModal dashTabModal;
     private NotificationModal notificationModal;
     private ProfessorModal professorModal;
     private SubjectModal subjectModal;
@@ -149,7 +143,6 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         studentModal = new ViewModelProvider(this).get(StudentModal.class);
         groupModal = new ViewModelProvider(this).get(GroupModal.class);
         courseModal = new ViewModelProvider(this).get(CourseModal.class);
-        dashTabModal = new ViewModelProvider(this).get(DashTabModal.class);
         notificationModal = new ViewModelProvider(this).get(NotificationModal.class);
         professorModal = new ViewModelProvider(this).get(ProfessorModal.class);
         subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
@@ -388,7 +381,16 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                     calendar.setMaterieId(null);
                                     calendar.setProfessorId(-1L);
 
-                                    calendarModal.insert(calendar);
+                                    long insertedId = calendarModal.insert(calendar);
+
+                                    Notification notification = new Notification();
+                                    notification.setType("calendar");
+
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        notification.setTime(LocalTime.now().format(formatter));
+                                    }
+                                    notification.setCauseId(Math.toIntExact(insertedId));
+                                    notificationModal.insert(notification);
 
                                     tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v4);
                                     editOrarInfoTab.setVisibility(View.GONE);
@@ -424,6 +426,15 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                                         //actualizam curs
                                                         calendar.setValabilPentru(spinnerValabilPentru.getSelectedItem().toString());
                                                         calendar.setEveniment(eveniment.getText().toString());
+
+                                                        Notification notification = new Notification();
+                                                        notification.setType("calendar");
+
+                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                            notification.setTime(LocalTime.now().format(formatter));
+                                                        }
+                                                        notification.setCauseId(Math.toIntExact(calendar.getCalendarId()));
+                                                        notificationModal.insert(notification);
                                                         calendarModal.update(calendar);
                                                         processCourseData(calendar, spinnerValabilPentru.getSelectedItem().toString(), eveniment.getText().toString());
 
@@ -592,7 +603,16 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                                     calendar.setMaterieId(subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
                                                     calendar.setProfessorId(professorId);
 
-                                                    calendarModal.insert(calendar);
+                                                    long insertedId = calendarModal.insert(calendar);
+
+                                                    Notification notification = new Notification();
+                                                    notification.setType("examen");
+
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                        notification.setTime(LocalTime.now().format(formatter));
+                                                    }
+                                                    notification.setCauseId(Math.toIntExact(insertedId));
+                                                    notificationModal.insert(notification);
 
                                                     tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v4);
                                                     editOrarInfoTab.setVisibility(View.GONE);
@@ -734,7 +754,16 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                                             calendar.setMaterieId(subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
                                                             calendar.setProfessorId(professorId);
 
-                                                            calendarModal.insert(calendar);
+                                                            long insertedId = calendarModal.insert(calendar);
+
+                                                            Notification notification = new Notification();
+                                                            notification.setType("examen");
+
+                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                                notification.setTime(LocalTime.now().format(formatter));
+                                                            }
+                                                            notification.setCauseId(Math.toIntExact(insertedId));
+                                                            notificationModal.insert(notification);
 
                                                             tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v4);
                                                             editOrarInfoTab.setVisibility(View.GONE);
@@ -861,8 +890,10 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                     Intent intent = new Intent(CalendarAcademicActivity.this, ExtracurricularActivity.class);
                     startActivity(intent);
                     finish();
-                } else if (itemId == R.id.cantina) {
                 } else if (itemId == R.id.informatii) {
+                    Intent intent = new Intent(CalendarAcademicActivity.this, InformatiiGeneraleActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 else if(itemId == R.id.creareContNou) {
                     Intent intent = new Intent(CalendarAcademicActivity.this, RegisterActivity.class);
@@ -885,6 +916,10 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                     finish();
                 }
                 if(item.getItemId() == R.id.setari){
+                    Intent intent = new Intent(CalendarAcademicActivity.this, NotificationActivity.class);
+                    intent.putExtra("previousActivity", "CalendarAcademicActivity");
+                    startActivity(intent);
+                    finish();
                      }
                 if(item.getItemId() == R.id.deconectare){
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -1248,6 +1283,16 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                                 calendar.setOraFinal(oraF);
                                                 calendar.setOraInceput(oraI);
                                                 calendar.setMaterieId(subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
+
+
+                                                Notification notification = new Notification();
+                                                notification.setType("examen");
+
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    notification.setTime(LocalTime.now().format(formatter));
+                                                }
+                                                notification.setCauseId(Math.toIntExact(calendar.getCalendarId()));
+                                                notificationModal.insert(notification);
 
                                                 calendarModal.update(calendar);
                                                 editOrarInfoTab.setVisibility(View.GONE);

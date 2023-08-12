@@ -36,7 +36,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplicationfmi.Modals.CalendarModal;
 import com.example.myapplicationfmi.Modals.CourseModal;
-import com.example.myapplicationfmi.Modals.DashTabModal;
 import com.example.myapplicationfmi.Modals.GroupModal;
 import com.example.myapplicationfmi.Modals.NoteModal;
 import com.example.myapplicationfmi.Modals.NotificationModal;
@@ -47,8 +46,8 @@ import com.example.myapplicationfmi.Modals.SubjectModal;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.GroupWithStudents;
 import com.example.myapplicationfmi.beans.Note;
+import com.example.myapplicationfmi.beans.Notification;
 import com.example.myapplicationfmi.beans.Professor;
-import com.example.myapplicationfmi.beans.ProfessorSubject;
 import com.example.myapplicationfmi.beans.ProfessorWithSubjects;
 import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
@@ -79,7 +78,6 @@ public class CarnetActivity extends AppCompatActivity {
     private StudentModal studentModal;
     private GroupModal groupModal;
     private CourseModal courseModal;
-    private DashTabModal dashTabModal;
     private NotificationModal notificationModal;
     private ProfessorModal professorModal;
     private SubjectModal subjectModal;
@@ -138,7 +136,6 @@ public class CarnetActivity extends AppCompatActivity {
         studentModal = new ViewModelProvider(this).get(StudentModal.class);
         groupModal = new ViewModelProvider(this).get(GroupModal.class);
         courseModal = new ViewModelProvider(this).get(CourseModal.class);
-        dashTabModal = new ViewModelProvider(this).get(DashTabModal.class);
         notificationModal = new ViewModelProvider(this).get(NotificationModal.class);
         professorModal = new ViewModelProvider(this).get(ProfessorModal.class);
         subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
@@ -472,6 +469,15 @@ public class CarnetActivity extends AppCompatActivity {
                                                         updateSelectionArgs
                                                 );
 
+                                                Notification notification = new Notification();
+                                                notification.setType("nota actualizata");
+
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    notification.setTime(LocalTime.now().format(formatter));
+                                                }
+                                                notification.setCauseId(Math.toIntExact(noteId));
+                                                notificationModal.insert(notification);
+
                                                 if ((TableRow) tableLayout.getChildAt(finalI + 1) != null) {
                                                     ((EditText) ((TableRow) tableLayout.getChildAt(finalI + 1)).getChildAt(1))
                                                             .setBackgroundResource(R.drawable.lavender_border_v6);
@@ -564,9 +570,18 @@ public class CarnetActivity extends AppCompatActivity {
                                                     note.setOraContestatie(LocalTime.parse(String.format(Locale.US, "%02d", hourPicker.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker.getValue()])), formatter));
                                                 }
                                                 note.setLocked(true);
-                                                noteModal.insert(note);
+                                                long insertedId = noteModal.insert(note);
                                                 editContestatii.setVisibility(View.GONE);
                                                 buttonAdaugaNote.setVisibility(View.VISIBLE);
+
+                                                Notification notification = new Notification();
+                                                notification.setType("nota noua");
+
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    notification.setTime(LocalTime.now().format(formatter));
+                                                }
+                                                notification.setCauseId(Math.toIntExact(insertedId));
+                                                notificationModal.insert(notification);
 
                                                 ((EditText) ((TableRow) tableLayout.getChildAt(i + 1)).getChildAt(1)).setBackgroundResource(R.drawable.lavender_border_v6);
                                                 ((EditText) ((TableRow) tableLayout.getChildAt(i + 1)).getChildAt(1)).setFocusable(false);
@@ -992,8 +1007,10 @@ public class CarnetActivity extends AppCompatActivity {
                     Intent intent = new Intent(CarnetActivity.this, ExtracurricularActivity.class);
                     startActivity(intent);
                     finish();
-                } else if (itemId == R.id.cantina) {
                 } else if (itemId == R.id.informatii) {
+                    Intent intent = new Intent(CarnetActivity.this, InformatiiGeneraleActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 else if(itemId == R.id.creareContNou) {
                     Intent intent = new Intent(CarnetActivity.this, RegisterActivity.class);
@@ -1016,6 +1033,10 @@ public class CarnetActivity extends AppCompatActivity {
                     finish();
                 }
                 if(item.getItemId() == R.id.setari){
+                    Intent intent = new Intent(CarnetActivity.this, NotificationActivity.class);
+                    intent.putExtra("previousActivity", "CarnetActivity");
+                    startActivity(intent);
+                    finish();
                 }
                 if(item.getItemId() == R.id.deconectare){
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);

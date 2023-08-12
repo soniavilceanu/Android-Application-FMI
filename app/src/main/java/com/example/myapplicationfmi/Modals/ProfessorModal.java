@@ -1,12 +1,15 @@
 package com.example.myapplicationfmi.Modals;
 
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.Repositories.ProfessorRepository;
+import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Professor;
 import com.example.myapplicationfmi.beans.ProfessorWithGroups;
 import com.example.myapplicationfmi.beans.ProfessorWithSubjects;
@@ -17,16 +20,19 @@ public class ProfessorModal extends AndroidViewModel {
     private ProfessorRepository repository;
     private LiveData<List<Professor>> allprofessors;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public ProfessorModal(@NonNull Application application) {
         super(application);
         repository = new ProfessorRepository(application);
         allprofessors = repository.getAllProfessors();
     }
 
-    public void insert(Professor model) {
-        repository.insert(model);
-    }
-
+//    public void insert(Professor model) {
+//        repository.insert(model);
+//    }
+public long insert(Professor model) {
+    return repository.insert(model);
+}
     public void update(Professor model) {
         repository.update(model);
     }

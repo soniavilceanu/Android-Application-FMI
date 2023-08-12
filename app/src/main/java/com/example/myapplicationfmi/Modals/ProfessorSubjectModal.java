@@ -1,8 +1,10 @@
 package com.example.myapplicationfmi.Modals;
 
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
@@ -20,6 +22,7 @@ public class ProfessorSubjectModal extends AndroidViewModel {
     private LiveData<List<ProfessorSubject>> allprofessorSubjects;
 
     // constructor for our view modal.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public ProfessorSubjectModal(@NonNull Application application) {
         super(application);
         repository = new ProfessorSubjectRepository(application);

@@ -2,7 +2,9 @@ package com.example.myapplicationfmi.Repositories;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.DAO.CalendarDAO;
@@ -11,19 +13,29 @@ import com.example.myapplicationfmi.beans.Calendar;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class CalendarRepository {
 
     private CalendarDAO dao;
     private LiveData<List<Calendar>> allcalendars;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public CalendarRepository(Application application) {
         MyRoomDatabase database = MyRoomDatabase.getInstance(application);
         dao = database.calendarDao();
         allcalendars = dao.getAllCalendars();
     }
 
-    public void insert(Calendar model) {
-        new InsertcalendarAsyncTask(dao).execute(model);
+//    public void insert(Calendar model) {
+//        new InsertcalendarAsyncTask(dao).execute(model);
+//    }
+    public long insert(Calendar model) {
+        try {
+            return new InsertcalendarAsyncTask(dao).execute(model).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return -1; // Return a default value or handle the error case
+        }
     }
     public void update(Calendar model) {
         new UpdatecalendarAsyncTask(dao).execute(model);
@@ -46,7 +58,10 @@ public class CalendarRepository {
     public LiveData<List<Calendar>> getCalendarsByLunaIdSaptamanaAndZiuaSaptamanii(long lunaId, String saptamana, int ziuaSaptamanii){
         return dao.getCalendarsByLunaIdSaptamanaAndZiuaSaptamanii(lunaId,saptamana,ziuaSaptamanii);
     }
-    private static class InsertcalendarAsyncTask extends AsyncTask<Calendar, Void, Void> {
+    public LiveData<Calendar> getCalendarById(long calendarId){
+        return dao.getCalendarById(calendarId);
+    }
+    private static class InsertcalendarAsyncTask extends AsyncTask<Calendar, Void, Long> {
         private CalendarDAO dao;
 
         private InsertcalendarAsyncTask(CalendarDAO dao) {
@@ -54,10 +69,9 @@ public class CalendarRepository {
         }
 
         @Override
-        protected Void doInBackground(Calendar... model) {
+        protected Long doInBackground(Calendar... model) {
             // below line is use to insert our modal in dao.
-            dao.insertCalendar(model[0]);
-            return null;
+            return dao.insertCalendar(model[0]);
         }
     }
     private static class UpdatecalendarAsyncTask extends AsyncTask<Calendar, Void, Void> {

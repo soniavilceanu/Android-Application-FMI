@@ -1,8 +1,10 @@
 package com.example.myapplicationfmi.Modals;
 
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
@@ -19,14 +21,19 @@ public class CalendarModal extends AndroidViewModel {
 
     private LiveData<List<Calendar>> allcalendars;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public CalendarModal(@NonNull Application application) {
         super(application);
         repository = new CalendarRepository(application);
         allcalendars = repository.getAllCalendars();
     }
 
-    public void insert(Calendar model) {
-        repository.insert(model);
+//    public void insert(Calendar model) {
+//        repository.insert(model);
+//    }
+
+    public long insert(Calendar model) {
+        return repository.insert(model);
     }
 
     public void update(Calendar model) {
@@ -52,5 +59,8 @@ public class CalendarModal extends AndroidViewModel {
     }
     public LiveData<List<Calendar>> getCalendarsByLunaIdSaptamanaAndZiuaSaptamanii(long lunaId, String saptamana, int ziuaSaptamanii){
         return repository.getCalendarsByLunaIdSaptamanaAndZiuaSaptamanii(lunaId,saptamana,ziuaSaptamanii);
+    }
+    public LiveData<Calendar> getCalendarById(long calendarId){
+        return repository.getCalendarById(calendarId);
     }
 }

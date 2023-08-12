@@ -27,7 +27,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplicationfmi.Modals.CourseModal;
-import com.example.myapplicationfmi.Modals.DashTabModal;
 import com.example.myapplicationfmi.Modals.GroupModal;
 import com.example.myapplicationfmi.Modals.NotificationModal;
 import com.example.myapplicationfmi.Modals.ProfessorModal;
@@ -72,7 +71,6 @@ public class RegisterActivity extends AppCompatActivity {
     private StudentModal studentModal;
     private GroupModal groupModal;
     private CourseModal courseModal;
-    private DashTabModal dashTabModal;
     private NotificationModal notificationModal;
     private ProfessorModal professorModal;
     private SubjectModal subjectModal;
@@ -99,7 +97,6 @@ public class RegisterActivity extends AppCompatActivity {
         studentModal = new ViewModelProvider(this).get(StudentModal.class);
         groupModal = new ViewModelProvider(this).get(GroupModal.class);
         courseModal = new ViewModelProvider(this).get(CourseModal.class);
-        dashTabModal = new ViewModelProvider(this).get(DashTabModal.class);
         notificationModal = new ViewModelProvider(this).get(NotificationModal.class);
         professorModal = new ViewModelProvider(this).get(ProfessorModal.class);
         subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
@@ -675,7 +672,7 @@ public class RegisterActivity extends AppCompatActivity {
             groupModal.getGroupIdByNumarAndForma(numar, formaDeInvatamant).observe(this, new Observer<Long>() {
                 @Override
                 public void onChanged(Long groupId) {
-                    studentModal.insert(new Student(NumeHolder, PrenumeHolder, EmailHolder, PasswordHolder, Integer.valueOf(String.valueOf(spinnerStudentAn.getSelectedItem().toString().charAt(spinnerStudentAn.getSelectedItem().toString().length() - 1))), checkboxTaxa.isChecked(), checkboxBursa.isChecked(), Integer.valueOf(editStudentAnIncepereHolder), finalTipStudii, groupId));
+                    studentModal.insert(new Student(NumeHolder, PrenumeHolder, EmailHolder, PasswordHolder, Integer.valueOf(String.valueOf(spinnerStudentAn.getSelectedItem().toString().charAt(spinnerStudentAn.getSelectedItem().toString().length() - 1))), checkboxTaxa.isChecked(), checkboxBursa.isChecked(), Integer.valueOf(editStudentAnIncepereHolder), finalTipStudii, groupId, false));
 
                 }
             });
@@ -693,7 +690,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else if(EditTextEmptyHolder == true && (int)spinnerTipCont.getSelectedItemPosition() == 2)
         {
-            studentModal.insert(new Student(NumeHolder, PrenumeHolder, EmailHolder, PasswordHolder, 0, false, false, 0, null, null));
+            studentModal.insert(new Student(NumeHolder, PrenumeHolder, EmailHolder, PasswordHolder, 0, false, false, 0, null, null, true));
 
 //            SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelper.TABLE_NAME+" (nume,prenume,email,password,an,serie,grupa,taxa,bursa,an_inscriere,forma_de_invatamant,tip_studii)" +
 //                    " VALUES('"+NumeHolder+"', '"+null+"', '"+EmailHolder+"', '"+PasswordHolder+"', '"+null+"', '"+null+"', '"+null+"', '"+null+"'," +

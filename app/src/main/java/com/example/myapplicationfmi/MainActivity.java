@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             //If any of login EditText empty then this block will be executed.
-            Toast.makeText(MainActivity.this,"Please Enter UserName or Password.",Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this,"Introduceți username și parolă",Toast.LENGTH_LONG).show();
         }
     }
     // Checking EditText is empty or not.
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("email", String.valueOf(Email.getText()));
             editor.apply();
-            Toast.makeText(MainActivity.this,"Login Successful",Toast.LENGTH_LONG).show();
+            //Toast.makeText(MainActivity.this,"Login Successful",Toast.LENGTH_LONG).show();
             // Going to Dashboard activity after login success message.
             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
             // Sending Email to Dashboard Activity using intent.
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         else {
-            Toast.makeText(MainActivity.this,"UserName or Password is Wrong, Please Try Again.",Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this,"Username sau parola greșită! Încercați din nou",Toast.LENGTH_LONG).show();
         }
         TempPassword = "NOT_FOUND" ;
     }

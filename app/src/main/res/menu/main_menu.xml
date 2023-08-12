@@ -41,9 +41,6 @@
     <item android:title="Altele">
         <menu>
             <group android:checkableBehavior="single">
-                <item android:id="@+id/cantina"
-                    android:icon="@drawable/baseline_restaurant_24"
-                    android:title="Cantină"/>
                 <item android:id="@+id/informatii"
                     android:icon="@drawable/baseline_perm_device_information_24"
                     android:title="Informații generale"/>

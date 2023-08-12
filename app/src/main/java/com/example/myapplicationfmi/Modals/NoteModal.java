@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.Repositories.NoteRepository;
+import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Note;
 
 import java.util.List;
@@ -30,10 +31,12 @@ public class NoteModal extends AndroidViewModel {
     }
 
     // below method is use to insert the data to our repository.
-    public void insert(Note model) {
-        repository.insert(model);
+//    public void insert(Note model) {
+//        repository.insert(model);
+//    }
+    public long insert(Note model) {
+        return repository.insert(model);
     }
-
     // below line is to update data in our repository.
     public void update(Note model) {
         repository.update(model);
@@ -62,5 +65,8 @@ public class NoteModal extends AndroidViewModel {
     }
     public LiveData<Note> getNoteByStudentAndSubjectIdAndAnAndSemestru(long studentId, long subjectId, Integer an, Integer semestru){
         return repository.getNoteByStudentAndSubjectIdAndAnAndSemestru(studentId,subjectId,an,semestru);
+    }
+    public LiveData<Note> getNoteByNoteId(long noteId){
+        return repository.getNoteByNoteId(noteId);
     }
 }

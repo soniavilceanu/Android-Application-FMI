@@ -9,6 +9,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
+            android:name=".NotificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InformatiiGeneraleActivity"
+            android:exported="false" />
+        <activity
             android:name=".CarnetActivity"
             android:exported="false" />
         <activity

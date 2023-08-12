@@ -19,7 +19,7 @@
     <item
         android:id="@+id/setari"
         android:title="Setări"
-        android:icon="@drawable/baseline_settings_24"
+        android:icon="@drawable/baseline_notifications_24"
         android:contentDescription="Setari"
         app:showAsAction="always"
         />

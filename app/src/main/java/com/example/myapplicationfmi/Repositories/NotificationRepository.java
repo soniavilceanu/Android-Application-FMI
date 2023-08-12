@@ -7,11 +7,14 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
+import com.example.myapplicationfmi.DAO.CourseDAO;
 import com.example.myapplicationfmi.DAO.NotificationDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
+import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.Notification;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class NotificationRepository {
 
@@ -30,10 +33,17 @@ public class NotificationRepository {
     }
 
     // creating a method to insert the data to our database.
-    public void insert(Notification model) {
-        new InsertnotificationAsyncTask(dao).execute(model);
+//    public void insert(Notification model) {
+//        new InsertnotificationAsyncTask(dao).execute(model);
+//    }
+    public long insert(Notification model) {
+        try {
+            return new NotificationRepository.InsertnotificationAsyncTask(dao).execute(model).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
-
     // creating a method to update data in database.
     public void update(Notification model) {
         new UpdatenotificationAsyncTask(dao).execute(model);
@@ -42,6 +52,9 @@ public class NotificationRepository {
     // creating a method to delete the data in our database.
     public void delete(Notification model) {
         new DeletenotificationAsyncTask(dao).execute(model);
+    }
+    public void deleteNotificationsWithType(String type) {
+        new NotificationRepository.DeleteNotificationsWithTypeAsyncTask(dao).execute(type);
     }
 
     // below is the method to delete all the notifications.
@@ -54,8 +67,12 @@ public class NotificationRepository {
         return allnotifications;
     }
 
+    public LiveData<List<Notification>> getAllNotificationsByType(String type){
+        return dao.getAllNotificationsByType(type);
+    }
+
     // we are creating a async task method to insert new notification.
-    private static class InsertnotificationAsyncTask extends AsyncTask<Notification, Void, Void> {
+    private static class InsertnotificationAsyncTask extends AsyncTask<Notification, Void, Long> {
         private NotificationDAO dao;
 
         private InsertnotificationAsyncTask(NotificationDAO dao) {
@@ -63,10 +80,9 @@ public class NotificationRepository {
         }
 
         @Override
-        protected Void doInBackground(Notification... model) {
+        protected Long doInBackground(Notification... model) {
             // below line is use to insert our modal in dao.
-            dao.insertNotification(model[0]);
-            return null;
+            return dao.insertNotification(model[0]);
         }
     }
 
@@ -115,6 +131,19 @@ public class NotificationRepository {
             // on below line calling method
             // to delete all notifications.
             dao.deleteAllNotifications();
+            return null;
+        }
+    }
+    private static class DeleteNotificationsWithTypeAsyncTask extends AsyncTask<String, Void, Void> {
+        private NotificationDAO dao;
+
+        private DeleteNotificationsWithTypeAsyncTask(NotificationDAO dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(String... types) {
+            dao.deleteNotificationsWithType(types[0]);
             return null;
         }
     }

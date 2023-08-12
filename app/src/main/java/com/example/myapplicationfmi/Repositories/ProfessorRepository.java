@@ -2,16 +2,20 @@ package com.example.myapplicationfmi.Repositories;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.DAO.ProfessorDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
+import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.Professor;
 import com.example.myapplicationfmi.beans.ProfessorWithGroups;
 import com.example.myapplicationfmi.beans.ProfessorWithSubjects;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ProfessorRepository {
 
@@ -22,6 +26,7 @@ public class ProfessorRepository {
 
     // creating a constructor for our variables
     // and passing the variables to it.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public ProfessorRepository(Application application) {
         MyRoomDatabase database = MyRoomDatabase.getInstance(application);
         dao = database.professorDao();
@@ -29,10 +34,17 @@ public class ProfessorRepository {
     }
 
     // creating a method to insert the data to our database.
-    public void insert(Professor model) {
-        new InsertprofessorAsyncTask(dao).execute(model);
+//    public void insert(Professor model) {
+//        new InsertprofessorAsyncTask(dao).execute(model);
+//    }
+    public long insert(Professor model) {
+        try {
+            return new ProfessorRepository.InsertprofessorAsyncTask(dao).execute(model).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
-
     // creating a method to update data in database.
     public void update(Professor model) {
         new UpdateprofessorAsyncTask(dao).execute(model);
@@ -70,7 +82,7 @@ public class ProfessorRepository {
     }
 
     // we are creating a async task method to insert new professor.
-    private static class InsertprofessorAsyncTask extends AsyncTask<Professor, Void, Void> {
+    private static class InsertprofessorAsyncTask extends AsyncTask<Professor, Void, Long> {
         private ProfessorDAO dao;
 
         private InsertprofessorAsyncTask(ProfessorDAO dao) {
@@ -78,10 +90,9 @@ public class ProfessorRepository {
         }
 
         @Override
-        protected Void doInBackground(Professor... model) {
+        protected Long doInBackground(Professor... model) {
             // below line is use to insert our modal in dao.
-            dao.insertProfessor(model[0]);
-            return null;
+            return dao.insertProfessor(model[0]);
         }
     }
 

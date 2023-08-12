@@ -2,7 +2,9 @@ package com.example.myapplicationfmi.Repositories;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.DAO.ProfessorSubjectDAO;
@@ -20,6 +22,7 @@ public class ProfessorSubjectRepository {
 
     // creating a constructor for our variables
     // and passing the variables to it.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public ProfessorSubjectRepository(Application application) {
         MyRoomDatabase database = MyRoomDatabase.getInstance(application);
         dao = database.professorSubjectDao();

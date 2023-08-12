@@ -11,10 +11,12 @@ import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.DAO.SubjectDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
+import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.Subject;
 import com.example.myapplicationfmi.beans.SubjectWithProfessors;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class SubjectRepository {
 
@@ -33,10 +35,17 @@ public class SubjectRepository {
     }
 
     // creating a method to insert the data to our database.
-    public void insert(Subject model) {
-        new InsertsubjectAsyncTask(dao).execute(model);
+//    public void insert(Subject model) {
+//        new InsertsubjectAsyncTask(dao).execute(model);
+//    }
+    public long insert(Subject model) {
+        try {
+            return new SubjectRepository.InsertsubjectAsyncTask(dao).execute(model).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
-
     // creating a method to update data in database.
     public void update(Subject model) {
         new UpdatesubjectAsyncTask(dao).execute(model);
@@ -72,7 +81,7 @@ public class SubjectRepository {
 
 
     // we are creating a async task method to insert new subject.
-    private static class InsertsubjectAsyncTask extends AsyncTask<Subject, Void, Void> {
+    private static class InsertsubjectAsyncTask extends AsyncTask<Subject, Void, Long> {
         private SubjectDAO dao;
 
         private InsertsubjectAsyncTask(SubjectDAO dao) {
@@ -80,10 +89,9 @@ public class SubjectRepository {
         }
 
         @Override
-        protected Void doInBackground(Subject... model) {
+        protected Long doInBackground(Subject... model) {
             // below line is use to insert our modal in dao.
-            dao.insertSubject(model[0]);
-            return null;
+            return dao.insertSubject(model[0]);
         }
     }
 

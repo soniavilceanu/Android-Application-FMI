@@ -7,10 +7,12 @@ import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.DAO.GroupDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
+import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.GroupWithStudents;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class GroupRepository {
 
@@ -28,8 +30,16 @@ public class GroupRepository {
     }
 
     // creating a method to insert the data to our database.
-    public void insert(Group model) {
-        new InsertgroupAsyncTask(dao).execute(model);
+//    public void insert(Group model) {
+//        new InsertgroupAsyncTask(dao).execute(model);
+//    }
+    public long insert(Group model) {
+        try {
+            return new GroupRepository.InsertgroupAsyncTask(dao).execute(model).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     // creating a method to update data in database.
@@ -64,7 +74,7 @@ public class GroupRepository {
     }
 
     // we are creating a async task method to insert new group.
-    private static class InsertgroupAsyncTask extends AsyncTask<Group, Void, Void> {
+    private static class InsertgroupAsyncTask extends AsyncTask<Group, Void, Long> {
         private GroupDAO dao;
 
         private InsertgroupAsyncTask(GroupDAO dao) {
@@ -72,10 +82,9 @@ public class GroupRepository {
         }
 
         @Override
-        protected Void doInBackground(Group... model) {
+        protected Long doInBackground(Group... model) {
             // below line is use to insert our modal in dao.
-            dao.insertGroup(model[0]);
-            return null;
+            return dao.insertGroup(model[0]);
         }
     }
 

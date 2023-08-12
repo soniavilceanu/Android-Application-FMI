@@ -12,11 +12,9 @@ public class Notification {
     @NonNull
     public Long notificationId;
 
-    public String text;
     public String time;
-
-    @ColumnInfo(name = "student_id")
-    public Long studentId; // Foreign key referencing Students table
+    public String type; // activitate, anunt, internship, voluntariat, nota, calendar, orar, voluntariatInscris
+    public Integer causeId; //dashboardTabId, noteId, calendarId, grupaId, studentId
 
     public Long getNotificationId() {
         return notificationId;
@@ -26,13 +24,6 @@ public class Notification {
         this.notificationId = notificationId;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 
     public String getTime() {
         return time;
@@ -42,19 +33,28 @@ public class Notification {
         this.time = time;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public String getType() {
+        return type;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Integer getCauseId() {
+        return causeId;
+    }
+
+    public void setCauseId(Integer causeId) {
+        this.causeId = causeId;
     }
 
     @Ignore
-    public Notification(String text, String time, Long studentId) {
-        this.text = text;
+    public Notification(@NonNull Long notificationId, String time, String type, Integer causeId) {
+        this.notificationId = notificationId;
         this.time = time;
-        this.studentId = studentId;
+        this.type = type;
+        this.causeId = causeId;
     }
 
     public Notification() {

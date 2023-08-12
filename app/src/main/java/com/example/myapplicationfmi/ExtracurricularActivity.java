@@ -131,8 +131,10 @@ public class ExtracurricularActivity extends AppCompatActivity {
                     finish();
                 } else if (itemId == R.id.internshipVoluntariat) {
                      drawerLayout.closeDrawer(GravityCompat.START);
-                } else if (itemId == R.id.cantina) {
                 } else if (itemId == R.id.informatii) {
+                    Intent intent = new Intent(ExtracurricularActivity.this, InformatiiGeneraleActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 else if(itemId == R.id.creareContNou) {
                     Intent intent = new Intent(ExtracurricularActivity.this, RegisterActivity.class);
@@ -228,7 +230,10 @@ public class ExtracurricularActivity extends AppCompatActivity {
                     finish();
                 }
                 if(item.getItemId() == R.id.setari){
-                    Toast.makeText(ExtracurricularActivity.this, "Settings selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ExtracurricularActivity.this, NotificationActivity.class);
+                    intent.putExtra("previousActivity", "ExtracurricularActivity");
+                    startActivity(intent);
+                    finish();
                 }
                 if(item.getItemId() == R.id.deconectare){
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);

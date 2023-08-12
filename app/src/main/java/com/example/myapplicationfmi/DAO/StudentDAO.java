@@ -10,7 +10,6 @@ import androidx.room.Update;
 
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Student;
-import com.example.myapplicationfmi.beans.StudentWithNotifications;
 
 import java.util.List;
 @Dao
@@ -32,10 +31,6 @@ public interface StudentDAO {
 
     @Query("SELECT * FROM Students WHERE studentId = :studentId")
     LiveData<Student> getStudentById(long studentId);
-
-    @Transaction
-    @Query("SELECT * FROM Students WHERE studentId = :studentId")
-    StudentWithNotifications getStudentWithNotifications(long studentId);
 
     @Query("SELECT * FROM Students WHERE email = :email")
     LiveData<Student> getStudentByEmail(String email);

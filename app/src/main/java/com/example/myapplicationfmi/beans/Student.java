@@ -21,6 +21,7 @@ public class Student implements Comparable<Student>{
     public boolean bursa;
     public int anInscriere;
     public String tipStudii;
+    public boolean asmi;
 
     @ColumnInfo(name = "grupa_id")
     public Long grupaId; // Foreign key referencing Groups table
@@ -113,8 +114,16 @@ public class Student implements Comparable<Student>{
         this.grupaId = grupaId;
     }
 
+    public boolean isAsmi() {
+        return asmi;
+    }
+
+    public void setAsmi(boolean asmi) {
+        this.asmi = asmi;
+    }
+
     @Ignore
-    public Student(String nume, String prenume, String email, String parola, int an, boolean taxa, boolean bursa, int anInscriere, String tipStudii, Long grupaId) {
+    public Student(String nume, String prenume, String email, String parola, int an, boolean taxa, boolean bursa, int anInscriere, String tipStudii, Long grupaId, boolean asmi) {
         this.nume = nume;
         this.prenume = prenume;
         this.email = email;
@@ -125,12 +134,14 @@ public class Student implements Comparable<Student>{
         this.anInscriere = anInscriere;
         this.tipStudii = tipStudii;
         this.grupaId = grupaId;
+        this.asmi = asmi;
     }
 
     public Student() {
     }
     @Override
     public int compareTo(Student otherStudent) {
+        //pentru ordonare alfabetica
         return (this.nume + " " + this.prenume).compareTo(otherStudent.nume + " " + otherStudent.prenume);
     }
 }

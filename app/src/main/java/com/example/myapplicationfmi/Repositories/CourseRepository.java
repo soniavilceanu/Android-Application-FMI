@@ -9,11 +9,13 @@ import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.DAO.CourseDAO;
 import com.example.myapplicationfmi.MyRoomDatabase;
+import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Subject;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class CourseRepository {
 
@@ -26,8 +28,16 @@ public class CourseRepository {
         allcourses = dao.getAllCourses();
     }
 
-    public void insert(Course model) {
-        new InsertcourseAsyncTask(dao).execute(model);
+//    public void insert(Course model) {
+//        new InsertcourseAsyncTask(dao).execute(model);
+//    }
+    public long insert(Course model) {
+        try {
+            return new CourseRepository.InsertcourseAsyncTask(dao).execute(model).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
     public void update(Course model) {
         new UpdatecourseAsyncTask(dao).execute(model);
@@ -64,7 +74,7 @@ public class CourseRepository {
         return dao.getSubjectsByGroupId(groupId);
     }
 
-    private static class InsertcourseAsyncTask extends AsyncTask<Course, Void, Void> {
+    private static class InsertcourseAsyncTask extends AsyncTask<Course, Void, Long> {
         private CourseDAO dao;
 
         private InsertcourseAsyncTask(CourseDAO dao) {
@@ -72,10 +82,9 @@ public class CourseRepository {
         }
 
         @Override
-        protected Void doInBackground(Course... model) {
+        protected Long doInBackground(Course... model) {
             // below line is use to insert our modal in dao.
-            dao.insertCourse(model[0]);
-            return null;
+            return dao.insertCourse(model[0]);
         }
     }
     private static class UpdatecourseAsyncTask extends AsyncTask<Course, Void, Void> {

@@ -7,7 +7,6 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
-import com.example.myapplicationfmi.beans.DashTabAndNotification;
 import com.example.myapplicationfmi.beans.Notification;
 import com.example.myapplicationfmi.beans.Student;
 
@@ -30,7 +29,10 @@ public interface NotificationDAO {
     @Query("DELETE FROM Notifications")
     void deleteAllNotifications();
 
-    @Transaction
-    @Query("SELECT * FROM Notifications")
-    public List<DashTabAndNotification> getDashTabAndNotifications();
+    @Query("DELETE FROM Notifications WHERE type = :type")
+    void deleteNotificationsWithType(String type);
+
+    @Query("SELECT * FROM Notifications WHERE type = :type")
+    LiveData<List<Notification>> getAllNotificationsByType(String type);
+
 }

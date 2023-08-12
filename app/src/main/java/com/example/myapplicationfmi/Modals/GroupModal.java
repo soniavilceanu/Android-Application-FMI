@@ -28,8 +28,12 @@ public class GroupModal extends AndroidViewModel {
     }
 
     // below method is use to insert the data to our repository.
-    public void insert(Group model) {
-        repository.insert(model);
+//    public void insert(Group model) {
+//        repository.insert(model);
+//    }
+
+    public long insert(Group model){
+        return repository.insert(model);
     }
 
     // below line is to update data in our repository.

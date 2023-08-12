@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.Repositories.CourseRepository;
+import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Course;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Subject;
@@ -29,8 +30,11 @@ public class CourseModal extends AndroidViewModel {
         allcourses = repository.getAllCourses();
     }
 
-    public void insert(Course model) {
-        repository.insert(model);
+//    public void insert(Course model) {
+//        repository.insert(model);
+//    }
+    public long insert(Course model) {
+        return repository.insert(model);
     }
 
     public void update(Course model) {

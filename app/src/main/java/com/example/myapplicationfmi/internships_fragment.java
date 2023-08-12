@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -29,10 +30,23 @@ import android.widget.Toast;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.myapplicationfmi.Modals.CalendarModal;
+import com.example.myapplicationfmi.Modals.CourseModal;
+import com.example.myapplicationfmi.Modals.GroupModal;
+import com.example.myapplicationfmi.Modals.NoteModal;
+import com.example.myapplicationfmi.Modals.NotificationModal;
+import com.example.myapplicationfmi.Modals.ProfessorModal;
+import com.example.myapplicationfmi.Modals.ProfessorSubjectModal;
+import com.example.myapplicationfmi.Modals.StudentModal;
+import com.example.myapplicationfmi.Modals.SubjectModal;
+import com.example.myapplicationfmi.beans.Notification;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -63,6 +77,17 @@ public class internships_fragment extends Fragment {
     private Button scrollDownButton;
     private int lastDashboardTabId;
     private Button addDashboardTabClose;
+    private DateTimeFormatter formatter;
+    private MyRoomDatabase myRoomDatabase;
+    private StudentModal studentModal;
+    private GroupModal groupModal;
+    private CourseModal courseModal;
+    private NotificationModal notificationModal;
+    private ProfessorModal professorModal;
+    private SubjectModal subjectModal;
+    private ProfessorSubjectModal professorSubjectModal;
+    private CalendarModal calendarModal;
+    private NoteModal noteModal;
 
     // SQLite database build method.
     public void SQLiteDataBaseBuild(){
@@ -192,6 +217,19 @@ public class internships_fragment extends Fragment {
             buttonCreateDashboardTab.setVisibility(View.VISIBLE);
         else buttonCreateDashboardTab.setVisibility(View.GONE);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            formatter = DateTimeFormatter.ofPattern("HH:mm");
+        }
+
+        studentModal = new ViewModelProvider(this).get(StudentModal.class);
+        groupModal = new ViewModelProvider(this).get(GroupModal.class);
+        courseModal = new ViewModelProvider(this).get(CourseModal.class);
+        notificationModal = new ViewModelProvider(this).get(NotificationModal.class);
+        professorModal = new ViewModelProvider(this).get(ProfessorModal.class);
+        subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
+        professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
+        calendarModal = new ViewModelProvider(this).get(CalendarModal.class);
+        noteModal = new ViewModelProvider(this).get(NoteModal.class);
 
         /**
          * tragem datele dashboard-urilor din baza de date
@@ -493,7 +531,7 @@ public class internships_fragment extends Fragment {
                         }
                     });
                 }
-                if (childView instanceof Button && String.valueOf(childView.getId()).equals("dashboardTabDelete")) {
+                if (childView instanceof Button) {
                     final int buttonId = childView.getId();
 
                     //daca e admin facem butonul de delete visibil
@@ -788,6 +826,15 @@ public class internships_fragment extends Fragment {
                 }
                 else {
                     String SQLiteDataBaseQueryHolder;
+
+                    Notification notification = new Notification();
+                    notification.setType("internship");
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        notification.setTime(LocalTime.now().format(formatter));
+                    }
+                    notification.setCauseId(newDashboardTabId);
+                    notificationModal.insert(notification);
 
                     sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
                     // SQLite query to insert data into table.

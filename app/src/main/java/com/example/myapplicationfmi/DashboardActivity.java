@@ -144,8 +144,10 @@ public class DashboardActivity extends AppCompatActivity {
                     Intent intent = new Intent(DashboardActivity.this, ExtracurricularActivity.class);
                     startActivity(intent);
                     finish();
-                } else if (itemId == R.id.cantina) {
                 } else if (itemId == R.id.informatii) {
+                    Intent intent = new Intent(DashboardActivity.this, InformatiiGeneraleActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 else if(itemId == R.id.creareContNou) {
                     Intent intent = new Intent(DashboardActivity.this, RegisterActivity.class);
@@ -241,7 +243,10 @@ public class DashboardActivity extends AppCompatActivity {
                     finish();
                 }
                 if(item.getItemId() == R.id.setari){
-                    Toast.makeText(DashboardActivity.this, "Settings selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(DashboardActivity.this, NotificationActivity.class);
+                    intent.putExtra("previousActivity", "DashboardActivity");
+                    startActivity(intent);
+                    finish();
                 }
                 if(item.getItemId() == R.id.deconectare){
                     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);

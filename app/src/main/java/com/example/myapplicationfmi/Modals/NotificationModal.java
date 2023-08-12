@@ -1,12 +1,15 @@
 package com.example.myapplicationfmi.Modals;
 
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.Repositories.NotificationRepository;
+import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Notification;
 
 import java.util.List;
@@ -20,6 +23,7 @@ public class NotificationModal extends AndroidViewModel {
     private LiveData<List<Notification>> allnotifications;
 
     // constructor for our view modal.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public NotificationModal(@NonNull Application application) {
         super(application);
         repository = new NotificationRepository(application);
@@ -27,10 +31,12 @@ public class NotificationModal extends AndroidViewModel {
     }
 
     // below method is use to insert the data to our repository.
-    public void insert(Notification model) {
-        repository.insert(model);
+//    public void insert(Notification model) {
+//        repository.insert(model);
+//    }
+    public long insert(Notification model) {
+        return repository.insert(model);
     }
-
     // below line is to update data in our repository.
     public void update(Notification model) {
         repository.update(model);
@@ -49,5 +55,13 @@ public class NotificationModal extends AndroidViewModel {
     // below method is to get all the notifications in our list.
     public LiveData<List<Notification>> getAllNotifications() {
         return allnotifications;
+    }
+
+    public void deleteNotificationsWithType(String type) {
+        repository.deleteNotificationsWithType(type);
+    }
+
+    public LiveData<List<Notification>> getAllNotificationsByType(String type){
+        return repository.getAllNotificationsByType(type);
     }
 }

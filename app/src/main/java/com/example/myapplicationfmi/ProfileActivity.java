@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -19,11 +18,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.myapplicationfmi.Modals.CalendarModal;
 import com.example.myapplicationfmi.Modals.CourseModal;
-import com.example.myapplicationfmi.Modals.DashTabModal;
 import com.example.myapplicationfmi.Modals.GroupModal;
 import com.example.myapplicationfmi.Modals.NotificationModal;
 import com.example.myapplicationfmi.Modals.ProfessorModal;
@@ -35,12 +32,9 @@ import com.example.myapplicationfmi.beans.Professor;
 import com.example.myapplicationfmi.beans.ProfessorWithGroups;
 import com.example.myapplicationfmi.beans.ProfessorWithSubjects;
 import com.example.myapplicationfmi.beans.Student;
-import com.example.myapplicationfmi.beans.Subject;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -54,7 +48,6 @@ public class ProfileActivity extends AppCompatActivity {
     private StudentModal studentModal;
     private GroupModal groupModal;
     private CourseModal courseModal;
-    private DashTabModal dashTabModal;
     private NotificationModal notificationModal;
     private ProfessorModal professorModal;
     private SubjectModal subjectModal;
@@ -91,7 +84,6 @@ public class ProfileActivity extends AppCompatActivity {
         studentModal = new ViewModelProvider(this).get(StudentModal.class);
         groupModal = new ViewModelProvider(this).get(GroupModal.class);
         courseModal = new ViewModelProvider(this).get(CourseModal.class);
-        dashTabModal = new ViewModelProvider(this).get(DashTabModal.class);
         notificationModal = new ViewModelProvider(this).get(NotificationModal.class);
         professorModal = new ViewModelProvider(this).get(ProfessorModal.class);
         subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
@@ -326,6 +318,11 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 else if(whereFrom.equals("CarnetActivity")) {
                     Intent intent = new Intent(ProfileActivity.this, CarnetActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(whereFrom.equals("InformatiiGeneraleActivity")) {
+                    Intent intent = new Intent(ProfileActivity.this, InformatiiGeneraleActivity.class);
                     startActivity(intent);
                     finish();
                 }

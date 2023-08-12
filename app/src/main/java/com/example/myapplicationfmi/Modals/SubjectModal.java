@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.Repositories.SubjectRepository;
+import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Subject;
 import com.example.myapplicationfmi.beans.SubjectWithProfessors;
 
@@ -31,10 +32,12 @@ public class SubjectModal extends AndroidViewModel {
     }
 
     // below method is use to insert the data to our repository.
-    public void insert(Subject model) {
-        repository.insert(model);
+//    public void insert(Subject model) {
+//        repository.insert(model);
+//    }
+    public long insert(Subject model) {
+        return repository.insert(model);
     }
-
     // below line is to update data in our repository.
     public void update(Subject model) {
         repository.update(model);

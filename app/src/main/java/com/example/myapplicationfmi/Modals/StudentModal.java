@@ -1,12 +1,15 @@
 package com.example.myapplicationfmi.Modals;
 
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplicationfmi.Repositories.StudentRepository;
+import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Student;
 
 import java.util.List;
@@ -20,6 +23,7 @@ public class StudentModal extends AndroidViewModel {
     private LiveData<List<Student>> allstudents;
 
     // constructor for our view modal.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public StudentModal(@NonNull Application application) {
         super(application);
         repository = new StudentRepository(application);
@@ -27,10 +31,12 @@ public class StudentModal extends AndroidViewModel {
     }
 
     // below method is use to insert the data to our repository.
-    public void insert(Student model) {
-        repository.insert(model);
+//    public void insert(Student model) {
+//        repository.insert(model);
+//    }
+    public long insert(Student model) {
+        return repository.insert(model);
     }
-
     // below line is to update data in our repository.
     public void update(Student model) {
         repository.update(model);
