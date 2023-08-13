@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.example.myapplicationfmi.Modals.CalendarModal;
 import com.example.myapplicationfmi.Modals.CourseModal;
+import com.example.myapplicationfmi.Modals.EvidentaNotificariModal;
+import com.example.myapplicationfmi.Modals.EvidentaVoluntariatModal;
 import com.example.myapplicationfmi.Modals.GroupModal;
 import com.example.myapplicationfmi.Modals.NoteModal;
 import com.example.myapplicationfmi.Modals.NotificationModal;
@@ -32,6 +34,8 @@ import com.example.myapplicationfmi.Modals.ProfessorSubjectModal;
 import com.example.myapplicationfmi.Modals.StudentModal;
 import com.example.myapplicationfmi.Modals.SubjectModal;
 import com.example.myapplicationfmi.beans.Calendar;
+import com.example.myapplicationfmi.beans.EvidentaNotificari;
+import com.example.myapplicationfmi.beans.EvidentaVoluntariat;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Note;
 import com.example.myapplicationfmi.beans.Notification;
@@ -60,8 +64,14 @@ public class NotificationActivity extends AppCompatActivity {
     private ProfessorSubjectModal professorSubjectModal;
     private CalendarModal calendarModal;
     private NoteModal noteModal;
+    private EvidentaNotificariModal evidentaNotificariModal;
+    private EvidentaVoluntariatModal evidentaVoluntariatModal;
     private LinearLayout parentLinearLayout;
     private DateTimeFormatter formatter;
+    private boolean amStersSauPlecat;
+    private boolean avemNotificari;
+    private TextView textAvemNotificari;
+    private List<Long> studentiVoluntari;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +87,17 @@ public class NotificationActivity extends AppCompatActivity {
         professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
         calendarModal = new ViewModelProvider(this).get(CalendarModal.class);
         noteModal = new ViewModelProvider(this).get(NoteModal.class);
+        evidentaNotificariModal = new ViewModelProvider(this).get(EvidentaNotificariModal.class);
+        evidentaVoluntariatModal = new ViewModelProvider(this).get(EvidentaVoluntariatModal.class);
 
         parentLinearLayout = findViewById(R.id.evenimenteLinearLayoutMultiple);
         buttonBack = findViewById(R.id.buttonBack);
+        textAvemNotificari = findViewById(R.id.textAvemNotificari);
+
+        amStersSauPlecat = false;
+        avemNotificari = false;
+        studentiVoluntari = new ArrayList<>();
+
         Intent intent = getIntent();
         String whereFrom = intent.getStringExtra("previousActivity");
 
@@ -90,58 +108,143 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onChanged(Student student) {
                 if(student != null){
-                    notificationModal.getAllNotifications().observe(NotificationActivity.this, new Observer<List<Notification>>() {
+
+                    evidentaNotificariModal.getAllEvidentaNotificariByStudentId(student.getStudentId()).observe(NotificationActivity.this, new Observer<List<EvidentaNotificari>>() {
                         @Override
-                        public void onChanged(List<Notification> notifications) {
-                            if(notifications != null){
-                                for(int i = 0; i < notifications.size(); i ++){
-                                    if(notifications.get(i).getType().equals("orar")){
-                                        //vrem sa fim notificati de orar actualizat doar pt grupa noastra
-                                        if(student.getGrupaId() == notifications.get(i).getCauseId().longValue())
-                                            addEvenimentTab("Orarul a fost actualizat!");
-                                    }
+                        public void onChanged(List<EvidentaNotificari> evidentaNotificaris) {
+                            if(evidentaNotificaris != null && evidentaNotificaris.size() > 0){
 
-                                    int finalI = i;
-                                    noteModal.getNoteByNoteId(notifications.get(i).getCauseId()).observe(NotificationActivity.this, new Observer<Note>() {
-                                        @Override
-                                        public void onChanged(Note note) {
-                                            if(note != null)
-                                                if(note.getStudentId() == student.getStudentId()){
-                                                    if(notifications.get(finalI).getType().equals("nota actualizata"))
-                                                        addEvenimentTab("Notele au fost actualizate!");
-                                                    else if(notifications.get(finalI).getType().equals("nota noua"))
-                                                        addEvenimentTab("Note noi adaugate!");
+                                notificationModal.getAllNotifications().observe(NotificationActivity.this, new Observer<List<Notification>>() {
+                                    @Override
+                                    public void onChanged(List<Notification> notifications) {
+                                        if(notifications != null && notifications.size() > 0) {
+                                            if(amStersSauPlecat == false){
+                                            for (int i = 0; i < notifications.size(); i++) {
+
+                                                boolean gasit = false;
+                                                for (int j = 0; j < evidentaNotificaris.size(); j++) {
+                                                    if (evidentaNotificaris.get(j).getNotificationId() == notifications.get(i).getNotificationId()) {
+                                                        gasit = true;
+                                                        break;
+                                                    }
                                                 }
-                                        }
-                                    });
 
-                                    // pt toata lumea
-                                    if(notifications.get(i).getType().equals("activitate"))
-                                        addEvenimentTab("Activitate nou adăugată");
-                                    if(notifications.get(i).getType().equals("anunt"))
-                                        addEvenimentTab("Anunț nou adăugat!");
-                                    if(notifications.get(i).getType().equals("voluntariat"))
-                                        addEvenimentTab("Oportunitate nouă voluntariat ASMI!");
-                                    if(notifications.get(i).getType().equals("internship"))
-                                        addEvenimentTab("Oportunitate nouă internship!");
+                                                if (!gasit) {
 
-                                    if(notifications.get(i).getType().equals("calendar"))
-                                        calendarModal.getCalendarById(notifications.get(i).getCauseId()).observe(NotificationActivity.this, new Observer<Calendar>() {
-                                            @Override
-                                            public void onChanged(Calendar calendar) {
-                                                if(calendar != null)
-                                                    if(calendar.getValabilPentru().equals(student.getTipStudii()))
-                                                        addEvenimentTab("Eveniment nou în calendar!");
+                                                    if (notifications.get(i).getType().equals("voluntariatInscris")) {
+
+                                                        boolean gasit2 = false;
+                                                        for(int ll = 0; ll < studentiVoluntari.size(); ll ++)
+                                                            if(studentiVoluntari.get(ll) == Long.valueOf(notifications.get(i).getCauseId())){
+                                                                gasit2 = true;
+                                                                break;
+                                                            }
+                                                        if(!gasit2){
+                                                            studentiVoluntari.add(Long.valueOf(notifications.get(i).getCauseId()));
+
+                                                            SQLiteHelperVolunteerings dbHelper = new SQLiteHelperVolunteerings(NotificationActivity.this);
+
+                                                            List<String> voluntariateleMele = dbHelper.getDashboardTabIdsByDashboardTabEmail(emailHolder);
+
+                                                            int finalI3 = i;
+                                                            evidentaVoluntariatModal.getAllEvidentaVoluntariatByStudentId(notifications.get(i).getCauseId().longValue()).observe(NotificationActivity.this, new Observer<List<EvidentaVoluntariat>>() {
+                                                                @Override
+                                                                public void onChanged(List<EvidentaVoluntariat> evidentaVoluntariats) {
+                                                                    if (evidentaVoluntariats != null && evidentaVoluntariats.size() > 0) {
+                                                                        for (int j = 0; j < evidentaVoluntariats.size(); j++) {
+
+                                                                            for (int k = 0; k < voluntariateleMele.size(); k++) {
+                                                                                if (evidentaVoluntariats.get(j).getVoluntariatId() == Integer.valueOf(voluntariateleMele.get(k)).longValue()) {
+                                                                                    avemNotificari = true;
+                                                                                    addEvenimentTab("Un student s-a inscris la un voluntariat administrat de tine!", notifications.get(finalI3), student.getStudentId());
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                    if (notifications.get(i).getType().equals("orar")) {
+                                                        //vrem sa fim notificati de orar actualizat doar pt grupa noastra
+                                                        if (student.getGrupaId() == notifications.get(i).getCauseId().longValue()){
+                                                            avemNotificari = true;
+                                                            addEvenimentTab("Orarul a fost actualizat!", notifications.get(i), student.getStudentId());
+                                                        }
+                                                    }
+
+                                                    int finalI = i;
+                                                    int finalI1 = i;
+                                                    noteModal.getNoteByNoteId(notifications.get(i).getCauseId()).observe(NotificationActivity.this, new Observer<Note>() {
+                                                        @Override
+                                                        public void onChanged(Note note) {
+                                                            if (note != null)
+                                                                if (note.getStudentId() == student.getStudentId()) {
+                                                                    if (notifications.get(finalI).getType().equals("nota actualizata")){
+                                                                        avemNotificari = true;
+                                                                        addEvenimentTab("Notele au fost actualizate!", notifications.get(finalI1), student.getStudentId());
+                                                                    }
+                                                                    else if (notifications.get(finalI).getType().equals("nota noua")){
+                                                                        avemNotificari = true;
+                                                                        addEvenimentTab("Note noi adaugate!", notifications.get(finalI1), student.getStudentId());
+                                                                    }
+                                                                }
+                                                        }
+                                                    });
+
+                                                    // pt toata lumea
+                                                    if (notifications.get(i).getType().equals("activitate")){
+                                                        avemNotificari = true;
+                                                        addEvenimentTab("Activitate nou adăugată", notifications.get(i), student.getStudentId());
+                                                    }
+                                                    if (notifications.get(i).getType().equals("anunt")){
+                                                        avemNotificari = true;
+                                                        addEvenimentTab("Anunț nou adăugat!", notifications.get(i), student.getStudentId());
+                                                    }
+                                                    if (notifications.get(i).getType().equals("voluntariat")){
+                                                        avemNotificari = true;
+                                                        addEvenimentTab("Oportunitate nouă voluntariat ASMI!", notifications.get(i), student.getStudentId());
+                                                    }
+                                                    if (notifications.get(i).getType().equals("internship")){
+                                                        avemNotificari = true;
+                                                        addEvenimentTab("Oportunitate nouă internship!", notifications.get(i), student.getStudentId());
+                                                    }
+
+                                                    if (notifications.get(i).getType().equals("calendar")) {
+                                                        int finalI2 = i;
+                                                        calendarModal.getCalendarById(notifications.get(i).getCauseId()).observe(NotificationActivity.this, new Observer<Calendar>() {
+                                                            @Override
+                                                            public void onChanged(Calendar calendar) {
+                                                                if (calendar != null)
+                                                                    if (calendar.getValabilPentru().equals(student.getTipStudii())){
+                                                                        avemNotificari = true;
+                                                                        addEvenimentTab("Eveniment nou în calendar!", notifications.get(finalI2), student.getStudentId());
+                                                                    }
+                                                            }
+                                                        });
+                                                    }
+
+                                                    //eventual doar seria/grupa
+                                                    if (notifications.get(i).getType().equals("examen")){
+                                                        avemNotificari = true;
+                                                        addEvenimentTab("Dată nouă examen a fost stabilită!", notifications.get(i), student.getStudentId());
+                                                    }
+                                                }
+
+                                                if(avemNotificari == false)
+                                                    textAvemNotificari.setVisibility(View.VISIBLE);
+                                                else textAvemNotificari.setVisibility(View.GONE);
+
                                             }
-                                        });
-
-                                    //eventual doar seria/grupa
-                                    if(notifications.get(i).getType().equals("examen"))
-                                        addEvenimentTab("Dată nouă examen a fost stabilită!");
-                                }
+                                        }
+                                        }
+                                    }
+                                });
                             }
                         }
                     });
+
+
                 }
             }
         });
@@ -187,7 +290,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     }
 
-    private void addEvenimentTab(String tipNotificare) {
+    private void addEvenimentTab(String tipNotificare, Notification notification, Long studentId) {
         LinearLayout evenimentTab = new LinearLayout(this);
         evenimentTab.setId(View.generateViewId());
 
@@ -196,6 +299,85 @@ public class NotificationActivity extends AppCompatActivity {
         evenimentTab.setOrientation(LinearLayout.VERTICAL);
         evenimentTab.setLayoutParams(layoutParams);
         evenimentTab.setBackgroundResource(R.drawable.dashboard_article_background_v2);
+
+        evenimentTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               if(notification.getType().equals("nota actualizata") || notification.getType().equals("nota noua")){
+                   amStersSauPlecat = true;
+                   Intent intent = new Intent(NotificationActivity.this, CarnetActivity.class);
+                   startActivity(intent);
+                   finish();
+               }
+               else if(notification.getType().equals("examen") || notification.getType().equals("calendar")){
+                   calendarModal.getCalendarById(notification.getCauseId()).observe(NotificationActivity.this, new Observer<Calendar>() {
+                       @Override
+                       public void onChanged(Calendar calendar) {
+                           if(calendar != null){
+                               amStersSauPlecat = true;
+                               Intent intent = new Intent(NotificationActivity.this, CalendarAcademicActivity.class);
+                               intent.putExtra("prevActivity", "NotificationActivity");
+                               intent.putExtra("luna", calendar.getLunaId());
+                               startActivity(intent);
+                               finish();
+                           }
+                       }
+                   });
+               }
+               else if(notification.getType().equals("voluntariat")){
+                   amStersSauPlecat = true;
+                   Intent intent = new Intent(NotificationActivity.this, ExtracurricularActivity.class);
+                   intent.putExtra("prevActivity", "NotificationActivity");
+                   intent.putExtra("tabItemToSelect", "0");
+                   startActivity(intent);
+                   finish();
+               }
+                else if(notification.getType().equals("internship")){
+                   amStersSauPlecat = true;
+                    Intent intent = new Intent(NotificationActivity.this, ExtracurricularActivity.class);
+                   intent.putExtra("prevActivity", "NotificationActivity");
+                   intent.putExtra("tabItemToSelect", "1");
+                    startActivity(intent);
+                    finish();
+                }
+               else if(notification.getType().equals("anunt")){
+                   amStersSauPlecat = true;
+                   Intent intent = new Intent(NotificationActivity.this, DashboardActivity.class);
+                   intent.putExtra("prevActivity", "NotificationActivity");
+                   intent.putExtra("tabItemToSelect", "0");
+                   startActivity(intent);
+                   finish();
+               }
+               else if(notification.getType().equals("activitate")){
+                   amStersSauPlecat = true;
+                   Intent intent = new Intent(NotificationActivity.this, DashboardActivity.class);
+                   intent.putExtra("prevActivity", "NotificationActivity");
+                   intent.putExtra("tabItemToSelect", "1");
+                   startActivity(intent);
+                   finish();
+               }
+               else if(notification.getType().equals("orar")){
+                   amStersSauPlecat = true;
+                   Intent intent = new Intent(NotificationActivity.this, OrarActivity.class);
+                   startActivity(intent);
+                   finish();
+               }
+               else if(notification.getType().equals("voluntariatInscris")){
+                   amStersSauPlecat = true;
+                   Intent intent = new Intent(NotificationActivity.this, ExtracurricularActivity.class);
+                   intent.putExtra("prevActivity", "NotificationActivity");
+                   intent.putExtra("tabItemToSelect", "0");
+                   startActivity(intent);
+                   finish();
+               }
+
+
+               EvidentaNotificari evidentaNotificari = new EvidentaNotificari();
+               evidentaNotificari.setStudentId(studentId);
+               evidentaNotificari.setNotificationId(notification.getNotificationId());
+               evidentaNotificariModal.insert(evidentaNotificari);
+            }
+        });
 
         LinearLayout valabilPentruLayout = new LinearLayout(this);
         valabilPentruLayout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -233,6 +415,12 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 parentLinearLayout.removeView((View) v.getParent().getParent());
+
+                amStersSauPlecat = true;
+                EvidentaNotificari evidentaNotificari = new EvidentaNotificari();
+                evidentaNotificari.setStudentId(studentId);
+                evidentaNotificari.setNotificationId(notification.getNotificationId());
+                evidentaNotificariModal.insert(evidentaNotificari);
             }
         });
 

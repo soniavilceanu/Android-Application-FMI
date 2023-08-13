@@ -15,6 +15,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.myapplicationfmi.DAO.CalendarDAO;
 import com.example.myapplicationfmi.DAO.CourseDAO;
+import com.example.myapplicationfmi.DAO.EvidentaNotificariDAO;
+import com.example.myapplicationfmi.DAO.EvidentaVoluntariatDAO;
 import com.example.myapplicationfmi.DAO.GroupDAO;
 import com.example.myapplicationfmi.DAO.NoteDAO;
 import com.example.myapplicationfmi.DAO.NotificationDAO;
@@ -26,6 +28,8 @@ import com.example.myapplicationfmi.ModalFactory.LocalDateConverter;
 import com.example.myapplicationfmi.ModalFactory.LocalTimeConverter;
 import com.example.myapplicationfmi.ModalFactory.Migration_10_11;
 import com.example.myapplicationfmi.ModalFactory.Migration_11_12;
+import com.example.myapplicationfmi.ModalFactory.Migration_12_13;
+import com.example.myapplicationfmi.ModalFactory.Migration_13_14;
 import com.example.myapplicationfmi.ModalFactory.Migration_1_2;
 import com.example.myapplicationfmi.ModalFactory.Migration_2_3;
 import com.example.myapplicationfmi.ModalFactory.Migration_3_4;
@@ -37,6 +41,8 @@ import com.example.myapplicationfmi.ModalFactory.Migration_8_9;
 import com.example.myapplicationfmi.ModalFactory.Migration_9_10;
 import com.example.myapplicationfmi.beans.Calendar;
 import com.example.myapplicationfmi.beans.Course;
+import com.example.myapplicationfmi.beans.EvidentaNotificari;
+import com.example.myapplicationfmi.beans.EvidentaVoluntariat;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Note;
 import com.example.myapplicationfmi.beans.Notification;
@@ -46,7 +52,7 @@ import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-@Database(entities = {Notification.class, Student.class, Group.class, Course.class, Professor.class, Subject.class, ProfessorSubject.class, Calendar.class, Note.class}, version = 12)
+@Database(entities = {Notification.class, Student.class, Group.class, Course.class, Professor.class, Subject.class, ProfessorSubject.class, Calendar.class, Note.class, EvidentaNotificari.class, EvidentaVoluntariat.class}, version = 14)
 @TypeConverters({LocalTimeConverter.class, LocalDateConverter.class})
 public abstract class MyRoomDatabase extends RoomDatabase {
     public abstract NotificationDAO notificationDao();
@@ -58,7 +64,9 @@ public abstract class MyRoomDatabase extends RoomDatabase {
     public abstract ProfessorSubjectDAO professorSubjectDao();
     public abstract CalendarDAO calendarDao();
     public abstract NoteDAO noteDao();
-    static final Migration[] MIGRATIONS = {new Migration_1_2(), new Migration_2_3(), new Migration_3_4(), new Migration_4_5(), new Migration_5_6(), new Migration_6_7(), new Migration_7_8(), new Migration_8_9(), new Migration_9_10(), new Migration_10_11(), new Migration_11_12()};
+    public abstract EvidentaNotificariDAO evidentaNotificariDao();
+    public abstract EvidentaVoluntariatDAO evidentaVoluntariatDao();
+    static final Migration[] MIGRATIONS = {new Migration_1_2(), new Migration_2_3(), new Migration_3_4(), new Migration_4_5(), new Migration_5_6(), new Migration_6_7(), new Migration_7_8(), new Migration_8_9(), new Migration_9_10(), new Migration_10_11(), new Migration_11_12(), new Migration_12_13(), new Migration_13_14()};
 
     private static MyRoomDatabase instance;
 
@@ -91,6 +99,8 @@ public abstract class MyRoomDatabase extends RoomDatabase {
             ProfessorSubjectDAO professorSubjectDAO = instance.professorSubjectDao();
             CalendarDAO calendarDAO = instance.calendarDao();
             NoteDAO noteDAO = instance.noteDao();
+            EvidentaNotificariDAO evidentaNotificariDAO = instance.evidentaNotificariDao();
+            EvidentaVoluntariatDAO evidentaVoluntariatDAO = instance.evidentaVoluntariatDao();
         }
         @Override
         protected Void doInBackground(Void... voids) {

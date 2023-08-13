@@ -109,6 +109,15 @@ public class DashboardActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+
+        Intent intent = getIntent();
+        String whereFrom = intent.getStringExtra("prevActivity");
+        String tabItemToSelect = intent.getStringExtra("tabItemToSelect");
+        if(whereFrom != null && whereFrom.equals("NotificationActivity")){
+            tabLayout.getTabAt(Integer.parseInt(tabItemToSelect)).select();
+            viewPager.setCurrentItem(Integer.parseInt(tabItemToSelect));
+        }
+
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {

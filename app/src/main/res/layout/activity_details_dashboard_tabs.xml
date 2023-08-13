@@ -102,5 +102,79 @@
         android:background="@color/white"
         android:layout_marginStart="5dp"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layoutVoluntariat"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/textInscriereVoluntariat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vreau sa ma inscriu!"
+            android:paddingTop="20dp"
+            android:fontFamily="casual"
+            android:paddingBottom="10dp"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:layout_marginEnd="8dp" />
+
+        <CheckBox
+            android:id="@+id/checkboxVoluntariat"
+            android:layout_width="30dp"
+            android:layout_height="30dp">
+        </CheckBox>
+    </LinearLayout>
+
+    <View
+        android:layout_width="380dp"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:id="@+id/textEleviInscrisi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:fontFamily="casual"
+        android:paddingBottom="10dp"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:layout_marginEnd="8dp"
+        android:text="Elevii inscrisi la acest voluntariat:">
+    </TextView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tableLayout"
+        android:layout_marginTop="10dp"
+        android:id="@+id/evenimenteScrollViewMultiple"
+        android:visibility="visible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/studentiVoluntariat"
+            android:visibility="gone"
+            android:orientation="vertical">
+<!--            <TextView-->
+<!--                android:id="@+id/studentInscris"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Nume student"-->
+<!--                android:paddingTop="20dp"-->
+<!--                android:fontFamily="casual"-->
+<!--                android:paddingBottom="10dp"-->
+<!--                android:textSize="22sp"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:layout_marginEnd="8dp" />-->
+<!--            <View-->
+<!--                android:layout_width="380dp"-->
+<!--                android:layout_height="2dp"-->
+<!--                android:background="@color/white"-->
+<!--                android:layout_marginStart="5dp"/>-->
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

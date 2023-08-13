@@ -488,6 +488,7 @@ public class internships_fragment extends Fragment {
                     intent.putExtra("date",dashboardTabDate.getText().toString());
                     intent.putExtra("body",dashboardTabBody.getText().toString());
                     intent.putExtra("previousActivity", "ExtracurricularActivity");
+                    intent.putExtra("previousTabItem", "internship");
 
                     String dashboardTabIdQQuery = String.valueOf(v.getId());
 
@@ -794,6 +795,7 @@ public class internships_fragment extends Fragment {
                         intent.putExtra("date",dashboardTabDate.getText().toString());
                         intent.putExtra("body",dashboardTabBody.getText().toString());
                         intent.putExtra("previousActivity", "ExtracurricularActivity");
+                        intent.putExtra("previousTabItem", "internship");
 
                         String dashboardTabIdQQuery = String.valueOf(v.getId());
 

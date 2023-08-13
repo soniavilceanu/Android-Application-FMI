@@ -1,8 +1,12 @@
 package com.example.myapplicationfmi;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SQLiteHelperVolunteerings extends SQLiteOpenHelper {
     static String DATABASE_NAME="UserDataBase";
@@ -44,4 +48,34 @@ public class SQLiteHelperVolunteerings extends SQLiteOpenHelper {
         onCreate(db);
 
     }
+
+    public List<String> getDashboardTabIdsByDashboardTabEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] columns = { Table_Column_5_Dashboard_Tab_Id };
+
+        String selection = Table_Column_11_Dashboard_Tab_Email + " = ?";
+        String[] selectionArgs = { email };
+
+        Cursor cursor = db.query(TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+
+        List<String> dashboardTabIds = new ArrayList<>();
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndex(Table_Column_5_Dashboard_Tab_Id);
+
+            do {
+                String dashboardTabId = cursor.getString(columnIndex);
+                dashboardTabIds.add(dashboardTabId);
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        db.close();
+
+        return dashboardTabIds;
+    }
+
+
 }

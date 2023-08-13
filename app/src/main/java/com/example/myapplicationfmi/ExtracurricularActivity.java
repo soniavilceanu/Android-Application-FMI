@@ -84,6 +84,14 @@ public class ExtracurricularActivity extends AppCompatActivity {
             creareContNouItem.setVisible(true);
         }
 
+        Intent intent = getIntent();
+        String whereFrom = intent.getStringExtra("prevActivity");
+        String tabItemToSelect = intent.getStringExtra("tabItemToSelect");
+        if(whereFrom != null && whereFrom.equals("NotificationActivity")){
+            tabLayout.getTabAt(Integer.parseInt(tabItemToSelect)).select();
+            viewPager.setCurrentItem(Integer.parseInt(tabItemToSelect));
+        }
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

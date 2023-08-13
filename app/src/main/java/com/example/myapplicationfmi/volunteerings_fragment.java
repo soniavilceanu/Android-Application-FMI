@@ -1,8 +1,11 @@
 package com.example.myapplicationfmi;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -30,6 +33,8 @@ import android.widget.Toast;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplicationfmi.Modals.CalendarModal;
@@ -42,6 +47,7 @@ import com.example.myapplicationfmi.Modals.ProfessorSubjectModal;
 import com.example.myapplicationfmi.Modals.StudentModal;
 import com.example.myapplicationfmi.Modals.SubjectModal;
 import com.example.myapplicationfmi.beans.Notification;
+import com.example.myapplicationfmi.beans.Student;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
@@ -88,11 +94,12 @@ public class volunteerings_fragment extends Fragment {
     private ProfessorSubjectModal professorSubjectModal;
     private CalendarModal calendarModal;
     private NoteModal noteModal;
+    private  String emailHolder;
 
     // SQLite database build method.
     public void SQLiteDataBaseBuild(){
         Context context = requireContext();
-        sqLiteDatabaseObj = context.openOrCreateDatabase(SQLiteHelperVolunteerings.DATABASE_NAME, Context.MODE_PRIVATE, null);
+        sqLiteDatabaseObj = context.openOrCreateDatabase(SQLiteHelperVolunteerings.DATABASE_NAME, MODE_PRIVATE, null);
     }
     // SQLite table build method.
     public void SQLiteTableBuild() {
@@ -182,6 +189,9 @@ public class volunteerings_fragment extends Fragment {
 
         dashboardTabIds = new ArrayList<Integer>();
 
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(DashboardActivity.SHARED_PREFS, MODE_PRIVATE);
+        emailHolder = sharedPreferences.getString("email", "");
+
         View rootView = inflater.inflate(R.layout.fragment_volunteerings_fragment, container, false);
         activitiesRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.activitiesRelativeLayout);
 //        dashboardTabImage = (ImageView) rootView.findViewById(R.id.dashboardTabImage);
@@ -194,6 +204,16 @@ public class volunteerings_fragment extends Fragment {
         addDashboardLink = (EditText) rootView.findViewById(R.id.addDashboardLink);
         addDashboardEmail = (EditText) rootView.findViewById(R.id.addDashboardEmail);
         addDashboardTabClose = (Button) rootView.findViewById(R.id.addDashboardTabClose);
+
+        studentModal = new ViewModelProvider(this).get(StudentModal.class);
+        groupModal = new ViewModelProvider(this).get(GroupModal.class);
+        courseModal = new ViewModelProvider(this).get(CourseModal.class);
+        notificationModal = new ViewModelProvider(this).get(NotificationModal.class);
+        professorModal = new ViewModelProvider(this).get(ProfessorModal.class);
+        subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
+        professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
+        calendarModal = new ViewModelProvider(this).get(CalendarModal.class);
+        noteModal = new ViewModelProvider(this).get(NoteModal.class);
 
         addDashboardTabClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,23 +233,24 @@ public class volunteerings_fragment extends Fragment {
 
         buttonCreateDashboardTab = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
         //daca e admin
-        if(MainActivity.USER_TYPE == 1)
-            buttonCreateDashboardTab.setVisibility(View.VISIBLE);
-        else buttonCreateDashboardTab.setVisibility(View.GONE);
+
+        studentModal.getStudentByEmail(emailHolder).observe((LifecycleOwner) requireContext(), new Observer<Student>() {
+            @Override
+            public void onChanged(Student student) {
+                if(student != null){
+                    if(MainActivity.USER_TYPE == 1 || (MainActivity.USER_TYPE == 2 && student.isAsmi()))
+                        buttonCreateDashboardTab.setVisibility(View.VISIBLE);
+                    else buttonCreateDashboardTab.setVisibility(View.GONE);
+                }
+            }
+        });
+//        if(MainActivity.USER_TYPE == 1)
+//            buttonCreateDashboardTab.setVisibility(View.VISIBLE);
+//        else buttonCreateDashboardTab.setVisibility(View.GONE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             formatter = DateTimeFormatter.ofPattern("HH:mm");
         }
-
-        studentModal = new ViewModelProvider(this).get(StudentModal.class);
-        groupModal = new ViewModelProvider(this).get(GroupModal.class);
-        courseModal = new ViewModelProvider(this).get(CourseModal.class);
-        notificationModal = new ViewModelProvider(this).get(NotificationModal.class);
-        professorModal = new ViewModelProvider(this).get(ProfessorModal.class);
-        subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
-        professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
-        calendarModal = new ViewModelProvider(this).get(CalendarModal.class);
-        noteModal = new ViewModelProvider(this).get(NoteModal.class);
 
         /**
          * tragem datele dashboard-urilor din baza de date
@@ -480,6 +501,7 @@ public class volunteerings_fragment extends Fragment {
             previousDashboardTabTitleId = newDashboardTabTitleId;
             lastDashboardTabId = previousDashboardTabId;
 
+            int finalNewDashboardTabId = newDashboardTabId;
             dashboardTab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -488,6 +510,8 @@ public class volunteerings_fragment extends Fragment {
                     intent.putExtra("date",dashboardTabDate.getText().toString());
                     intent.putExtra("body",dashboardTabBody.getText().toString());
                     intent.putExtra("previousActivity", "ExtracurricularActivity");
+                    intent.putExtra("previousTabItem", "voluntariat");
+                    intent.putExtra("id", String.valueOf(finalNewDashboardTabId));
 
                     String dashboardTabIdQQuery = String.valueOf(v.getId());
 
@@ -535,9 +559,16 @@ public class volunteerings_fragment extends Fragment {
                     final int buttonId = childView.getId();
 
                     //daca e admin facem butonul de delete visibil
-                    if(MainActivity.USER_TYPE == 1)
-                        ((Button)rootView.findViewById(buttonId)).setVisibility(View.VISIBLE);
-                    else ((Button)rootView.findViewById(buttonId)).setVisibility(View.GONE);
+                    studentModal.getStudentByEmail(emailHolder).observe((LifecycleOwner) requireContext(), new Observer<Student>() {
+                        @Override
+                        public void onChanged(Student student) {
+                            if(student != null){
+                                if(MainActivity.USER_TYPE == 1 || (MainActivity.USER_TYPE == 2 && student.isAsmi()))
+                                    ((Button)rootView.findViewById(buttonId)).setVisibility(View.VISIBLE);
+                                else ((Button)rootView.findViewById(buttonId)).setVisibility(View.GONE);
+                            }
+                        }
+                    });
 
                     RelativeLayout dashboardParent = (RelativeLayout) ((Button)rootView.findViewById(buttonId)).getParent();
                     childView.setOnClickListener(new View.OnClickListener() {
@@ -597,256 +628,271 @@ public class volunteerings_fragment extends Fragment {
         addDashboardTabInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (TextUtils.isEmpty(addDashboardTitle.getText().toString()) || TextUtils.isEmpty(addDashboardBody.getText().toString()) || TextUtils.isEmpty(addDashboardLink.getText().toString()) || TextUtils.isEmpty(addDashboardEmail.getText().toString())) {
+                    Toast.makeText(requireContext(), "Vă rog completați toate datele!", Toast.LENGTH_LONG).show();
+                } else {
+                    studentModal.getStudentByEmail(addDashboardEmail.getText().toString()).observe((LifecycleOwner) requireContext(), new Observer<Student>() {
+                        @Override
+                        public void onChanged(Student student) {
+                            if (student != null) {
+                                if (!student.isAsmi()) {
+                                    Toast.makeText(requireContext(), "Acest student nu este in ASMI!", Toast.LENGTH_LONG).show();
+                                } else {
 
-                if(previousDashboardTabId == 0){
-                    previousDashboardTabId = R.id.dashboardTab;
-                    previousDashboardTabTitleId = R.id.dashboardTabTitle;
-                    previousDashboardTabDateId = R.id.dashboardTabDate;
-                    previousDashboardTabBodyId = R.id.dashboardTabBody;
-                    dashboardTabIds.add(previousDashboardTabId);
-                }
+                                    if (previousDashboardTabId == 0) {
+                                        previousDashboardTabId = R.id.dashboardTab;
+                                        previousDashboardTabTitleId = R.id.dashboardTabTitle;
+                                        previousDashboardTabDateId = R.id.dashboardTabDate;
+                                        previousDashboardTabBodyId = R.id.dashboardTabBody;
+                                        dashboardTabIds.add(previousDashboardTabId);
+                                    }
 
-                // Generate dynamic view IDs
-                int newDashboardTabDateId = View.generateViewId();
-                while(allIds.contains(String.valueOf(newDashboardTabDateId)))
-                    newDashboardTabDateId = View.generateViewId();
+                                    // Generate dynamic view IDs
+                                    int newDashboardTabDateId = View.generateViewId();
+                                    while (allIds.contains(String.valueOf(newDashboardTabDateId)))
+                                        newDashboardTabDateId = View.generateViewId();
 
-                int newDashboardTabTitleId = View.generateViewId();
-                while(allIds.contains(String.valueOf(newDashboardTabTitleId)))
-                    newDashboardTabTitleId = View.generateViewId();
+                                    int newDashboardTabTitleId = View.generateViewId();
+                                    while (allIds.contains(String.valueOf(newDashboardTabTitleId)))
+                                        newDashboardTabTitleId = View.generateViewId();
 
-                int newDashboardTabBodyId = View.generateViewId();
-                while(allIds.contains(String.valueOf(newDashboardTabBodyId)))
-                    newDashboardTabBodyId = View.generateViewId();
+                                    int newDashboardTabBodyId = View.generateViewId();
+                                    while (allIds.contains(String.valueOf(newDashboardTabBodyId)))
+                                        newDashboardTabBodyId = View.generateViewId();
 
-                int newDashboardTabId = View.generateViewId();
-                while(allIds.contains(String.valueOf(newDashboardTabId)))
-                    newDashboardTabId = View.generateViewId();
+                                    int newDashboardTabId = View.generateViewId();
+                                    while (allIds.contains(String.valueOf(newDashboardTabId)))
+                                        newDashboardTabId = View.generateViewId();
 
-                int newDashboardImageId = View.generateViewId();
-                while(allIds.contains(String.valueOf(newDashboardImageId)))
-                    newDashboardImageId = View.generateViewId();
+                                    int newDashboardImageId = View.generateViewId();
+                                    while (allIds.contains(String.valueOf(newDashboardImageId)))
+                                        newDashboardImageId = View.generateViewId();
 
-                int newDashboardDeleteId = View.generateViewId();
-                while(allIds.contains(String.valueOf(newDashboardDeleteId)))
-                    newDashboardDeleteId = View.generateViewId();
+                                    int newDashboardDeleteId = View.generateViewId();
+                                    while (allIds.contains(String.valueOf(newDashboardDeleteId)))
+                                        newDashboardDeleteId = View.generateViewId();
 
-                dashboardTabIds.add(newDashboardTabId);
+                                    dashboardTabIds.add(newDashboardTabId);
 
-                RelativeLayout dashboardTab = new RelativeLayout(v.getContext());
-                dashboardTab.setId(newDashboardTabId);
-                RelativeLayout.LayoutParams dashboardTabParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                dashboardTabParams.setMargins(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), 0);
-                dashboardTab.setPadding(10, 10, 10, 10);
-                dashboardTab.setLayoutParams(dashboardTabParams);
-                dashboardTab.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.dashboard_article_background));
+                                    RelativeLayout dashboardTab = new RelativeLayout(v.getContext());
+                                    dashboardTab.setId(newDashboardTabId);
+                                    RelativeLayout.LayoutParams dashboardTabParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    dashboardTabParams.setMargins(dpToPx(v.getContext(), 30), dpToPx(v.getContext(), 30), dpToPx(v.getContext(), 30), 0);
+                                    dashboardTab.setPadding(10, 10, 10, 10);
+                                    dashboardTab.setLayoutParams(dashboardTabParams);
+                                    dashboardTab.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.dashboard_article_background));
 
-                tabIdList.add(String.valueOf(newDashboardTabId));
-                allIds.add(String.valueOf(newDashboardTabId));
+                                    tabIdList.add(String.valueOf(newDashboardTabId));
+                                    allIds.add(String.valueOf(newDashboardTabId));
 
-                TextView dashboardTabDate = new TextView(v.getContext());
-                dashboardTabDate.setId(newDashboardTabDateId);
-                RelativeLayout.LayoutParams dashboardTabDateParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                dashboardTabDateParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-                dashboardTabDateParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                dashboardTabDate.setLayoutParams(dashboardTabDateParams);
-                dashboardTabDate.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.lavender_border));
-                dashboardTabDate.setPadding(dpToPx(v.getContext(),8), dpToPx(v.getContext(),4), dpToPx(v.getContext(),8), dpToPx(v.getContext(),4));
-                dashboardTabDate.setText(sdf.format(new Date()));
-                dashboardTabDate.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
-                dashboardTabDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                dashboardTab.addView(dashboardTabDate);
+                                    TextView dashboardTabDate = new TextView(v.getContext());
+                                    dashboardTabDate.setId(newDashboardTabDateId);
+                                    RelativeLayout.LayoutParams dashboardTabDateParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    dashboardTabDateParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+                                    dashboardTabDateParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                                    dashboardTabDate.setLayoutParams(dashboardTabDateParams);
+                                    dashboardTabDate.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.lavender_border));
+                                    dashboardTabDate.setPadding(dpToPx(v.getContext(), 8), dpToPx(v.getContext(), 4), dpToPx(v.getContext(), 8), dpToPx(v.getContext(), 4));
+                                    dashboardTabDate.setText(sdf.format(new Date()));
+                                    dashboardTabDate.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
+                                    dashboardTabDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                                    dashboardTab.addView(dashboardTabDate);
 
-                tabDateIdList.add(String.valueOf(newDashboardTabDateId));
-                allIds.add(String.valueOf(newDashboardTabDateId));
+                                    tabDateIdList.add(String.valueOf(newDashboardTabDateId));
+                                    allIds.add(String.valueOf(newDashboardTabDateId));
 
-                ImageView dashboardTabImage = new ImageView(v.getContext());
-                dashboardTabImage.setLayoutParams(new RelativeLayout.LayoutParams(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30)));
-                dashboardTabImage.setImageResource(R.drawable.baseline_open_in_new_24);
-                dashboardTabImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                dashboardTabImage.setId(newDashboardImageId);
-                RelativeLayout.LayoutParams dashboardTabImageParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                dashboardTabImageParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                dashboardTabImageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                dashboardTabImage.setLayoutParams(dashboardTabImageParams);
-                dashboardTab.addView(dashboardTabImage);
+                                    ImageView dashboardTabImage = new ImageView(v.getContext());
+                                    dashboardTabImage.setLayoutParams(new RelativeLayout.LayoutParams(dpToPx(v.getContext(), 30), dpToPx(v.getContext(), 30)));
+                                    dashboardTabImage.setImageResource(R.drawable.baseline_open_in_new_24);
+                                    dashboardTabImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                                    dashboardTabImage.setId(newDashboardImageId);
+                                    RelativeLayout.LayoutParams dashboardTabImageParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    dashboardTabImageParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+                                    dashboardTabImageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                                    dashboardTabImage.setLayoutParams(dashboardTabImageParams);
+                                    dashboardTab.addView(dashboardTabImage);
 
-                tabImageIdList.add(String.valueOf(newDashboardImageId));
-                allIds.add(String.valueOf(newDashboardImageId));
+                                    tabImageIdList.add(String.valueOf(newDashboardImageId));
+                                    allIds.add(String.valueOf(newDashboardImageId));
 
-                dashboardTabImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        handleButtonClick(dashboardTabImage.getId());
-                    }
-                });
-                imageLinkList.add(addDashboardLink.getText().toString());
+                                    dashboardTabImage.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            handleButtonClick(dashboardTabImage.getId());
+                                        }
+                                    });
+                                    imageLinkList.add(addDashboardLink.getText().toString());
 
-                Button dashboardTabDelete = new Button(v.getContext());
-                dashboardTabDelete.setLayoutParams(new RelativeLayout.LayoutParams(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30)));
-                dashboardTabDelete.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.baseline_close_24));
-                dashboardTabDelete.setId(newDashboardDeleteId);
+                                    Button dashboardTabDelete = new Button(v.getContext());
+                                    dashboardTabDelete.setLayoutParams(new RelativeLayout.LayoutParams(dpToPx(v.getContext(), 30), dpToPx(v.getContext(), 30)));
+                                    dashboardTabDelete.setBackground(ContextCompat.getDrawable(v.getContext(), R.drawable.baseline_close_24));
+                                    dashboardTabDelete.setId(newDashboardDeleteId);
 
-                RelativeLayout.LayoutParams dashboardTabDeleteParams = new RelativeLayout.LayoutParams(new RelativeLayout.LayoutParams(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30)));
-                dashboardTabDeleteParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-                dashboardTabDeleteParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                dashboardTabDeleteParams.setMargins(dpToPx(v.getContext(),40), 0,0,0);
-                dashboardTabDelete.setLayoutParams(dashboardTabDeleteParams);
-                dashboardTab.addView(dashboardTabDelete);
+                                    RelativeLayout.LayoutParams dashboardTabDeleteParams = new RelativeLayout.LayoutParams(new RelativeLayout.LayoutParams(dpToPx(v.getContext(), 30), dpToPx(v.getContext(), 30)));
+                                    dashboardTabDeleteParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+                                    dashboardTabDeleteParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                                    dashboardTabDeleteParams.setMargins(dpToPx(v.getContext(), 40), 0, 0, 0);
+                                    dashboardTabDelete.setLayoutParams(dashboardTabDeleteParams);
+                                    dashboardTab.addView(dashboardTabDelete);
 
-                tabDeleteIdList.add(String.valueOf(newDashboardDeleteId));
-                allIds.add(String.valueOf(newDashboardDeleteId));
+                                    tabDeleteIdList.add(String.valueOf(newDashboardDeleteId));
+                                    allIds.add(String.valueOf(newDashboardDeleteId));
 
-                dashboardTabDelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        activitiesRelativeLayout.removeView(dashboardTab);
-                        if(dashboardTabIds.indexOf((Object)dashboardTab.getId()) == dashboardTabIds.size() - 1 && dashboardTabIds.size() > 1){
-                            //is the last element in the dashboardTab list and the list is not made of only 1 element
-                            int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) - 1);
-                            previousDashboardTabId = previousId;
+                                    dashboardTabDelete.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            activitiesRelativeLayout.removeView(dashboardTab);
+                                            if (dashboardTabIds.indexOf((Object) dashboardTab.getId()) == dashboardTabIds.size() - 1 && dashboardTabIds.size() > 1) {
+                                                //is the last element in the dashboardTab list and the list is not made of only 1 element
+                                                int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object) dashboardTab.getId()) - 1);
+                                                previousDashboardTabId = previousId;
 
-                            if(dashboardTab.getId() == lastDashboardTabId)
-                                lastDashboardTabId = previousId;
-                        }
-                        else if(dashboardTabIds.size() > 1){
-                            int nextId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) + 1);
+                                                if (dashboardTab.getId() == lastDashboardTabId)
+                                                    lastDashboardTabId = previousId;
+                                            } else if (dashboardTabIds.size() > 1) {
+                                                int nextId = dashboardTabIds.get(dashboardTabIds.indexOf((Object) dashboardTab.getId()) + 1);
 
-                            if(dashboardTabIds.indexOf((Object)dashboardTab.getId()) != 0){
-                                int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object)dashboardTab.getId()) - 1);
-                                RelativeLayout nextDashboard = rootView.findViewById(nextId);
+                                                if (dashboardTabIds.indexOf((Object) dashboardTab.getId()) != 0) {
+                                                    int previousId = dashboardTabIds.get(dashboardTabIds.indexOf((Object) dashboardTab.getId()) - 1);
+                                                    RelativeLayout nextDashboard = rootView.findViewById(nextId);
 
-                                if(dashboardTab.getId() == lastDashboardTabId)
-                                    lastDashboardTabId = previousId;
+                                                    if (dashboardTab.getId() == lastDashboardTabId)
+                                                        lastDashboardTabId = previousId;
 
-                                RelativeLayout.LayoutParams dashboardTabParamsToDelete = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                dashboardTabParamsToDelete.addRule(RelativeLayout.BELOW, previousId);
-                                dashboardTabParamsToDelete.setMargins(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), 0);
-                                nextDashboard.setPadding(10, 10, 10, 10);
-                                nextDashboard.setLayoutParams(dashboardTabParamsToDelete);
+                                                    RelativeLayout.LayoutParams dashboardTabParamsToDelete = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                                    dashboardTabParamsToDelete.addRule(RelativeLayout.BELOW, previousId);
+                                                    dashboardTabParamsToDelete.setMargins(dpToPx(v.getContext(), 30), dpToPx(v.getContext(), 30), dpToPx(v.getContext(), 30), 0);
+                                                    nextDashboard.setPadding(10, 10, 10, 10);
+                                                    nextDashboard.setLayoutParams(dashboardTabParamsToDelete);
 
+                                                }
+                                            }
+                                            dashboardTabIds.remove((Object) dashboardTab.getId());
+                                            allIds.remove(String.valueOf((Object) dashboardTab.getId()));
+                                            tabIdList.remove(String.valueOf((Object) dashboardTab.getId()));
+
+                                            /**
+                                             *  poate ar trebui sterse si image, title, body, etc. ids din tabTitleIdList, tabImageIdList, etc.
+                                             */
+
+                                            //vezi daca mai trebuie instantiat sqLiteDatabaseObj
+                                            sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
+                                            int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperVolunteerings.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardTab.getId())});
+                                        }
+                                    });
+
+                                    TextView dashboardTabTitle = new TextView(v.getContext());
+                                    dashboardTabTitle.setId(newDashboardTabTitleId);
+                                    RelativeLayout.LayoutParams dashboardTabTitleParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    dashboardTabTitleParams.addRule(RelativeLayout.BELOW, newDashboardTabDateId);
+                                    dashboardTabTitle.setLayoutParams(dashboardTabTitleParams);
+                                    dashboardTabTitle.setText(addDashboardTitle.getText());
+                                    dashboardTabTitle.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
+                                    dashboardTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+                                    dashboardTab.addView(dashboardTabTitle);
+
+                                    tabTitleIdList.add(String.valueOf(newDashboardTabTitleId));
+                                    allIds.add(String.valueOf(newDashboardTabTitleId));
+
+
+                                    TextView dashboardTabBody = new TextView(v.getContext());
+                                    dashboardTabBody.setId(newDashboardTabBodyId);
+                                    RelativeLayout.LayoutParams dashboardTabBody2Params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    dashboardTabBody2Params.addRule(RelativeLayout.BELOW, newDashboardTabTitleId);
+                                    dashboardTabBody.setLayoutParams(dashboardTabBody2Params);
+                                    dashboardTabBody.setPadding(0, dpToPx(v.getContext(), 5), 0, 0);
+                                    dashboardTabBody.setEllipsize(TextUtils.TruncateAt.END);
+                                    dashboardTabBody.setMaxLines(3);
+                                    dashboardTabBody.setText(addDashboardBody.getText());
+                                    dashboardTabBody.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
+                                    dashboardTabBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                    dashboardTab.addView(dashboardTabBody);
+
+                                    tabBodyIdList.add(String.valueOf(newDashboardTabBodyId));
+                                    allIds.add(String.valueOf(newDashboardTabBodyId));
+
+
+                                    int finalNewDashboardTabId = newDashboardTabId;
+                                    dashboardTab.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(getActivity(), DetailsDashboardTabsActivity.class);
+                                            intent.putExtra("title", dashboardTabTitle.getText().toString());
+                                            intent.putExtra("date", dashboardTabDate.getText().toString());
+                                            intent.putExtra("body", dashboardTabBody.getText().toString());
+                                            intent.putExtra("previousActivity", "ExtracurricularActivity");
+                                            intent.putExtra("previousTabItem", "voluntariat");
+                                            intent.putExtra("id", String.valueOf(finalNewDashboardTabId));
+
+                                            String dashboardTabIdQQuery = String.valueOf(v.getId());
+
+                                            //vezi daca mai trebuie instantiat sqLiteDatabaseObj
+                                            sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
+                                            Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperVolunteerings.TABLE_NAME, new String[]{SQLiteHelperVolunteerings.Table_Column_11_Dashboard_Tab_Email}, SQLiteHelperVolunteerings.Table_Column_5_Dashboard_Tab_Id + " = ?", new String[]{dashboardTabIdQQuery}, null, null, null);
+                                            if (cursor != null && cursor.moveToFirst()) {
+                                                int columnIndex = cursor.getColumnIndex(SQLiteHelperVolunteerings.Table_Column_11_Dashboard_Tab_Email);
+                                                if (columnIndex >= 0) {
+                                                    String email = cursor.getString(columnIndex);
+                                                    intent.putExtra("email", email);
+                                                }
+                                                cursor.close();
+                                            }
+                                            startActivity(intent);
+                                        }
+                                    });
+
+                                    RelativeLayout.LayoutParams dashboardTabParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    dashboardTabParams2.addRule(RelativeLayout.BELOW, previousDashboardTabId);
+                                    dashboardTabParams2.setMargins(dpToPx(v.getContext(), 30), dpToPx(v.getContext(), 30), dpToPx(v.getContext(), 30), 0);
+                                    dashboardTab.setPadding(10, 10, 10, 10);
+                                    dashboardTab.setLayoutParams(dashboardTabParams2);
+
+                                    activitiesRelativeLayout.addView(dashboardTab);
+
+                                    if (TextUtils.isEmpty(addDashboardTitle.getText().toString()) || TextUtils.isEmpty(addDashboardBody.getText().toString()) || TextUtils.isEmpty(addDashboardLink.getText().toString()) || TextUtils.isEmpty(addDashboardEmail.getText().toString())) {
+                                        Toast.makeText(requireContext(), "Vă rog completați toate datele!", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        String SQLiteDataBaseQueryHolder;
+
+                                        Notification notification = new Notification();
+                                        notification.setType("voluntariat");
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            notification.setTime(LocalTime.now().format(formatter));
+                                        }
+                                        notification.setCauseId(newDashboardTabId);
+                                        notificationModal.insert(notification);
+
+                                        sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
+                                        // SQLite query to insert data into table.
+                                        SQLiteDataBaseQueryHolder = "INSERT INTO " + SQLiteHelperVolunteerings.TABLE_NAME + " (titlu,data,image_link,body,dashboard_tab_id,dashboard_tab_date_id,dashboard_tab_image_id,dashboard_tab_delete_id,dashboard_tab_title_id,dashboard_tab_body_id,dashboard_tab_email)" +
+                                                " VALUES('" + addDashboardTitle.getText().toString() + "', '" + sdf.format(new Date()) + "', '" + addDashboardLink.getText().toString() + "', '" + addDashboardBody.getText().toString() + "', '" + newDashboardTabId + "', '" + newDashboardTabDateId + "', '" + newDashboardImageId + "', '" + newDashboardDeleteId + "'," +
+                                                "'" + newDashboardTabTitleId + "', '" + newDashboardTabBodyId + "', '" + addDashboardEmail.getText().toString() + "');";
+
+                                        sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
+                                        sqLiteDatabaseObj.close();
+                                    }
+
+                                    previousDashboardTabBodyId = newDashboardTabBodyId;
+                                    previousDashboardTabDateId = newDashboardTabDateId;
+                                    previousDashboardTabId = newDashboardTabId;
+                                    previousDashboardTabTitleId = newDashboardTabTitleId;
+                                    lastDashboardTabId = previousDashboardTabId;
+
+                                    addDashboardBody.setText("");
+                                    addDashboardLink.setText("");
+                                    addDashboardTitle.setText("");
+                                    addDashboardEmail.setText("");
+
+                                    TransitionManager.beginDelayedTransition(fillDashboardTabInfo);
+
+                                    fillDashboardTabInfo.setVisibility(View.GONE);
+                                    vpAdapter2.updateFragments(volunteerings_fragment.this);
+                                }
                             }
                         }
-                        dashboardTabIds.remove((Object)dashboardTab.getId());
-                        allIds.remove(String.valueOf((Object)dashboardTab.getId()));
-                        tabIdList.remove(String.valueOf((Object)dashboardTab.getId()));
-
-                        /**
-                         *  poate ar trebui sterse si image, title, body, etc. ids din tabTitleIdList, tabImageIdList, etc.
-                         */
-
-                        //vezi daca mai trebuie instantiat sqLiteDatabaseObj
-                        sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
-                        int deletedRows = sqLiteDatabaseObj.delete(SQLiteHelperVolunteerings.TABLE_NAME, "dashboard_tab_id = ?", new String[]{String.valueOf(dashboardTab.getId())});
-                    }
-                });
-
-                TextView dashboardTabTitle = new TextView(v.getContext());
-                dashboardTabTitle.setId(newDashboardTabTitleId);
-                RelativeLayout.LayoutParams dashboardTabTitleParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                dashboardTabTitleParams.addRule(RelativeLayout.BELOW, newDashboardTabDateId);
-                dashboardTabTitle.setLayoutParams(dashboardTabTitleParams);
-                dashboardTabTitle.setText(addDashboardTitle.getText());
-                dashboardTabTitle.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
-                dashboardTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-                dashboardTab.addView(dashboardTabTitle);
-
-                tabTitleIdList.add(String.valueOf(newDashboardTabTitleId));
-                allIds.add(String.valueOf(newDashboardTabTitleId));
-
-
-                TextView dashboardTabBody = new TextView(v.getContext());
-                dashboardTabBody.setId(newDashboardTabBodyId);
-                RelativeLayout.LayoutParams dashboardTabBody2Params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                dashboardTabBody2Params.addRule(RelativeLayout.BELOW, newDashboardTabTitleId);
-                dashboardTabBody.setLayoutParams(dashboardTabBody2Params);
-                dashboardTabBody.setPadding(0, dpToPx(v.getContext(),5), 0, 0);
-                dashboardTabBody.setEllipsize(TextUtils.TruncateAt.END);
-                dashboardTabBody.setMaxLines(3);
-                dashboardTabBody.setText(addDashboardBody.getText());
-                dashboardTabBody.setTextColor(ContextCompat.getColor(v.getContext(), R.color.black));
-                dashboardTabBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                dashboardTab.addView(dashboardTabBody);
-
-                tabBodyIdList.add(String.valueOf(newDashboardTabBodyId));
-                allIds.add(String.valueOf(newDashboardTabBodyId));
-
-
-                dashboardTab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), DetailsDashboardTabsActivity.class);
-                        intent.putExtra("title",dashboardTabTitle.getText().toString());
-                        intent.putExtra("date",dashboardTabDate.getText().toString());
-                        intent.putExtra("body",dashboardTabBody.getText().toString());
-                        intent.putExtra("previousActivity", "ExtracurricularActivity");
-
-                        String dashboardTabIdQQuery = String.valueOf(v.getId());
-
-                        //vezi daca mai trebuie instantiat sqLiteDatabaseObj
-                        sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
-                        Cursor cursor = sqLiteDatabaseObj.query(SQLiteHelperVolunteerings.TABLE_NAME, new String[]{SQLiteHelperVolunteerings.Table_Column_11_Dashboard_Tab_Email}, SQLiteHelperVolunteerings.Table_Column_5_Dashboard_Tab_Id + " = ?", new String[]{dashboardTabIdQQuery}, null, null, null);
-                        if (cursor != null && cursor.moveToFirst()) {
-                            int columnIndex = cursor.getColumnIndex(SQLiteHelperVolunteerings.Table_Column_11_Dashboard_Tab_Email);
-                            if (columnIndex >= 0) {
-                                String email = cursor.getString(columnIndex);
-                                intent.putExtra("email", email);
-                            }
-                            cursor.close();
-                        }
-                        startActivity(intent);
-                    }
-                });
-
-                RelativeLayout.LayoutParams dashboardTabParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                dashboardTabParams2.addRule(RelativeLayout.BELOW, previousDashboardTabId);
-                dashboardTabParams2.setMargins(dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), dpToPx(v.getContext(),30), 0);
-                dashboardTab.setPadding(10, 10, 10, 10);
-                dashboardTab.setLayoutParams(dashboardTabParams2);
-
-                activitiesRelativeLayout.addView(dashboardTab);
-
-                if(TextUtils.isEmpty(addDashboardTitle.getText().toString()) || TextUtils.isEmpty(addDashboardBody.getText().toString()) || TextUtils.isEmpty(addDashboardLink.getText().toString()) || TextUtils.isEmpty(addDashboardEmail.getText().toString()))
-                {
-                    Toast.makeText(requireContext(),"Vă rog completați toate datele!", Toast.LENGTH_LONG).show();
+                    });
                 }
-                else {
-                    String SQLiteDataBaseQueryHolder;
-
-                    Notification notification = new Notification();
-                    notification.setType("voluntariat");
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        notification.setTime(LocalTime.now().format(formatter));
-                    }
-                    notification.setCauseId(newDashboardTabId);
-                    notificationModal.insert(notification);
-
-                    sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
-                    // SQLite query to insert data into table.
-                    SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelperVolunteerings.TABLE_NAME+" (titlu,data,image_link,body,dashboard_tab_id,dashboard_tab_date_id,dashboard_tab_image_id,dashboard_tab_delete_id,dashboard_tab_title_id,dashboard_tab_body_id,dashboard_tab_email)" +
-                            " VALUES('"+addDashboardTitle.getText().toString()+"', '"+sdf.format(new Date())+"', '"+addDashboardLink.getText().toString()+"', '"+addDashboardBody.getText().toString()+"', '"+newDashboardTabId+"', '"+newDashboardTabDateId+"', '"+newDashboardImageId+"', '"+newDashboardDeleteId+"'," +
-                            "'"+newDashboardTabTitleId+"', '"+newDashboardTabBodyId+"', '"+addDashboardEmail.getText().toString()+"');";
-
-                    sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
-                    sqLiteDatabaseObj.close();
-                }
-
-                previousDashboardTabBodyId = newDashboardTabBodyId;
-                previousDashboardTabDateId = newDashboardTabDateId;
-                previousDashboardTabId = newDashboardTabId;
-                previousDashboardTabTitleId = newDashboardTabTitleId;
-                lastDashboardTabId = previousDashboardTabId;
-
-                addDashboardBody.setText("");
-                addDashboardLink.setText("");
-                addDashboardTitle.setText("");
-                addDashboardEmail.setText("");
-
-                TransitionManager.beginDelayedTransition(fillDashboardTabInfo);
-
-                fillDashboardTabInfo.setVisibility(View.GONE);
-                vpAdapter2.updateFragments(volunteerings_fragment.this);
             }
         });
 

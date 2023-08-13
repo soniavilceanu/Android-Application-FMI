@@ -255,7 +255,13 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             currentM = currentDate.getMonthValue();
         }
-        spinnerSelecteazaLuna.setSelection(currentM - 1);
+
+        Intent intent = getIntent();
+        String whereFrom = intent.getStringExtra("prevActivity");
+        String lunaEveniment = intent.getStringExtra("luna");
+        if(whereFrom != null && whereFrom.equals("NotificationActivity"))
+            spinnerSelecteazaLuna.setSelection(Integer.parseInt(lunaEveniment));
+        else spinnerSelecteazaLuna.setSelection(currentM - 1);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) floatingActionButtonAdd.getLayoutParams();
         if (lastRow.getVisibility() == View.VISIBLE) {
             layoutParams.bottomMargin = dpToPx(CalendarAcademicActivity.this, 140);
