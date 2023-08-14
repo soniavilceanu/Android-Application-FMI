@@ -31,11 +31,13 @@ import com.example.myapplicationfmi.Modals.GroupModal;
 import com.example.myapplicationfmi.Modals.NotificationModal;
 import com.example.myapplicationfmi.Modals.ProfessorModal;
 import com.example.myapplicationfmi.Modals.ProfessorSubjectModal;
+import com.example.myapplicationfmi.Modals.SetariNotificariModal;
 import com.example.myapplicationfmi.Modals.StudentModal;
 import com.example.myapplicationfmi.Modals.SubjectModal;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Professor;
 import com.example.myapplicationfmi.beans.ProfessorSubject;
+import com.example.myapplicationfmi.beans.SetariNotificari;
 import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
 import com.google.android.material.card.MaterialCardView;
@@ -75,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ProfessorModal professorModal;
     private SubjectModal subjectModal;
     private ProfessorSubjectModal professorSubjectModal;
+    private SetariNotificariModal setariNotificariModal;
     private String[] licentaGrupaSerie13Items;
     private String[] licentaGrupaSerie14Items;
     private String[] licentaGrupaSerie23Items;
@@ -101,6 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
         professorModal = new ViewModelProvider(this).get(ProfessorModal.class);
         subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
         professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
+        setariNotificariModal = new ViewModelProvider(this).get(SetariNotificariModal.class);
 
         groupModal.getAllGroups().observe(this, new Observer<List<Group>>() {
             @Override
@@ -672,8 +676,61 @@ public class RegisterActivity extends AppCompatActivity {
             groupModal.getGroupIdByNumarAndForma(numar, formaDeInvatamant).observe(this, new Observer<Long>() {
                 @Override
                 public void onChanged(Long groupId) {
-                    studentModal.insert(new Student(NumeHolder, PrenumeHolder, EmailHolder, PasswordHolder, Integer.valueOf(String.valueOf(spinnerStudentAn.getSelectedItem().toString().charAt(spinnerStudentAn.getSelectedItem().toString().length() - 1))), checkboxTaxa.isChecked(), checkboxBursa.isChecked(), Integer.valueOf(editStudentAnIncepereHolder), finalTipStudii, groupId, false));
+                    long insertedId = studentModal.insert(new Student(NumeHolder, PrenumeHolder, EmailHolder, PasswordHolder, Integer.valueOf(String.valueOf(spinnerStudentAn.getSelectedItem().toString().charAt(spinnerStudentAn.getSelectedItem().toString().length() - 1))), checkboxTaxa.isChecked(), checkboxBursa.isChecked(), Integer.valueOf(editStudentAnIncepereHolder), finalTipStudii, groupId, false));
 
+                    SetariNotificari setariNotificari = new SetariNotificari();
+                    setariNotificari.setStudentId(insertedId);
+                    setariNotificari.setType("orar");
+                    setariNotificari.setVreaNotificare(true);
+                    setariNotificariModal.insert(setariNotificari);
+
+                    SetariNotificari setariNotificari1 = new SetariNotificari();
+                    setariNotificari1.setStudentId(insertedId);
+                    setariNotificari1.setType("calendar");
+                    setariNotificari1.setVreaNotificare(true);
+                    setariNotificariModal.insert(setariNotificari1);
+
+                    SetariNotificari setariNotificari2 = new SetariNotificari();
+                    setariNotificari2.setStudentId(insertedId);
+                    setariNotificari2.setType("examen");
+                    setariNotificari2.setVreaNotificare(true);
+                    setariNotificariModal.insert(setariNotificari2);
+
+                    SetariNotificari setariNotificari3 = new SetariNotificari();
+                    setariNotificari3.setStudentId(insertedId);
+                    setariNotificari3.setType("nota");
+                    setariNotificari3.setVreaNotificare(true);
+                    setariNotificariModal.insert(setariNotificari3);
+
+                    SetariNotificari setariNotificari4 = new SetariNotificari();
+                    setariNotificari4.setStudentId(insertedId);
+                    setariNotificari4.setType("activitate");
+                    setariNotificari4.setVreaNotificare(true);
+                    setariNotificariModal.insert(setariNotificari4);
+
+                    SetariNotificari setariNotificari5 = new SetariNotificari();
+                    setariNotificari5.setStudentId(insertedId);
+                    setariNotificari5.setType("anunt");
+                    setariNotificari5.setVreaNotificare(true);
+                    setariNotificariModal.insert(setariNotificari5);
+
+                    SetariNotificari setariNotificari6 = new SetariNotificari();
+                    setariNotificari6.setStudentId(insertedId);
+                    setariNotificari6.setType("internship");
+                    setariNotificari6.setVreaNotificare(true);
+                    setariNotificariModal.insert(setariNotificari6);
+
+                    SetariNotificari setariNotificari7 = new SetariNotificari();
+                    setariNotificari7.setStudentId(insertedId);
+                    setariNotificari7.setType("voluntariat");
+                    setariNotificari7.setVreaNotificare(true);
+                    setariNotificariModal.insert(setariNotificari7);
+
+                    SetariNotificari setariNotificari8 = new SetariNotificari();
+                    setariNotificari8.setStudentId(insertedId);
+                    setariNotificari8.setType("voluntariatInscris");
+                    setariNotificari8.setVreaNotificare(false);
+                    setariNotificariModal.insert(setariNotificari8);
                 }
             });
 

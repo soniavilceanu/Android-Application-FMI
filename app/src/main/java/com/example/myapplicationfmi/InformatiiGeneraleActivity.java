@@ -26,8 +26,10 @@ import com.example.myapplicationfmi.Modals.GroupModal;
 import com.example.myapplicationfmi.Modals.NotificationModal;
 import com.example.myapplicationfmi.Modals.ProfessorModal;
 import com.example.myapplicationfmi.Modals.ProfessorSubjectModal;
+import com.example.myapplicationfmi.Modals.SetariNotificariModal;
 import com.example.myapplicationfmi.Modals.StudentModal;
 import com.example.myapplicationfmi.Modals.SubjectModal;
+import com.example.myapplicationfmi.beans.SetariNotificari;
 import com.example.myapplicationfmi.beans.Student;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
@@ -49,6 +51,7 @@ public class InformatiiGeneraleActivity extends AppCompatActivity {
     private ProfessorModal professorModal;
     private SubjectModal subjectModal;
     private ProfessorSubjectModal professorSubjectModal;
+    private SetariNotificariModal setariNotificariModal;
     private EditText addASMIEmail;
     private LinearLayout adminAdaugareStudentInASMI;
     private Button buttonAdaugaASMI;
@@ -87,6 +90,7 @@ public class InformatiiGeneraleActivity extends AppCompatActivity {
         professorModal = new ViewModelProvider(this).get(ProfessorModal.class);
         subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
         professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
+        setariNotificariModal =  new ViewModelProvider(this).get(SetariNotificariModal.class);
 
         navigationView = findViewById(R.id.nav_view);
         topAppBar = findViewById(R.id.topAppBar);
@@ -116,6 +120,15 @@ public class InformatiiGeneraleActivity extends AppCompatActivity {
                     if (student != null) {
                         dbHelper.updateStudentAsmi(student.getStudentId(), true);
                         addASMIEmail.setText("");
+                        setariNotificariModal.getSetariNotificariByStudentIdAndType(student.getStudentId(), "voluntariatInscris").observe(InformatiiGeneraleActivity.this, new Observer<SetariNotificari>() {
+                            @Override
+                            public void onChanged(SetariNotificari setariNotificari) {
+                                if(setariNotificari != null){
+                                    setariNotificari.setVreaNotificare(true);
+                                    setariNotificariModal.update(setariNotificari);
+                                }
+                            }
+                        });
                     }
                     else{
                         Toast.makeText(InformatiiGeneraleActivity.this, "Nu s-a găsit studentul cu acest email", Toast.LENGTH_LONG).show();

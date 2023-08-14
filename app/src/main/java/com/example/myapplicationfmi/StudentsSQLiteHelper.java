@@ -10,7 +10,7 @@ import com.example.myapplicationfmi.beans.Student;
 
 public class StudentsSQLiteHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "RoomDatabase";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 16;
 
     public static final String TABLE_NAME = "Students";
     public static final String COLUMN_NAME_STUDENT_ID = "studentId";

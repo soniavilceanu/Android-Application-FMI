@@ -43,10 +43,282 @@
             android:layout_height="50dp"
             android:src="@drawable/baseline_settings_24"
             android:layout_gravity="end"
-            android:layout_marginEnd="10dp"/>
+            android:layout_marginEnd="10dp"
+            android:clickable="true"/>
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/setariDisplay"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alegeti pentru ce doriti sa primiti notificari"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:fontFamily="casual"
+            android:paddingBottom="10dp"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:layout_marginEnd="8dp">
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Orar"
+                android:paddingTop="10dp"
+                android:fontFamily="casual"
+                android:paddingBottom="10dp"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp">
+            </TextView>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkboxOrar"
+                android:layout_gravity="center">
+            </CheckBox>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Calendar Academic"
+                android:paddingTop="10dp"
+                android:fontFamily="casual"
+                android:paddingBottom="10dp"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp">
+            </TextView>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkboxCalendar"
+                android:layout_gravity="center">
+            </CheckBox>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Examene"
+                android:paddingTop="10dp"
+                android:fontFamily="casual"
+                android:paddingBottom="10dp"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp">
+            </TextView>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkboxExamene"
+                android:layout_gravity="center">
+            </CheckBox>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Note"
+                android:paddingTop="10dp"
+                android:fontFamily="casual"
+                android:paddingBottom="10dp"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp">
+            </TextView>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkboxNote"
+                android:layout_gravity="center">
+            </CheckBox>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Activitati"
+                android:paddingTop="10dp"
+                android:fontFamily="casual"
+                android:paddingBottom="10dp"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp">
+            </TextView>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkboxActivitati"
+                android:layout_gravity="center">
+            </CheckBox>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Anunturi"
+                    android:paddingTop="10dp"
+                    android:fontFamily="casual"
+                    android:paddingBottom="10dp"
+                    android:textSize="22sp"
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="8dp">
+                </TextView>
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/checkboxAnunturi"
+                    android:layout_gravity="center">
+
+                </CheckBox>
+            </LinearLayout>
+        <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Interniship-uri"
+                        android:paddingTop="10dp"
+                        android:fontFamily="casual"
+                        android:paddingBottom="10dp"
+                        android:textSize="22sp"
+                        android:textColor="@color/black"
+                        android:layout_marginEnd="8dp">
+                    </TextView>
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/checkboxInternshipuri"
+                        android:layout_gravity="center">
+                    </CheckBox>
+                </LinearLayout>
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Voluntariate"
+                android:paddingTop="10dp"
+                android:fontFamily="casual"
+                android:paddingBottom="10dp"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp">
+            </TextView>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkboxVoluntariate"
+                android:layout_gravity="center">
+            </CheckBox>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/voluntariSetari"
+            android:layout_gravity="center">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Voluntari inscrisi"
+                android:paddingTop="10dp"
+                android:fontFamily="casual"
+                android:paddingBottom="10dp"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp">
+            </TextView>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkboxVoluntariInscrisi"
+                android:layout_gravity="center">
+            </CheckBox>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonSalveazaSetari"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tableLayoutScrollable"
+            android:layout_centerInParent="true"
+            android:background="@drawable/lavender_border"
+            android:backgroundTint="@color/original_lavender"
+            android:gravity="center"
+            android:text="Salvează"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:id="@+id/notificariDisplay"
+        android:visibility="visible">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +330,8 @@
         android:textSize="22sp"
         android:textColor="@color/black"
         android:layout_marginEnd="8dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:visibility="gone">
     </TextView>
 
     <ScrollView
@@ -108,6 +381,6 @@
 <!--            </LinearLayout>-->
         </LinearLayout>
     </ScrollView>
-
+    </LinearLayout>
 
 </LinearLayout>

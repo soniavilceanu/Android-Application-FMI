@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ import com.example.myapplicationfmi.Modals.NoteModal;
 import com.example.myapplicationfmi.Modals.NotificationModal;
 import com.example.myapplicationfmi.Modals.ProfessorModal;
 import com.example.myapplicationfmi.Modals.ProfessorSubjectModal;
+import com.example.myapplicationfmi.Modals.SetariNotificariModal;
 import com.example.myapplicationfmi.Modals.StudentModal;
 import com.example.myapplicationfmi.Modals.SubjectModal;
 import com.example.myapplicationfmi.beans.Calendar;
@@ -39,6 +42,7 @@ import com.example.myapplicationfmi.beans.EvidentaVoluntariat;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Note;
 import com.example.myapplicationfmi.beans.Notification;
+import com.example.myapplicationfmi.beans.SetariNotificari;
 import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -66,12 +70,16 @@ public class NotificationActivity extends AppCompatActivity {
     private NoteModal noteModal;
     private EvidentaNotificariModal evidentaNotificariModal;
     private EvidentaVoluntariatModal evidentaVoluntariatModal;
-    private LinearLayout parentLinearLayout;
+    private SetariNotificariModal setariNotificariModal;
+    private LinearLayout parentLinearLayout, notificariDisplay, setariDisplay, voluntariSetari;
     private DateTimeFormatter formatter;
     private boolean amStersSauPlecat;
     private boolean avemNotificari;
     private TextView textAvemNotificari;
     private List<Long> studentiVoluntari;
+    private Button buttonSalveazaSetari;
+    private CheckBox checkboxOrar, checkboxNote, checkboxCalendar, checkboxExamene, checkboxAnunturi, checkboxActivitati, checkboxInternshipuri, checkboxVoluntariat, checkboxVoluntariInscrisi;
+    private ImageView logoProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,10 +97,25 @@ public class NotificationActivity extends AppCompatActivity {
         noteModal = new ViewModelProvider(this).get(NoteModal.class);
         evidentaNotificariModal = new ViewModelProvider(this).get(EvidentaNotificariModal.class);
         evidentaVoluntariatModal = new ViewModelProvider(this).get(EvidentaVoluntariatModal.class);
+        setariNotificariModal = new ViewModelProvider(this).get(SetariNotificariModal.class);
 
         parentLinearLayout = findViewById(R.id.evenimenteLinearLayoutMultiple);
         buttonBack = findViewById(R.id.buttonBack);
         textAvemNotificari = findViewById(R.id.textAvemNotificari);
+        notificariDisplay = findViewById(R.id.notificariDisplay);
+        setariDisplay = findViewById(R.id.setariDisplay);
+        buttonSalveazaSetari = findViewById(R.id.buttonSalveazaSetari);
+        checkboxOrar = findViewById(R.id.checkboxOrar);
+        checkboxNote = findViewById(R.id.checkboxNote);
+        checkboxCalendar = findViewById(R.id.checkboxCalendar);
+        checkboxExamene = findViewById(R.id.checkboxExamene);
+        checkboxAnunturi = findViewById(R.id.checkboxAnunturi);
+        checkboxActivitati = findViewById(R.id.checkboxActivitati);
+        checkboxInternshipuri = findViewById(R.id.checkboxInternshipuri);
+        checkboxVoluntariat = findViewById(R.id.checkboxVoluntariate);
+        checkboxVoluntariInscrisi = findViewById(R.id.checkboxVoluntariInscrisi);
+        logoProfile = findViewById(R.id.logoProfile);
+        voluntariSetari = findViewById(R.id.voluntariSetari);
 
         amStersSauPlecat = false;
         avemNotificari = false;
@@ -109,6 +132,83 @@ public class NotificationActivity extends AppCompatActivity {
             public void onChanged(Student student) {
                 if(student != null){
 
+
+                    setariNotificariModal.getSetariNotificariByStudentIdAndType(student.getStudentId(), "orar").observe(NotificationActivity.this, new Observer<SetariNotificari>() {
+                        @Override
+                        public void onChanged(SetariNotificari setariNotificari) {
+                            if(setariNotificari != null){
+                                checkboxOrar.setChecked(setariNotificari.getVreaNotificare());
+                            }
+                        }
+                    });
+                    setariNotificariModal.getSetariNotificariByStudentIdAndType(student.getStudentId(), "calendar").observe(NotificationActivity.this, new Observer<SetariNotificari>() {
+                        @Override
+                        public void onChanged(SetariNotificari setariNotificari) {
+                            if(setariNotificari != null){
+                                checkboxCalendar.setChecked(setariNotificari.getVreaNotificare());
+                            }
+                        }
+                    });
+                    setariNotificariModal.getSetariNotificariByStudentIdAndType(student.getStudentId(), "examen").observe(NotificationActivity.this, new Observer<SetariNotificari>() {
+                        @Override
+                        public void onChanged(SetariNotificari setariNotificari) {
+                            if(setariNotificari != null){
+                                checkboxExamene.setChecked(setariNotificari.getVreaNotificare());
+                            }
+                        }
+                    });
+                    setariNotificariModal.getSetariNotificariByStudentIdAndType(student.getStudentId(), "nota").observe(NotificationActivity.this, new Observer<SetariNotificari>() {
+                        @Override
+                        public void onChanged(SetariNotificari setariNotificari) {
+                            if(setariNotificari != null){
+                                checkboxNote.setChecked(setariNotificari.getVreaNotificare());
+                            }
+                        }
+                    });
+                    setariNotificariModal.getSetariNotificariByStudentIdAndType(student.getStudentId(), "activitate").observe(NotificationActivity.this, new Observer<SetariNotificari>() {
+                        @Override
+                        public void onChanged(SetariNotificari setariNotificari) {
+                            if(setariNotificari != null){
+                                checkboxActivitati.setChecked(setariNotificari.getVreaNotificare());
+                            }
+                        }
+                    });
+                    setariNotificariModal.getSetariNotificariByStudentIdAndType(student.getStudentId(), "anunt").observe(NotificationActivity.this, new Observer<SetariNotificari>() {
+                        @Override
+                        public void onChanged(SetariNotificari setariNotificari) {
+                            if(setariNotificari != null){
+                                checkboxAnunturi.setChecked(setariNotificari.getVreaNotificare());
+                            }
+                        }
+                    });
+                    setariNotificariModal.getSetariNotificariByStudentIdAndType(student.getStudentId(), "internship").observe(NotificationActivity.this, new Observer<SetariNotificari>() {
+                        @Override
+                        public void onChanged(SetariNotificari setariNotificari) {
+                            if(setariNotificari != null){
+                                checkboxInternshipuri.setChecked(setariNotificari.getVreaNotificare());
+                            }
+                        }
+                    });
+                    setariNotificariModal.getSetariNotificariByStudentIdAndType(student.getStudentId(), "voluntariat").observe(NotificationActivity.this, new Observer<SetariNotificari>() {
+                        @Override
+                        public void onChanged(SetariNotificari setariNotificari) {
+                            if(setariNotificari != null){
+                                checkboxVoluntariat.setChecked(setariNotificari.getVreaNotificare());
+                            }
+                        }
+                    });
+                    if(student.isAsmi())
+                        setariNotificariModal.getSetariNotificariByStudentIdAndType(student.getStudentId(), "voluntariatInscris").observe(NotificationActivity.this, new Observer<SetariNotificari>() {
+                            @Override
+                            public void onChanged(SetariNotificari setariNotificari) {
+                                if(setariNotificari != null){
+                                    checkboxVoluntariInscrisi.setChecked(setariNotificari.getVreaNotificare());
+                                }
+                            }
+                        });
+
+                    if(student.isAsmi()) voluntariSetari.setVisibility(View.VISIBLE);
+                    else voluntariSetari.setVisibility(View.GONE);
                     evidentaNotificariModal.getAllEvidentaNotificariByStudentId(student.getStudentId()).observe(NotificationActivity.this, new Observer<List<EvidentaNotificari>>() {
                         @Override
                         public void onChanged(List<EvidentaNotificari> evidentaNotificaris) {
@@ -131,7 +231,7 @@ public class NotificationActivity extends AppCompatActivity {
 
                                                 if (!gasit) {
 
-                                                    if (notifications.get(i).getType().equals("voluntariatInscris")) {
+                                                    if (notifications.get(i).getType().equals("voluntariatInscris") && checkboxVoluntariInscrisi.isChecked()) {
 
                                                         boolean gasit2 = false;
                                                         for(int ll = 0; ll < studentiVoluntari.size(); ll ++)
@@ -160,12 +260,15 @@ public class NotificationActivity extends AppCompatActivity {
                                                                                 }
                                                                             }
                                                                         }
+                                                                        if(avemNotificari == false)
+                                                                            textAvemNotificari.setVisibility(View.VISIBLE);
+                                                                        else textAvemNotificari.setVisibility(View.GONE);
                                                                     }
                                                                 }
                                                             });
                                                         }
                                                     }
-                                                    if (notifications.get(i).getType().equals("orar")) {
+                                                    if (notifications.get(i).getType().equals("orar") && checkboxOrar.isChecked()) {
                                                         //vrem sa fim notificati de orar actualizat doar pt grupa noastra
                                                         if (student.getGrupaId() == notifications.get(i).getCauseId().longValue()){
                                                             avemNotificari = true;
@@ -180,11 +283,11 @@ public class NotificationActivity extends AppCompatActivity {
                                                         public void onChanged(Note note) {
                                                             if (note != null)
                                                                 if (note.getStudentId() == student.getStudentId()) {
-                                                                    if (notifications.get(finalI).getType().equals("nota actualizata")){
+                                                                    if (notifications.get(finalI).getType().equals("nota actualizata") && checkboxNote.isChecked()){
                                                                         avemNotificari = true;
                                                                         addEvenimentTab("Notele au fost actualizate!", notifications.get(finalI1), student.getStudentId());
                                                                     }
-                                                                    else if (notifications.get(finalI).getType().equals("nota noua")){
+                                                                    else if (notifications.get(finalI).getType().equals("nota noua") && checkboxNote.isChecked()){
                                                                         avemNotificari = true;
                                                                         addEvenimentTab("Note noi adaugate!", notifications.get(finalI1), student.getStudentId());
                                                                     }
@@ -193,24 +296,24 @@ public class NotificationActivity extends AppCompatActivity {
                                                     });
 
                                                     // pt toata lumea
-                                                    if (notifications.get(i).getType().equals("activitate")){
+                                                    if (notifications.get(i).getType().equals("activitate")  && checkboxActivitati.isChecked()){
                                                         avemNotificari = true;
                                                         addEvenimentTab("Activitate nou adăugată", notifications.get(i), student.getStudentId());
                                                     }
-                                                    if (notifications.get(i).getType().equals("anunt")){
+                                                    if (notifications.get(i).getType().equals("anunt")  && checkboxAnunturi.isChecked()){
                                                         avemNotificari = true;
                                                         addEvenimentTab("Anunț nou adăugat!", notifications.get(i), student.getStudentId());
                                                     }
-                                                    if (notifications.get(i).getType().equals("voluntariat")){
+                                                    if (notifications.get(i).getType().equals("voluntariat")  && checkboxVoluntariat.isChecked()){
                                                         avemNotificari = true;
                                                         addEvenimentTab("Oportunitate nouă voluntariat ASMI!", notifications.get(i), student.getStudentId());
                                                     }
-                                                    if (notifications.get(i).getType().equals("internship")){
+                                                    if (notifications.get(i).getType().equals("internship")  && checkboxInternshipuri.isChecked()){
                                                         avemNotificari = true;
                                                         addEvenimentTab("Oportunitate nouă internship!", notifications.get(i), student.getStudentId());
                                                     }
 
-                                                    if (notifications.get(i).getType().equals("calendar")) {
+                                                    if (notifications.get(i).getType().equals("calendar")  && checkboxCalendar.isChecked()) {
                                                         int finalI2 = i;
                                                         calendarModal.getCalendarById(notifications.get(i).getCauseId()).observe(NotificationActivity.this, new Observer<Calendar>() {
                                                             @Override
@@ -225,7 +328,7 @@ public class NotificationActivity extends AppCompatActivity {
                                                     }
 
                                                     //eventual doar seria/grupa
-                                                    if (notifications.get(i).getType().equals("examen")){
+                                                    if (notifications.get(i).getType().equals("examen")  && checkboxExamene.isChecked()){
                                                         avemNotificari = true;
                                                         addEvenimentTab("Dată nouă examen a fost stabilită!", notifications.get(i), student.getStudentId());
                                                     }
@@ -250,6 +353,82 @@ public class NotificationActivity extends AppCompatActivity {
         });
 
 
+
+        logoProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setariDisplay.setVisibility(View.VISIBLE);
+                notificariDisplay.setVisibility(View.GONE);
+            }
+        });
+
+        buttonSalveazaSetari.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                studentModal.getStudentByEmail(emailHolder).observe(NotificationActivity.this, new Observer<Student>() {
+                    @Override
+                    public void onChanged(Student student) {
+                        if(student != null){
+                            setariDisplay.setVisibility(View.GONE);
+                            notificariDisplay.setVisibility(View.VISIBLE);
+
+                            SetariNotificariSQLiteHelper dbHelper = new SetariNotificariSQLiteHelper(NotificationActivity.this);
+
+                            SetariNotificari setariNotificari = dbHelper.getSetariNotificariByStudentIdAndType(student.getStudentId(), "orar");
+                            if (setariNotificari != null) {
+                                setariNotificari.setVreaNotificare(checkboxOrar.isChecked());
+                                dbHelper.updateSetariNotificari(setariNotificari);
+                            }
+                            SetariNotificari setariNotificariCalendar = dbHelper.getSetariNotificariByStudentIdAndType(student.getStudentId(), "calendar");
+                            if (setariNotificariCalendar != null) {
+                                setariNotificariCalendar.setVreaNotificare(checkboxCalendar.isChecked());
+                                dbHelper.updateSetariNotificari(setariNotificariCalendar);
+                            }
+                            SetariNotificari setariNotificariExamen = dbHelper.getSetariNotificariByStudentIdAndType(student.getStudentId(), "examen");
+                            if (setariNotificariExamen != null) {
+                                setariNotificariExamen.setVreaNotificare(checkboxExamene.isChecked());
+                                dbHelper.updateSetariNotificari(setariNotificariExamen);
+                            }
+                            SetariNotificari setariNotificariNota = dbHelper.getSetariNotificariByStudentIdAndType(student.getStudentId(), "nota");
+                            if (setariNotificariNota != null) {
+                                setariNotificariNota.setVreaNotificare(checkboxNote.isChecked());
+                                dbHelper.updateSetariNotificari(setariNotificariNota);
+                            }
+                            SetariNotificari setariNotificariActivitate = dbHelper.getSetariNotificariByStudentIdAndType(student.getStudentId(), "activitate");
+                            if (setariNotificariActivitate != null) {
+                                setariNotificariActivitate.setVreaNotificare(checkboxActivitati.isChecked());
+                                dbHelper.updateSetariNotificari(setariNotificariActivitate);
+                            }
+                            SetariNotificari setariNotificariAnunt = dbHelper.getSetariNotificariByStudentIdAndType(student.getStudentId(), "anunt");
+                            if (setariNotificariAnunt != null) {
+                                setariNotificariAnunt.setVreaNotificare(checkboxAnunturi.isChecked());
+                                dbHelper.updateSetariNotificari(setariNotificariAnunt);
+                            }
+                            SetariNotificari setariNotificariInternship = dbHelper.getSetariNotificariByStudentIdAndType(student.getStudentId(), "internship");
+                            if (setariNotificariInternship != null) {
+                                setariNotificariInternship.setVreaNotificare(checkboxInternshipuri.isChecked());
+                                dbHelper.updateSetariNotificari(setariNotificariInternship);
+                            }
+                            SetariNotificari setariNotificariVoluntariat = dbHelper.getSetariNotificariByStudentIdAndType(student.getStudentId(), "voluntariat");
+                            if (setariNotificariVoluntariat != null) {
+                                setariNotificariVoluntariat.setVreaNotificare(checkboxVoluntariat.isChecked());
+                                dbHelper.updateSetariNotificari(setariNotificariVoluntariat);
+                            }
+                            if (student.isAsmi()) {
+                                SetariNotificari setariNotificariVoluntariatInscris = dbHelper.getSetariNotificariByStudentIdAndType(student.getStudentId(), "voluntariatInscris");
+                                if (setariNotificariVoluntariatInscris != null) {
+                                    setariNotificariVoluntariatInscris.setVreaNotificare(checkboxVoluntariInscrisi.isChecked());
+                                    dbHelper.updateSetariNotificari(setariNotificariVoluntariatInscris);
+                                }
+                            }
+
+                            dbHelper.close();
+                        }
+                    }
+                });
+            }
+        });
 
 
         buttonBack.setOnClickListener(new View.OnClickListener() {

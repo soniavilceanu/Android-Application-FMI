@@ -13,7 +13,7 @@ public class Notification {
     public Long notificationId;
 
     public String time;
-    public String type; // activitate, anunt, internship, voluntariat, nota, calendar, orar, voluntariatInscris
+    public String type; // activitate, anunt, internship, voluntariat, nota, calendar, examen, orar, voluntariatInscris
     public Integer causeId; //dashboardTabId, noteId, calendarId, grupaId, studentId
 
     public Long getNotificationId() {
