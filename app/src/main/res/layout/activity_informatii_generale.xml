@@ -12,6 +12,10 @@
         android:id="@+id/activity_dashboard"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -30,12 +34,921 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/appBarLayout"
+            android:id="@+id/programSecretariat"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/programSecretariatTextView"
+                android:text="Program secretariat"
+                android:textSize="20dp"
+                android:textColor="@color/original_lavender"
+
+                android:textStyle="italic|bold"
+                android:layout_gravity="center"
+                />
+
+            <Button
+                android:id="@+id/buttonEditProgSecretariat"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/baseline_edit_24"
+                android:backgroundTint="@color/original_lavender"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tabelSecretariat"
+            android:layout_below="@+id/programSecretariat"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programLuni">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Luni:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputLuni"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitLuni"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programMarti"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/zi"
+                    android:text="Marți:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputMarti"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitMarti"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programMiercuri"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Miercuri:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputMiercuri"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitMiercuri"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programJoi"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Joi:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputJoi"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitJoi"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programVineri"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Vineri:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputVineri"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitVineri"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="300dp"
+            android:layout_height="2dp"
+            android:id="@+id/viewSecretariat"
+            android:background="@color/original_lavender"
+            android:layout_marginStart="55dp"
+            android:layout_below="@+id/tabelSecretariat"
+            android:layout_marginTop="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/viewSecretariat"
+            android:id="@+id/programCantina"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/programCantinaTextView"
+                android:text="Program cantină"
+                android:textSize="20dp"
+                android:textColor="@color/original_lavender"
+
+                android:textStyle="italic|bold"
+                android:layout_gravity="center"
+                />
+
+            <Button
+                android:id="@+id/buttonEditProgCantina"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/baseline_edit_24"
+                android:backgroundTint="@color/original_lavender"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tabelCantina"
+            android:layout_below="@+id/programCantina"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programLuniC">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Luni:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputLuniC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitLuniC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programMartiC"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Marți:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputMartiC"
+                    android:layout_width="30dp"
+                    android:textColor="@color/black"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitMartiC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programMiercuriC"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Miercuri:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputMiercuriC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitMiercuriC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programJoiC"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Joi:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputJoiC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitJoiC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programVineriC"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Vineri:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputVineriC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitVineriC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="300dp"
+            android:layout_height="2dp"
+            android:background="@color/original_lavender"
+            android:layout_marginStart="55dp"
+            android:id="@+id/viewCantina"
+            android:layout_below="@+id/tabelCantina"
+            android:layout_marginTop="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/viewCantina"
+            android:id="@+id/programBiblioteca"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/programBibliotecaTextView"
+                android:text="Program bibliotecă"
+                android:textSize="20dp"
+                android:textColor="@color/original_lavender"
+                android:textStyle="italic|bold"
+                android:layout_gravity="center"
+                />
+
+            <Button
+                android:id="@+id/buttonEditProgBiblioteca"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/baseline_edit_24"
+                android:backgroundTint="@color/original_lavender"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tabelBiblioteca"
+            android:layout_below="@+id/programBiblioteca"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programLuniB">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Luni:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputLuniB"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitLuniB"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programMartiB"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Marți:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputMartiB"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitMartiB"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programMiercuriB"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Miercuri:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputMiercuriB"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitMiercuriB"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programJoiB"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Joi:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputJoiB"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitJoiB"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/programVineriB"
+                android:paddingTop="10dp">
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="Vineri:"
+                    android:textSize="20dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/progInceputVineriB"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/lavender_border_v3"
+                    android:text=""
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="20dp"
+                    android:text="-"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/progSfarsitVineriB"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/lavender_border_v3"
+                    android:layout_weight="1"
+                    android:textColor="@color/black"
+                    android:text=""
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="300dp"
+            android:layout_height="2dp"
+            android:background="@color/original_lavender"
+            android:layout_marginStart="55dp"
+            android:id="@+id/viewBiblioteca"
+            android:layout_below="@+id/tabelBiblioteca"
+            android:layout_marginTop="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/viewBiblioteca"
+            android:id="@+id/verdeLayout"
+            android:paddingTop="10dp"
+            android:orientation="vertical"
+            android:gravity="center">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/verdeTextView"
+                    android:text="Hei! Știați că...?"
+                    android:textSize="20dp"
+                    android:textColor="@color/original_lavender"
+                    android:layout_below="@+id/viewCantina"
+                    android:textStyle="italic|bold"
+                    />
+                <Button
+                    android:id="@+id/buttonStiati"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/baseline_edit_24"
+                    android:backgroundTint="@color/original_lavender"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    android:visibility="visible" />
+            </LinearLayout>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/stiatiCaEditText"
+                android:padding="5dp"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:text="• Au reducere la transport în comun (călătorii și abonamente STB, Metrorex și CFR) de 50%?\n\n
+• Pot beneficia de diverse reduceri la muzee, filme, teatru etc.?\n\n
+• Se pot înscrie în anul 1 la tutoriate ținute de alți studenți? Și, de asemenea, studenții din anul 3 pot preda în cadrul acestora? Pentru mai multe detalii urmărește postările de pe pagina principală de activități și voluntariate\n\n
+• Pot fi eligibili pentru mai multe tipuri de burse: socială, de merit și de studiu?\n\n
+• Beneficiază de consult gratis la cabinetul medical?\n\n
+• Beneficiază de reducere sau chiar acces gratuit la diverse aplicatii sau articole prin intermediul contului de student?\n\n
+• Se pot înscrie în cadrul Asociatiei Studentilor de la Matematica si Informatica pentru a participa si organiza diverse activitati de voluntariat?\n\n
+• De două ori pe an se pot înscrie în ESN pentru a lua parte la voluntariate atât naționale cât și internaționale?\n\n
+• Se pot înscrie în programul ERASMUS pentru a participa la schimburi de experiență cu alte universități din Europa? Mai multe detalii se află pe pagina biroului ERASMUS din cadrul Universității.
+"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
             android:layout_marginTop="10dp"
-            android:visibility="visible"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone"
             android:id="@+id/adminAdaugareStudentInASMI"
-            android:layout_below="@+id/appBarLayout">
+            android:layout_below="@+id/verdeLayout">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -109,6 +1022,9 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
+
+        </ScrollView>
+
         <com.google.android.material.navigation.NavigationView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
