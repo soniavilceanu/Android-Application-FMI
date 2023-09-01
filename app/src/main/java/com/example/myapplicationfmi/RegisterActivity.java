@@ -906,7 +906,6 @@ public class RegisterActivity extends AppCompatActivity {
                 cursor.close();
             }
         }
-        // Calling method to check final result and insert data into SQLite database.
         CheckFinalResult();
     }
     public void CheckFinalResult(){

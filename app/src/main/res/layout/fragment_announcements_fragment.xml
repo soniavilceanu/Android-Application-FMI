@@ -51,14 +51,14 @@
                         android:layout_alignParentTop="true"
                         android:visibility="gone"/>
 
-                    <ImageView
-                        android:id="@+id/dashboardTabImage"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/baseline_open_in_new_24"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:visibility="gone"/>
+<!--                    <ImageView-->
+<!--                        android:id="@+id/dashboardTabImage"-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:src="@drawable/baseline_open_in_new_24"-->
+<!--                        android:layout_alignParentStart="true"-->
+<!--                        android:layout_alignParentTop="true"-->
+<!--                        android:visibility="gone"/>-->
 
                     <!--                    <Button-->
                     <!--                        android:id="@+id/dashboardTabDelete"-->
@@ -85,7 +85,6 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="5dp"
                         android:ellipsize="end"
-                        android:maxLines="3"
                         android:text="Diplomele de licență vor fi eliberate săptămâna aceasta. Studenții trebuie să se deplaseze la Biroul Acte Studii al rectoratului Universității București"
 
                         android:textColor="@color/black"

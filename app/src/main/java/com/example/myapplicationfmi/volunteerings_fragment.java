@@ -96,12 +96,10 @@ public class volunteerings_fragment extends Fragment {
     private NoteModal noteModal;
     private  String emailHolder;
 
-    // SQLite database build method.
     public void SQLiteDataBaseBuild(){
         Context context = requireContext();
         sqLiteDatabaseObj = context.openOrCreateDatabase(SQLiteHelperVolunteerings.DATABASE_NAME, MODE_PRIVATE, null);
     }
-    // SQLite table build method.
     public void SQLiteTableBuild() {
         sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + SQLiteHelperVolunteerings.TABLE_NAME + "("
                 + SQLiteHelperVolunteerings.Table_Column_ID + " INTEGER PRIMARY KEY, "
@@ -364,7 +362,6 @@ public class volunteerings_fragment extends Fragment {
                  */
             }
 
-            // Generate dynamic view IDs
             int newDashboardTabDateId = Integer.valueOf(tabDateIdList.get(k));
             int newDashboardTabTitleId = Integer.valueOf(tabTitleIdList.get(k));
             int newDashboardTabBodyId = Integer.valueOf(tabBodyIdList.get(k));
@@ -647,7 +644,6 @@ public class volunteerings_fragment extends Fragment {
                                         dashboardTabIds.add(previousDashboardTabId);
                                     }
 
-                                    // Generate dynamic view IDs
                                     int newDashboardTabDateId = View.generateViewId();
                                     while (allIds.contains(String.valueOf(newDashboardTabDateId)))
                                         newDashboardTabDateId = View.generateViewId();
@@ -864,7 +860,6 @@ public class volunteerings_fragment extends Fragment {
                                         notificationModal.insert(notification);
 
                                         sqLiteDatabaseObj = sqLiteHelperVolunteerings.getWritableDatabase();
-                                        // SQLite query to insert data into table.
                                         SQLiteDataBaseQueryHolder = "INSERT INTO " + SQLiteHelperVolunteerings.TABLE_NAME + " (titlu,data,image_link,body,dashboard_tab_id,dashboard_tab_date_id,dashboard_tab_image_id,dashboard_tab_delete_id,dashboard_tab_title_id,dashboard_tab_body_id,dashboard_tab_email)" +
                                                 " VALUES('" + addDashboardTitle.getText().toString() + "', '" + sdf.format(new Date()) + "', '" + addDashboardLink.getText().toString() + "', '" + addDashboardBody.getText().toString() + "', '" + newDashboardTabId + "', '" + newDashboardTabDateId + "', '" + newDashboardImageId + "', '" + newDashboardDeleteId + "'," +
                                                 "'" + newDashboardTabTitleId + "', '" + newDashboardTabBodyId + "', '" + addDashboardEmail.getText().toString() + "');";
@@ -899,8 +894,8 @@ public class volunteerings_fragment extends Fragment {
         //expanding the main (first) dashboard tab
         dashboardTabBodyToExpand = rootView.findViewById(R.id.dashboardTabBody);
         dashboardTabToExpand = rootView.findViewById(R.id.dashboardTab);
-        dashboardTabDateToExpand = rootView.findViewById(R.id.dashboardTabDate);
-        dashboardTabImageToExpand = rootView.findViewById(R.id.dashboardTabImage);
+//        dashboardTabDateToExpand = rootView.findViewById(R.id.dashboardTabDate);
+//        dashboardTabImageToExpand = rootView.findViewById(R.id.dashboardTabImage);
 
         dashboardTabToExpand.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
 
@@ -910,8 +905,8 @@ public class volunteerings_fragment extends Fragment {
                 int visibility = (dashboardTabBodyToExpand.getVisibility() == View.GONE)? View.VISIBLE : View.GONE;
 
                 TransitionManager.beginDelayedTransition(dashboardTabToExpand, new AutoTransition());
-                dashboardTabDateToExpand.setVisibility(visibility);
-                dashboardTabImageToExpand.setVisibility(visibility);
+//                dashboardTabDateToExpand.setVisibility(visibility);
+//                dashboardTabImageToExpand.setVisibility(visibility);
                 dashboardTabBodyToExpand.setVisibility(visibility);
             }
         });

@@ -27,16 +27,12 @@ public class SetariNotificariSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // You don't need to create tables here, as Room has already created them
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Handle database upgrades if needed
     }
 
-    // Add methods to query or update the Notes table using raw SQL queries
-    // ...
     public SetariNotificari getSetariNotificariByStudentIdAndType(long studentId, String type) {
         SQLiteDatabase db = this.getReadableDatabase();
         SetariNotificari setariNotificari = null;
@@ -52,8 +48,6 @@ public class SetariNotificariSQLiteHelper extends SQLiteOpenHelper {
         );
 
         if (cursor != null && cursor.moveToFirst()) {
-            // Retrieve data from cursor and create SetariNotificari object
-            // SetariNotificari is the bean class you provided
 
             int columnIndexSetariNotificariId = cursor.getColumnIndex("setariNotificariId");
             int columnIndexStudentId = cursor.getColumnIndex("studentId");
@@ -67,9 +61,8 @@ public class SetariNotificariSQLiteHelper extends SQLiteOpenHelper {
                 setariNotificari.setSetariNotificariId(cursor.getLong(columnIndexSetariNotificariId));
                 setariNotificari.setStudentId(cursor.getLong(columnIndexStudentId));
                 setariNotificari.setType(cursor.getString(columnIndexType));
-                setariNotificari.setVreaNotificare(cursor.getInt(columnIndexVreaNotificare) == 1); // Convert integer to boolean
+                setariNotificari.setVreaNotificare(cursor.getInt(columnIndexVreaNotificare) == 1);
             } else {
-                // Handle the case where one or more columns are missing
             }
 
             cursor.close();
@@ -80,7 +73,6 @@ public class SetariNotificariSQLiteHelper extends SQLiteOpenHelper {
         return setariNotificari;
     }
 
-    // Update SetariNotificari
     public void updateSetariNotificari(SetariNotificari setariNotificari) {
         SQLiteDatabase db = this.getWritableDatabase();
 

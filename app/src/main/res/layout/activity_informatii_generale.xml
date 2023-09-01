@@ -897,7 +897,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/verdeTextView"
-                    android:text="Hei! Știați că...?"
+                    android:text="Știați că studenții...?"
                     android:textSize="20dp"
                     android:textColor="@color/original_lavender"
                     android:layout_below="@+id/viewCantina"
@@ -938,6 +938,56 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:id="@+id/alteInfoLayout"
+            android:layout_below="@+id/verdeLayout">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/alteInfoTextView"
+                    android:text="Informații adiționale"
+                    android:textSize="20dp"
+                    android:textColor="@color/original_lavender"
+                    android:layout_below="@+id/viewCantina"
+                    android:textStyle="italic|bold"
+                    />
+                <Button
+                    android:id="@+id/buttonAlteInfo"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/baseline_edit_24"
+                    android:backgroundTint="@color/original_lavender"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    android:visibility="visible" />
+            </LinearLayout>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/alteInfoEditText"
+                android:padding="5dp"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:text="• În saptamâna 08 - 14 octombrie vor fi decontate abonamentele pentru transportul în comun\n\n
+• Cabinetul medical va fi deschis de Luni până Vineri în intervalul orar 08:00 - 16:00\n\n
+"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -948,7 +998,7 @@
             android:layout_marginBottom="20dp"
             android:visibility="gone"
             android:id="@+id/adminAdaugareStudentInASMI"
-            android:layout_below="@+id/verdeLayout">
+            android:layout_below="@+id/alteInfoLayout">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

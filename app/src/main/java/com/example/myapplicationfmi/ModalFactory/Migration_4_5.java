@@ -22,14 +22,11 @@ public class Migration_4_5 extends Migration {
                 "subject_id INTEGER, " +
                 "PRIMARY KEY(groupId, professorId, zi, intervalOrar))");
 
-        // Copy the data from the old table to the new table
         database.execSQL("INSERT INTO Courses_new (groupId, professorId, zi, intervalOrar, frecventa, semigrupa, subject_id) " +
                 "SELECT groupId, professorId, zi, intervalOrar, frecventa, semigrupa, subject_id FROM Courses");
 
-        // Drop the old table
         database.execSQL("DROP TABLE Courses");
 
-        // Rename the new table to the original table name
         database.execSQL("ALTER TABLE Courses_new RENAME TO Courses");
     }
 }

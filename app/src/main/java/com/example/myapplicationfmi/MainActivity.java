@@ -50,13 +50,10 @@ public class MainActivity extends AppCompatActivity {
 
         checkBox = findViewById(R.id.rememberLogin);
         checkbox();
-        //Adding click listener to log in button.
         LogInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Calling EditText is empty or no method.
                 CheckEditTextStatus();
-                // Calling login method.
                 LoginFunction();
             }
         });
@@ -79,12 +76,10 @@ public class MainActivity extends AppCompatActivity {
             outputStream.close();
             inputStream.close();
 
-            // Optional: Display a message confirming the successful copy
             Toast.makeText(context, "Database copied to device", Toast.LENGTH_SHORT).show();
 
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the exception
         }
     }
 
@@ -97,43 +92,32 @@ public class MainActivity extends AppCompatActivity {
             else if(!email.contains("admin")) MainActivity.USER_TYPE = 3;
             else  MainActivity.USER_TYPE = 1;
             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-            // Sending Email to Dashboard Activity using intent.
             intent.putExtra(UserEmail, email);
             startActivity(intent);
             finish();
         }
     }
 
-    // Login function starts from here.
     public void LoginFunction(){
         if(EditTextEmptyHolder) {
-            // Opening SQLite database write permission.
             sqLiteDatabaseObj = sqLiteHelper.getWritableDatabase();
-            // Adding search email query to cursor.
             cursor = sqLiteDatabaseObj.query(SQLiteHelper.TABLE_NAME, null, " " + SQLiteHelper.Table_Column_3_Email + "=?", new String[]{EmailHolder}, null, null, null);
             while (cursor.moveToNext()) {
                 if (cursor.isFirst()) {
                     cursor.moveToFirst();
-                    // Storing Password associated with entered email.
                     TempPassword = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.Table_Column_4_Password));
-                    // Closing cursor.
                     cursor.close();
                 }
             }
-            // Calling method to check final result ..
             CheckFinalResult();
         }
         else {
-            //If any of login EditText empty then this block will be executed.
             Toast.makeText(MainActivity.this,"Introduceți username și parolă",Toast.LENGTH_LONG).show();
         }
     }
-    // Checking EditText is empty or not.
     public void CheckEditTextStatus(){
-        // Getting value from All EditText and storing into String Variables.
         EmailHolder = Email.getText().toString();
         PasswordHolder = Password.getText().toString();
-        // Checking EditText is empty or no using TextUtils.
         if( TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder))
             EditTextEmptyHolder = false;
         else EditTextEmptyHolder = true;
@@ -142,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         else if(!EmailHolder.contains("admin")) MainActivity.USER_TYPE = 3;
             else  MainActivity.USER_TYPE = 1;
     }
-    // Checking entered password from SQLite database email associated password.
+
     public void CheckFinalResult(){
         if(TempPassword.equalsIgnoreCase(PasswordHolder))
         {
@@ -157,9 +141,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putString("email", String.valueOf(Email.getText()));
             editor.apply();
             //Toast.makeText(MainActivity.this,"Login Successful",Toast.LENGTH_LONG).show();
-            // Going to Dashboard activity after login success message.
             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-            // Sending Email to Dashboard Activity using intent.
             intent.putExtra(UserEmail, EmailHolder);
             startActivity(intent);
         }

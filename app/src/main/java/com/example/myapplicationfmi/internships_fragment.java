@@ -89,12 +89,11 @@ public class internships_fragment extends Fragment {
     private CalendarModal calendarModal;
     private NoteModal noteModal;
 
-    // SQLite database build method.
     public void SQLiteDataBaseBuild(){
         Context context = requireContext();
         sqLiteDatabaseObj = context.openOrCreateDatabase(SQLiteHelperInternships.DATABASE_NAME, Context.MODE_PRIVATE, null);
     }
-    // SQLite table build method.
+
     public void SQLiteTableBuild() {
         sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + SQLiteHelperInternships.TABLE_NAME + "("
                 + SQLiteHelperInternships.Table_Column_ID + " INTEGER PRIMARY KEY, "
@@ -177,9 +176,7 @@ public class internships_fragment extends Fragment {
 
         sqLiteHelperInternships = new SQLiteHelperInternships(requireContext());
 
-        // Creating SQLite database if doesn't exist
         SQLiteDataBaseBuild();
-        // Creating SQLite table if doesn't exist.
         SQLiteTableBuild();
 
 //        for(int i = 1; i <= 5; i ++){
@@ -343,7 +340,6 @@ public class internships_fragment extends Fragment {
                  */
             }
 
-            // Generate dynamic view IDs
             int newDashboardTabDateId = Integer.valueOf(tabDateIdList.get(k));
             int newDashboardTabTitleId = Integer.valueOf(tabTitleIdList.get(k));
             int newDashboardTabBodyId = Integer.valueOf(tabBodyIdList.get(k));
@@ -621,7 +617,6 @@ public class internships_fragment extends Fragment {
                     dashboardTabIds.add(previousDashboardTabId);
                 }
 
-                // Generate dynamic view IDs
                 int newDashboardTabDateId = View.generateViewId();
                 while(allIds.contains(String.valueOf(newDashboardTabDateId)))
                     newDashboardTabDateId = View.generateViewId();
@@ -839,7 +834,6 @@ public class internships_fragment extends Fragment {
                     notificationModal.insert(notification);
 
                     sqLiteDatabaseObj = sqLiteHelperInternships.getWritableDatabase();
-                    // SQLite query to insert data into table.
                     SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelperInternships.TABLE_NAME+" (titlu,data,image_link,body,dashboard_tab_id,dashboard_tab_date_id,dashboard_tab_image_id,dashboard_tab_delete_id,dashboard_tab_title_id,dashboard_tab_body_id,dashboard_tab_email)" +
                             " VALUES('"+addDashboardTitle.getText().toString()+"', '"+sdf.format(new Date())+"', '"+addDashboardLink.getText().toString()+"', '"+addDashboardBody.getText().toString()+"', '"+newDashboardTabId+"', '"+newDashboardTabDateId+"', '"+newDashboardImageId+"', '"+newDashboardDeleteId+"'," +
                             "'"+newDashboardTabTitleId+"', '"+newDashboardTabBodyId+"', '"+addDashboardEmail.getText().toString()+"');";
@@ -869,8 +863,8 @@ public class internships_fragment extends Fragment {
         //expanding the main (first) dashboard tab
         dashboardTabBodyToExpand = rootView.findViewById(R.id.dashboardTabBody);
         dashboardTabToExpand = rootView.findViewById(R.id.dashboardTab);
-        dashboardTabDateToExpand = rootView.findViewById(R.id.dashboardTabDate);
-        dashboardTabImageToExpand = rootView.findViewById(R.id.dashboardTabImage);
+//        dashboardTabDateToExpand = rootView.findViewById(R.id.dashboardTabDate);
+//        dashboardTabImageToExpand = rootView.findViewById(R.id.dashboardTabImage);
 
         dashboardTabToExpand.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
 
@@ -880,8 +874,8 @@ public class internships_fragment extends Fragment {
                 int visibility = (dashboardTabBodyToExpand.getVisibility() == View.GONE)? View.VISIBLE : View.GONE;
 
                 TransitionManager.beginDelayedTransition(dashboardTabToExpand, new AutoTransition());
-                dashboardTabDateToExpand.setVisibility(visibility);
-                dashboardTabImageToExpand.setVisibility(visibility);
+//                dashboardTabDateToExpand.setVisibility(visibility);
+//                dashboardTabImageToExpand.setVisibility(visibility);
                 dashboardTabBodyToExpand.setVisibility(visibility);
             }
         });

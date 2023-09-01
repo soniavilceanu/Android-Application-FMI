@@ -110,6 +110,7 @@ public class InformatiiGeneraleActivity extends AppCompatActivity {
         Button buttonEditProgCantina = findViewById(R.id.buttonEditProgCantina);
         Button buttonEditProgBiblioteca = findViewById(R.id.buttonEditProgBiblioteca);
         Button buttonStiati = findViewById(R.id.buttonStiati);
+        Button buttonAlteInfo = findViewById(R.id.buttonAlteInfo);
         DrawerLayout activity_dashboard = findViewById(R.id.activity_dashboard);
         LinearLayout programCantina = findViewById(R.id.programCantina);
         LinearLayout programSecretariat = findViewById(R.id.programSecretariat);
@@ -204,12 +205,17 @@ public class InformatiiGeneraleActivity extends AppCompatActivity {
         stiatiCaEditText.setEnabled(false);
         stiatiCaEditText.setText(sharedPreferences.getString("stiatiCa", ""));
 
+        EditText alteInfoEditText = findViewById(R.id.alteInfoEditText);
+        alteInfoEditText.setEnabled(false);
+        alteInfoEditText.setText(sharedPreferences.getString("alteInfo", ""));
+
         if (MainActivity.USER_TYPE != 1) {
             creareContNouItem.setVisible(false);
             buttonEditProgSecretariat.setVisibility(View.GONE);
             buttonEditProgCantina.setVisibility(View.GONE);
             buttonEditProgBiblioteca.setVisibility(View.GONE);
             buttonStiati.setVisibility(View.GONE);
+            buttonAlteInfo.setVisibility(View.GONE);
             adminAdaugareStudentInASMI.setVisibility(View.GONE);
         } else {
             // e admin
@@ -218,6 +224,7 @@ public class InformatiiGeneraleActivity extends AppCompatActivity {
             buttonEditProgCantina.setVisibility(View.VISIBLE);
             buttonEditProgBiblioteca.setVisibility(View.VISIBLE);
             buttonStiati.setVisibility(View.VISIBLE);
+            buttonAlteInfo.setVisibility(View.VISIBLE);
             adminAdaugareStudentInASMI.setVisibility(View.VISIBLE);
 
             buttonAdaugaASMI.setOnClickListener(new View.OnClickListener() {
@@ -384,6 +391,28 @@ public class InformatiiGeneraleActivity extends AppCompatActivity {
                     stiatiCaEditText.setEnabled(false);
                 }
                 isEditMode4[0] = !isEditMode4[0];
+            }
+        });
+
+        final boolean[] isEditMode5 = {true};
+        buttonAlteInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isEditMode5[0]){
+                    buttonAlteInfo.setBackgroundResource(R.drawable.baseline_check_24);
+                    alteInfoEditText.setEnabled(true);
+                }
+                else{
+                    buttonAlteInfo.setBackgroundResource(R.drawable.baseline_edit_24);
+
+                    // salvare
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("alteInfo", String.valueOf(alteInfoEditText.getText()));
+                    editor.apply();
+
+                    alteInfoEditText.setEnabled(false);
+                }
+                isEditMode5[0] = !isEditMode5[0];
             }
         });
 

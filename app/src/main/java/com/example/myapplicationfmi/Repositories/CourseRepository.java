@@ -83,7 +83,6 @@ public class CourseRepository {
 
         @Override
         protected Long doInBackground(Course... model) {
-            // below line is use to insert our modal in dao.
             return dao.insertCourse(model[0]);
         }
     }

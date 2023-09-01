@@ -88,12 +88,10 @@ public class announcements_fragment extends Fragment {
     private CalendarModal calendarModal;
     private NoteModal noteModal;
 
-    // SQLite database build method.
     public void SQLiteDataBaseBuild(){
         Context context = requireContext();
         sqLiteDatabaseObj = context.openOrCreateDatabase(SQLiteHelperAnnouncements.DATABASE_NAME, Context.MODE_PRIVATE, null);
     }
-    // SQLite table build method.
     public void SQLiteTableBuild() {
         sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + SQLiteHelperAnnouncements.TABLE_NAME + "("
                 + SQLiteHelperAnnouncements.Table_Column_ID + " INTEGER PRIMARY KEY, "
@@ -332,7 +330,6 @@ public class announcements_fragment extends Fragment {
                  */
             }
 
-            // Generate dynamic view IDs
             int newDashboardTabDateId = Integer.valueOf(tabDateIdList.get(k));
             int newDashboardTabTitleId = Integer.valueOf(tabTitleIdList.get(k));
             int newDashboardTabBodyId = Integer.valueOf(tabBodyIdList.get(k));
@@ -581,7 +578,6 @@ public class announcements_fragment extends Fragment {
                     dashboardTabIds.add(previousDashboardTabId);
                 }
 
-                // Generate dynamic view IDs
                 int newDashboardTabDateId = View.generateViewId();
                 while(allIds.contains(String.valueOf(newDashboardTabDateId)))
                     newDashboardTabDateId = View.generateViewId();
@@ -784,7 +780,7 @@ public class announcements_fragment extends Fragment {
                     notificationModal.insert(notification);
 
                     sqLiteDatabaseObj = sqLiteHelperAnnouncements.getWritableDatabase();
-                    // SQLite query to insert data into table.
+
                     SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelperAnnouncements.TABLE_NAME+" (titlu,data,image_link,body,dashboard_tab_id,dashboard_tab_date_id,dashboard_tab_image_id,dashboard_tab_delete_id,dashboard_tab_title_id,dashboard_tab_body_id)" +
                             " VALUES('"+addDashboardTitle.getText().toString()+"', '"+sdf.format(new Date())+"', '"+addDashboardLink.getText().toString()+"', '"+addDashboardBody.getText().toString()+"', '"+newDashboardTabId+"', '"+newDashboardTabDateId+"', '"+newDashboardImageId+"', '"+newDashboardDeleteId+"'," +
                             "'"+newDashboardTabTitleId+"', '"+newDashboardTabBodyId+"');";
@@ -814,7 +810,7 @@ public class announcements_fragment extends Fragment {
         dashboardTabBodyToExpand = rootView.findViewById(R.id.dashboardTabBody);
         dashboardTabToExpand = rootView.findViewById(R.id.dashboardTab);
         dashboardTabDateToExpand = rootView.findViewById(R.id.dashboardTabDate);
-        dashboardTabImageToExpand = rootView.findViewById(R.id.dashboardTabImage);
+//        dashboardTabImageToExpand = rootView.findViewById(R.id.dashboardTabImage);
 
         dashboardTabToExpand.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
 
@@ -825,7 +821,7 @@ public class announcements_fragment extends Fragment {
 
                 TransitionManager.beginDelayedTransition(dashboardTabToExpand, new AutoTransition());
                 dashboardTabDateToExpand.setVisibility(visibility);
-                dashboardTabImageToExpand.setVisibility(visibility);
+//                dashboardTabImageToExpand.setVisibility(visibility);
                 dashboardTabBodyToExpand.setVisibility(visibility);
             }
         });

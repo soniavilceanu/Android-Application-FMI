@@ -34,12 +34,10 @@ public class StudentsSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // You don't need to create tables here, as Room has already created them
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Handle database upgrades if needed
     }
 
     public Student getStudentByEmail(String email) {
@@ -78,7 +76,7 @@ public class StudentsSQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME_ASMI, asmi ? 1 : 0); // Convert boolean to integer
+        values.put(COLUMN_NAME_ASMI, asmi ? 1 : 0);
 
         String selection = COLUMN_NAME_STUDENT_ID + " = ?";
         String[] selectionArgs = { String.valueOf(studentId) };

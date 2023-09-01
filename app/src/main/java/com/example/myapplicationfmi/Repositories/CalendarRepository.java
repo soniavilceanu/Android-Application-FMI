@@ -34,7 +34,7 @@ public class CalendarRepository {
             return new InsertcalendarAsyncTask(dao).execute(model).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            return -1; // Return a default value or handle the error case
+            return -1;
         }
     }
     public void update(Calendar model) {

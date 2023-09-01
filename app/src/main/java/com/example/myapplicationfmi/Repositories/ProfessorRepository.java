@@ -19,13 +19,9 @@ import java.util.concurrent.ExecutionException;
 
 public class ProfessorRepository {
 
-    // below line is the create a variable
-    // for dao and list for all professors.
     private ProfessorDAO dao;
     private LiveData<List<Professor>> allprofessors;
 
-    // creating a constructor for our variables
-    // and passing the variables to it.
     @RequiresApi(api = Build.VERSION_CODES.O)
     public ProfessorRepository(Application application) {
         MyRoomDatabase database = MyRoomDatabase.getInstance(application);
@@ -33,7 +29,6 @@ public class ProfessorRepository {
         allprofessors = dao.getAllProfessors();
     }
 
-    // creating a method to insert the data to our database.
 //    public void insert(Professor model) {
 //        new InsertprofessorAsyncTask(dao).execute(model);
 //    }
@@ -45,22 +40,18 @@ public class ProfessorRepository {
             return -1;
         }
     }
-    // creating a method to update data in database.
     public void update(Professor model) {
         new UpdateprofessorAsyncTask(dao).execute(model);
     }
 
-    // creating a method to delete the data in our database.
     public void delete(Professor model) {
         new DeleteprofessorAsyncTask(dao).execute(model);
     }
 
-    // below is the method to delete all the professors.
     public void deleteAllprofessors() {
         new DeleteAllprofessorsAsyncTask(dao).execute();
     }
 
-    // below method is to read all the professors.
     public LiveData<List<Professor>> getAllProfessors() {
         return allprofessors;
     }
@@ -81,7 +72,6 @@ public class ProfessorRepository {
         return dao.getProfessorByEmail(email);
     }
 
-    // we are creating a async task method to insert new professor.
     private static class InsertprofessorAsyncTask extends AsyncTask<Professor, Void, Long> {
         private ProfessorDAO dao;
 
@@ -91,12 +81,10 @@ public class ProfessorRepository {
 
         @Override
         protected Long doInBackground(Professor... model) {
-            // below line is use to insert our modal in dao.
             return dao.insertProfessor(model[0]);
         }
     }
 
-    // we are creating a async task method to update our professor.
     private static class UpdateprofessorAsyncTask extends AsyncTask<Professor, Void, Void> {
         private ProfessorDAO dao;
 
@@ -106,14 +94,11 @@ public class ProfessorRepository {
 
         @Override
         protected Void doInBackground(Professor... models) {
-            // below line is use to update
-            // our modal in dao.
             dao.updateProfessor(models[0]);
             return null;
         }
     }
 
-    // we are creating a async task method to delete professor.
     private static class DeleteprofessorAsyncTask extends AsyncTask<Professor, Void, Void> {
         private ProfessorDAO dao;
 
@@ -123,14 +108,11 @@ public class ProfessorRepository {
 
         @Override
         protected Void doInBackground(Professor... models) {
-            // below line is use to delete
-            // our professor modal in dao.
             dao.deleteProfessor(models[0]);
             return null;
         }
     }
 
-    // we are creating a async task method to delete all professors.
     private static class DeleteAllprofessorsAsyncTask extends AsyncTask<Void, Void, Void> {
         private ProfessorDAO dao;
         private DeleteAllprofessorsAsyncTask(ProfessorDAO dao) {
@@ -138,8 +120,6 @@ public class ProfessorRepository {
         }
         @Override
         protected Void doInBackground(Void... voids) {
-            // on below line calling method
-            // to delete all professors.
             dao.deleteAllProfessors();
             return null;
         }

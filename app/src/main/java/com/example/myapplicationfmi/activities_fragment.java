@@ -88,12 +88,10 @@ public class activities_fragment extends Fragment {
     private CalendarModal calendarModal;
     private NoteModal noteModal;
 
-    // SQLite database build method.
     public void SQLiteDataBaseBuild(){
         Context context = requireContext();
         sqLiteDatabaseObj = context.openOrCreateDatabase(SQLiteHelperDashboard.DATABASE_NAME, Context.MODE_PRIVATE, null);
     }
-    // SQLite table build method.
     public void SQLiteTableBuild() {
         sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + SQLiteHelperDashboard.TABLE_NAME + "("
                 + SQLiteHelperDashboard.Table_Column_ID + " INTEGER PRIMARY KEY, "
@@ -175,9 +173,7 @@ public class activities_fragment extends Fragment {
 
         sqLiteHelperDashboard = new SQLiteHelperDashboard(requireContext());
 
-        // Creating SQLite database if doesn't exist
         SQLiteDataBaseBuild();
-        // Creating SQLite table if doesn't exist.
         SQLiteTableBuild();
 
 //        for(int i = 1; i <= 5; i ++){
@@ -340,7 +336,6 @@ public class activities_fragment extends Fragment {
                  */
             }
 
-            // Generate dynamic view IDs
             int newDashboardTabDateId = Integer.valueOf(tabDateIdList.get(k));
             int newDashboardTabTitleId = Integer.valueOf(tabTitleIdList.get(k));
             int newDashboardTabBodyId = Integer.valueOf(tabBodyIdList.get(k));
@@ -603,7 +598,6 @@ public class activities_fragment extends Fragment {
                     dashboardTabIds.add(previousDashboardTabId);
                 }
 
-                // Generate dynamic view IDs
                 int newDashboardTabDateId = View.generateViewId();
                 while(allIds.contains(String.valueOf(newDashboardTabDateId)))
                     newDashboardTabDateId = View.generateViewId();
@@ -797,7 +791,6 @@ public class activities_fragment extends Fragment {
                     String SQLiteDataBaseQueryHolder;
 
                     sqLiteDatabaseObj = sqLiteHelperDashboard.getWritableDatabase();
-                    // SQLite query to insert data into table.
 
                     Notification notification = new Notification();
                     notification.setType("activitate");
@@ -837,7 +830,7 @@ public class activities_fragment extends Fragment {
         dashboardTabBodyToExpand = rootView.findViewById(R.id.dashboardTabBody);
         dashboardTabToExpand = rootView.findViewById(R.id.dashboardTab);
         dashboardTabDateToExpand = rootView.findViewById(R.id.dashboardTabDate);
-        dashboardTabImageToExpand = rootView.findViewById(R.id.dashboardTabImage);
+//        dashboardTabImageToExpand = rootView.findViewById(R.id.dashboardTabImage);
 
         dashboardTabToExpand.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
 
@@ -848,7 +841,7 @@ public class activities_fragment extends Fragment {
 
                 TransitionManager.beginDelayedTransition(dashboardTabToExpand, new AutoTransition());
                 dashboardTabDateToExpand.setVisibility(visibility);
-                dashboardTabImageToExpand.setVisibility(visibility);
+//                dashboardTabImageToExpand.setVisibility(visibility);
                 dashboardTabBodyToExpand.setVisibility(visibility);
             }
         });

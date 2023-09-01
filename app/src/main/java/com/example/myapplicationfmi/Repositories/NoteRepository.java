@@ -17,13 +17,9 @@ import java.util.concurrent.ExecutionException;
 
 public class NoteRepository {
 
-    // below line is the create a variable
-    // for dao and list for all notes.
     private NoteDAO dao;
     private LiveData<List<Note>> allnotes;
 
-    // creating a constructor for our variables
-    // and passing the variables to it.
     @RequiresApi(api = Build.VERSION_CODES.O)
     public NoteRepository(Application application) {
         MyRoomDatabase database = MyRoomDatabase.getInstance(application);
@@ -31,7 +27,6 @@ public class NoteRepository {
         allnotes = dao.getAllNotes();
     }
 
-    // creating a method to insert the data to our database.
 //    public void insert(Note model) {
 //        new InsertnoteAsyncTask(dao).execute(model);
 //    }
@@ -43,22 +38,18 @@ public class NoteRepository {
             return -1;
         }
     }
-    // creating a method to update data in database.
     public void update(Note model) {
         new UpdatenoteAsyncTask(dao).execute(model);
     }
 
-    // creating a method to delete the data in our database.
     public void delete(Note model) {
         new DeletenoteAsyncTask(dao).execute(model);
     }
 
-    // below is the method to delete all the notes.
     public void deleteAllnotes() {
         new DeleteAllnotesAsyncTask(dao).execute();
     }
 
-    // below method is to read all the notes.
     public LiveData<List<Note>> getAllNotes() {
         return allnotes;
     }
@@ -79,7 +70,6 @@ public class NoteRepository {
         return dao.getNoteByNoteId(noteId);
     }
 
-    // we are creating a async task method to insert new note.
     private static class InsertnoteAsyncTask extends AsyncTask<Note, Void, Long> {
         private NoteDAO dao;
 
@@ -94,7 +84,6 @@ public class NoteRepository {
         }
     }
 
-    // we are creating a async task method to update our note.
     private static class UpdatenoteAsyncTask extends AsyncTask<Note, Void, Void> {
         private NoteDAO dao;
 
@@ -104,14 +93,11 @@ public class NoteRepository {
 
         @Override
         protected Void doInBackground(Note... models) {
-            // below line is use to update
-            // our modal in dao.
             dao.updateNote(models[0]);
             return null;
         }
     }
 
-    // we are creating a async task method to delete note.
     private static class DeletenoteAsyncTask extends AsyncTask<Note, Void, Void> {
         private NoteDAO dao;
 
@@ -121,14 +107,11 @@ public class NoteRepository {
 
         @Override
         protected Void doInBackground(Note... models) {
-            // below line is use to delete
-            // our note modal in dao.
             dao.deleteNote(models[0]);
             return null;
         }
     }
 
-    // we are creating a async task method to delete all notes.
     private static class DeleteAllnotesAsyncTask extends AsyncTask<Void, Void, Void> {
         private NoteDAO dao;
         private DeleteAllnotesAsyncTask(NoteDAO dao) {
@@ -136,8 +119,6 @@ public class NoteRepository {
         }
         @Override
         protected Void doInBackground(Void... voids) {
-            // on below line calling method
-            // to delete all notes.
             dao.deleteAllNotes();
             return null;
         }

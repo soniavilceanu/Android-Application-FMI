@@ -185,7 +185,7 @@ public class CarnetActivity extends AppCompatActivity {
         minuteValues = new String[12]; // We want to allow increments of 5 minutes (12 intervals)
         for (int i = 0; i < 12; i++) {
             int minuteValue = i * 5;
-            minuteValues[i] = String.format("%02d", minuteValue); // Format the minutes to have leading zeros
+            minuteValues[i] = String.format("%02d", minuteValue);
             minuteValueMap.put(minuteValue, i);
         }
         minutePicker.setMinValue(0);

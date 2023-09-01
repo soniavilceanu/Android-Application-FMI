@@ -34,31 +34,31 @@
                     android:layout_marginTop="30dp"
                     android:animateLayoutChanges="true">
 
-                    <TextView
-                        android:id="@+id/dashboardTabDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/lavender_border"
-                        android:paddingStart="8dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="4dp"
-                        android:text="06.06.2023"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:textSize="15dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:visibility="gone"/>
+<!--                    <TextView-->
+<!--                        android:id="@+id/dashboardTabDate"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:background="@drawable/lavender_border"-->
+<!--                        android:paddingStart="8dp"-->
+<!--                        android:paddingTop="4dp"-->
+<!--                        android:paddingEnd="8dp"-->
+<!--                        android:paddingBottom="4dp"-->
+<!--                        android:text="06.06.2023"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:textColor="@color/black"-->
+<!--                        android:textSize="15dp"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:layout_alignParentTop="true"-->
+<!--                        android:visibility="gone"/>-->
 
-                    <ImageView
-                        android:id="@+id/dashboardTabImage"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/baseline_open_in_new_24"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:visibility="gone"/>
+<!--                    <ImageView-->
+<!--                        android:id="@+id/dashboardTabImage"-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:src="@drawable/baseline_open_in_new_24"-->
+<!--                        android:layout_alignParentStart="true"-->
+<!--                        android:layout_alignParentTop="true"-->
+<!--                        android:visibility="gone"/>-->
 
                     <!--                    <Button-->
                     <!--                        android:id="@+id/dashboardTabDelete"-->
@@ -74,8 +74,9 @@
                         android:id="@+id/dashboardTabTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Imp !"
-                        android:textSize="30sp"
+                        android:text="Înscriere voluntari – CONNECT"
+                        android:gravity="center"
+                        android:textSize="20sp"
                         android:textColor="@color/black"
                         android:layout_below="@id/dashboardTabDate" />
 
@@ -85,11 +86,10 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="5dp"
                         android:ellipsize="end"
-                        android:maxLines="3"
-                        android:text="Diplomele de licență vor fi eliberate săptămâna aceasta. Studenții trebuie să se deplaseze la Biroul Acte Studii al rectoratului Universității București"
+                        android:text="Universitatea din București a lansat rețeaua de voluntariat CONNECT, o inițiativă instituțională deschisă tuturor studenților din cadrul comunității academice, care își doresc să își asume un rol activ în crearea unui mediu social și educațional incluziv.\n\nActivitățile voluntarilor CONNECT sunt menite să vină în întâmpinarea nevoilor studenților cu dizabilități, să faciliteze accesarea serviciilor educaționale și administrative ale Universității din București, să contribuie la eforturile de accesibilizare a resurselor educaționale și să susțină accesarea de servicii educaționale furnizate în regim online."
 
                         android:textColor="@color/black"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:layout_below="@id/dashboardTabTitle"
                         android:visibility="gone"/>
 

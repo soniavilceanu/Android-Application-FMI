@@ -71,7 +71,6 @@ public class EvidentaVoluntariatRepository {
 
         @Override
         protected Long doInBackground(EvidentaVoluntariat... model) {
-            // below line is use to insert our modal in dao.
             return dao.insertEvidentaVoluntariat(model[0]);
         }
     }

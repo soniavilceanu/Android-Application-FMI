@@ -28,14 +28,10 @@ public class NotesSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // You don't need to create tables here, as Room has already created them
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Handle database upgrades if needed
     }
 
-    // Add methods to query or update the Notes table using raw SQL queries
-    // ...
 }

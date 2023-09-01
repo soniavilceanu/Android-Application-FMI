@@ -603,19 +603,16 @@ public class OrarActivity extends AppCompatActivity {
                         @Override
                         public void onChanged(Course course) {
                             if (course != null && finalI == clickedCellIndex) {
-                                // Fetch the professor and subject data for the newly inserted course
                                 professorModal.getProfessorById(course.getProfessorId()).observe(OrarActivity.this, new Observer<Professor>() {
                                     @Override
                                     public void onChanged(Professor professor) {
                                         if (professor != null && finalI == clickedCellIndex) {
                                             final String professorNume = professor.getNume() + " " + professor.getPrenume();
-                                            // Fetch the subject data
                                             subjectModal.getSubjectById(course.getSubjectId()).observe(OrarActivity.this, new Observer<Subject>() {
                                                 @Override
                                                 public void onChanged(Subject subject) {
                                                     if (subject != null && finalI == clickedCellIndex) {
                                                         final String subjectDenumire = subject.getDenumire();
-                                                        // Update the UI with the newly inserted course data
                                                         processCourseData(course, professorNume, subjectDenumire);
                                                     }
                                                 }

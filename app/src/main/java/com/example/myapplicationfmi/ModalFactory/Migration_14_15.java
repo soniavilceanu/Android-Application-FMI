@@ -10,7 +10,6 @@ public class Migration_14_15 extends Migration {
 
     @Override
     public void migrate(@NonNull SupportSQLiteDatabase database) {
-        // Create the new table
         database.execSQL("CREATE TABLE IF NOT EXISTS `SetariNotificaris` (" +
                 "`setariNotificariId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 "`studentId` INTEGER, " +

@@ -210,7 +210,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         minuteValues = new String[12]; // We want to allow increments of 5 minutes (12 intervals)
         for (int i = 0; i < 12; i++) {
             int minuteValue = i * 5;
-            minuteValues[i] = String.format("%02d", minuteValue); // Format the minutes to have leading zeros
+            minuteValues[i] = String.format("%02d", minuteValue);
             minuteValueMap.put(minuteValue, i);
         }
         minutePicker.setMinValue(0);
@@ -1090,7 +1090,6 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         view2.setBackgroundResource(R.color.original_lavender);
 
 
-        // Enclosing LinearLayout for "Valabil pentru:" TextView and ConstraintLayout
         LinearLayout valabilPentruLayout = new LinearLayout(this);
         valabilPentruLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,

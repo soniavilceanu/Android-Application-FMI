@@ -64,7 +64,6 @@ public class EvidentaNotificariRepository {
 
         @Override
         protected Long doInBackground(EvidentaNotificari... model) {
-            // below line is use to insert our modal in dao.
             return dao.insertEvidentaNotificari(model[0]);
         }
     }
