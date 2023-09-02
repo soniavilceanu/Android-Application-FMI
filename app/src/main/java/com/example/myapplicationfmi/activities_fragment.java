@@ -1,8 +1,11 @@
 package com.example.myapplicationfmi;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -87,6 +90,9 @@ public class activities_fragment extends Fragment {
     private ProfessorSubjectModal professorSubjectModal;
     private CalendarModal calendarModal;
     private NoteModal noteModal;
+    TextView dashboardTabTitle;
+    TextView dashboardTabBody;
+    TextView dashboardTabDate;
 
     public void SQLiteDataBaseBuild(){
         Context context = requireContext();
@@ -188,6 +194,9 @@ public class activities_fragment extends Fragment {
         activitiesRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.activitiesRelativeLayout);
 //        dashboardTabImage = (ImageView) rootView.findViewById(R.id.dashboardTabImage);
 //        dashboardTabDelete = (Button) rootView.findViewById(R.id.dashboardTabDelete);
+        dashboardTabTitle = (TextView) rootView.findViewById(R.id.dashboardTabTitle);
+        dashboardTabBody = (TextView) rootView.findViewById(R.id.dashboardTabBody);
+        dashboardTabDate = (TextView) rootView.findViewById(R.id.dashboardTabDate);
 
         fillDashboardTabInfo = (LinearLayout) rootView.findViewById(R.id.fillDashboardTabInfo);
         addDashboardTabInfo = (Button) rootView.findViewById(R.id.addDashboardTabInfo);
@@ -223,6 +232,14 @@ public class activities_fragment extends Fragment {
         professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
         calendarModal = new ViewModelProvider(this).get(CalendarModal.class);
         noteModal = new ViewModelProvider(this).get(NoteModal.class);
+
+
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(DashboardActivity.SHARED_PREFS, MODE_PRIVATE);
+
+        dashboardTabTitle.setText(sharedPreferences.getString("dashboardTabTitleActivities", ""));
+        dashboardTabBody.setText(sharedPreferences.getString("dashboardTabBodyActivities", ""));
+        dashboardTabDate.setText(sharedPreferences.getString("dashboardTabDateActivities", ""));
+
 
         /**
          * tragem datele dashboard-urilor din baza de date
@@ -479,7 +496,7 @@ public class activities_fragment extends Fragment {
                     intent.putExtra("title",dashboardTabTitle.getText().toString());
                     intent.putExtra("date",dashboardTabDate.getText().toString());
                     intent.putExtra("body",dashboardTabBody.getText().toString());
-                    intent.putExtra("previousActivity", "DashboardActivity");
+                    intent.putExtra("previousActivity", "activities");
                     startActivity(intent);
                 }
             });
@@ -770,7 +787,7 @@ public class activities_fragment extends Fragment {
                         intent.putExtra("title",dashboardTabTitle.getText().toString());
                         intent.putExtra("date",dashboardTabDate.getText().toString());
                         intent.putExtra("body",dashboardTabBody.getText().toString());
-                        intent.putExtra("previousActivity", "DashboardActivity");
+                        intent.putExtra("previousActivity", "activities");
                         startActivity(intent);
                     }
                 });

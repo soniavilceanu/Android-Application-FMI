@@ -60,15 +60,15 @@
 <!--                        android:layout_alignParentTop="true"-->
 <!--                        android:visibility="gone"/>-->
 
-                    <!--                    <Button-->
-                    <!--                        android:id="@+id/dashboardTabDelete"-->
-                    <!--                        android:layout_width="30dp"-->
-                    <!--                        android:layout_height="30dp"-->
-                    <!--                        android:layout_alignParentStart="true"-->
-                    <!--                        android:layout_alignParentTop="true"-->
-                    <!--                        android:layout_marginStart="40dp"-->
-                    <!--                        android:background="@drawable/baseline_close_24"-->
-                    <!--                        android:visibility="gone"/>-->
+<!--                                        <Button-->
+<!--                                            android:id="@+id/dashboardTabDelete"-->
+<!--                                            android:layout_width="30dp"-->
+<!--                                            android:layout_height="30dp"-->
+<!--                                            android:layout_alignParentStart="true"-->
+<!--                                            android:layout_alignParentTop="true"-->
+<!--                                            android:layout_marginStart="40dp"-->
+<!--                                            android:background="@drawable/baseline_edit_24_black"-->
+<!--                                            android:visibility="gone"/>-->
 
                     <TextView
                         android:id="@+id/dashboardTabTitle"
@@ -86,7 +86,6 @@
                         android:paddingTop="5dp"
                         android:ellipsize="end"
                         android:text="Diplomele de licență vor fi eliberate săptămâna aceasta. Studenții trebuie să se deplaseze la Biroul Acte Studii al rectoratului Universității București"
-
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:layout_below="@id/dashboardTabTitle"

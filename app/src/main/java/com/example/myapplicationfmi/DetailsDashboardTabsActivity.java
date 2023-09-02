@@ -38,6 +38,7 @@ import com.example.myapplicationfmi.beans.Student;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 public class DetailsDashboardTabsActivity extends AppCompatActivity {
@@ -63,6 +64,7 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
     private EvidentaNotificariModal evidentaNotificariModal;
     private EvidentaVoluntariatModal evidentaVoluntariatModal;
     private DateTimeFormatter formatter;
+    private CheckBox checkboxMarcheazaPrincipal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +107,7 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
         layoutVoluntariat = findViewById(R.id.layoutVoluntariat);
         studentiVoluntariat = findViewById(R.id.studentiVoluntariat);
         textEleviInscrisi = findViewById(R.id.textEleviInscrisi);
+        checkboxMarcheazaPrincipal = findViewById(R.id.checkboxMarcheazaPrincipal);
 
         titluInformatii.setText(title);
         dateInformatii.setText(date);
@@ -117,11 +120,37 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
             textEleviInscrisi.setVisibility(View.GONE);
         }
 
-        if(whereFrom.equals("DashboardActivity")){
+        if(MainActivity.USER_TYPE == 1)
+            checkboxMarcheazaPrincipal.setVisibility(View.VISIBLE);
+        else checkboxMarcheazaPrincipal.setVisibility(View.GONE);
+
+        if(whereFrom.equals("announcements") || whereFrom.equals("activities")){
             emailInfo.setVisibility(View.GONE);
             layoutVoluntariat.setVisibility(View.GONE);
             studentiVoluntariat.setVisibility(View.GONE);
             textEleviInscrisi.setVisibility(View.GONE);
+
+            checkboxMarcheazaPrincipal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if(whereFrom.equals("announcements")){
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("dashboardTabTitle", String.valueOf(title));
+                        editor.putString("dashboardTabBody", String.valueOf(body));
+                        editor.putString("dashboardTabDate", String.valueOf(date));
+                        editor.apply();
+                    }
+                   else{
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("dashboardTabTitleActivities", String.valueOf(title));
+                        editor.putString("dashboardTabBodyActivities", String.valueOf(body));
+                        editor.putString("dashboardTabDateActivities", String.valueOf(date));
+                        editor.apply();
+                    }
+                }
+            });
+
         }
         else {
             String previousTabItem = intent.getStringExtra("previousTabItem");
@@ -246,7 +275,7 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(whereFrom.equals("DashboardActivity")){
+                if(whereFrom.equals("announcements") || whereFrom.equals("activities")){
                     Intent intent = new Intent(DetailsDashboardTabsActivity.this, DashboardActivity.class);
                     startActivity(intent);
                     finish();
