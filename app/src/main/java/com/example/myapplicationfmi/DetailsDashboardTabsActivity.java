@@ -65,6 +65,7 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
     private EvidentaVoluntariatModal evidentaVoluntariatModal;
     private DateTimeFormatter formatter;
     private CheckBox checkboxMarcheazaPrincipal;
+    private TextView textMarcheaza;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,8 +109,9 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
         studentiVoluntariat = findViewById(R.id.studentiVoluntariat);
         textEleviInscrisi = findViewById(R.id.textEleviInscrisi);
         checkboxMarcheazaPrincipal = findViewById(R.id.checkboxMarcheazaPrincipal);
+        textMarcheaza = findViewById(R.id.textMarcheaza);
 
-        titluInformatii.setText(title);
+                titluInformatii.setText(title);
         dateInformatii.setText(date);
         infoAdmin.setText(body);
         emailInfo.setText(emailInfo.getText() + email);
@@ -120,9 +122,14 @@ public class DetailsDashboardTabsActivity extends AppCompatActivity {
             textEleviInscrisi.setVisibility(View.GONE);
         }
 
-        if(MainActivity.USER_TYPE == 1)
+        if(MainActivity.USER_TYPE == 1){
+            textMarcheaza.setVisibility(View.VISIBLE);
             checkboxMarcheazaPrincipal.setVisibility(View.VISIBLE);
-        else checkboxMarcheazaPrincipal.setVisibility(View.GONE);
+        }
+        else {
+            textMarcheaza.setVisibility(View.GONE);
+            checkboxMarcheazaPrincipal.setVisibility(View.GONE);
+        }
 
         if(whereFrom.equals("announcements") || whereFrom.equals("activities")){
             emailInfo.setVisibility(View.GONE);
