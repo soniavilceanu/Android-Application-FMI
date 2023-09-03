@@ -86,6 +86,7 @@ public class OrarActivity extends AppCompatActivity {
     private Button  buttonCuratareOrar;
     private View dummyView;
     private DateTimeFormatter formatter;
+    private boolean primaDeschidereOrarProf;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -145,6 +146,8 @@ public class OrarActivity extends AppCompatActivity {
         floatingActionButton = findViewById(R.id.floatingActionButton);
         buttonCuratareOrar = findViewById(R.id.buttonCuratareOrar);
         dummyView = findViewById(R.id.dummyView);
+
+        primaDeschidereOrarProf = false;
 
         Menu menu = navigationView.getMenu();
         MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
@@ -214,11 +217,26 @@ public class OrarActivity extends AppCompatActivity {
                                 tableCells.get(Integer.valueOf(allCourses.get(i).getZi()) * 6 + allCourses.get(i).getIntervalOrar()).setBackgroundResource(R.drawable.lavender_border_v3);
                         }
                 }
+                if(MainActivity.USER_TYPE == 3 && !primaDeschidereOrarProf)
+                    textOrarProf.performClick();
+                primaDeschidereOrarProf = true;
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
             }
         });
+
+        textOrarProf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(allCourses != null)
+                    for(int i = 0; i <allCourses.size(); i ++)
+                        if(allCourses.get(i).getProfessorId() == profId)
+                            tableCells.get(Integer.valueOf(allCourses.get(i).zi) * 6 + allCourses.get(i).intervalOrar).setBackgroundResource(R.drawable.lavender_border_v4);
+                else tableCells.get(Integer.valueOf(allCourses.get(i).zi) * 6 + allCourses.get(i).intervalOrar).setBackgroundResource(R.drawable.lavender_border_v3);
+            }
+        });
+
         SharedPreferences sharedPreferences = getSharedPreferences(DashboardActivity.SHARED_PREFS, MODE_PRIVATE);
         String emailHolder = sharedPreferences.getString("email", "");
 
@@ -277,17 +295,6 @@ public class OrarActivity extends AppCompatActivity {
 //                        if (allCourses.get(i).getGroupId() == grupeIds.get(spinnerSelecteazaGrupa.getSelectedItemPosition()))
 //                            tableCells.get(Integer.valueOf(allCourses.get(i).getZi()) * 6 + allCourses.get(i).getIntervalOrar()).setBackgroundResource(R.drawable.lavender_border_v3);
 //                }
-            }
-        });
-
-        textOrarProf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(allCourses != null)
-                    for(int i = 0; i <allCourses.size(); i ++)
-                        if(allCourses.get(i).getProfessorId() == profId)
-                            tableCells.get(Integer.valueOf(allCourses.get(i).zi) * 6 + allCourses.get(i).intervalOrar).setBackgroundResource(R.drawable.lavender_border_v4);
-                        else tableCells.get(Integer.valueOf(allCourses.get(i).zi) * 6 + allCourses.get(i).intervalOrar).setBackgroundResource(R.drawable.lavender_border_v3);
             }
         });
 
