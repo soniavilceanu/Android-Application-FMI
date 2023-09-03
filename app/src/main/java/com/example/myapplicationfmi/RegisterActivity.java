@@ -4,11 +4,14 @@ package com.example.myapplicationfmi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,8 +24,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -40,12 +47,21 @@ import com.example.myapplicationfmi.beans.ProfessorSubject;
 import com.example.myapplicationfmi.beans.SetariNotificari;
 import com.example.myapplicationfmi.beans.Student;
 import com.example.myapplicationfmi.beans.Subject;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    ActionBarDrawerToggle drawerToggle;
+    MaterialToolbar materialToolbar;
+    private MaterialToolbar topAppBar;
+    public static final String SHARED_PREFS = "sharedPrefs";
+    private Menu menu;
     EditText Email, Password, Nume, Prenume, editStudentAnIncepere;
     Button Register;
     String NumeHolder, PrenumeHolder, EmailHolder, PasswordHolder, editStudentAnIncepereHolder;
@@ -90,6 +106,27 @@ public class RegisterActivity extends AppCompatActivity {
     private String[] masterIFRItems;
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(drawerToggle.onOptionsItemSelected(item))
+            return true;
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        this.menu = menu;
+
+        MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
+
+        if (MainActivity.USER_TYPE != 1) {
+            creareContNouItem.setVisible(false);
+        } else {
+            creareContNouItem.setVisible(true);
+        }
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
@@ -97,6 +134,13 @@ public class RegisterActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             myRoomDatabase = MyRoomDatabase.getInstance(this);
         }
+
+        navigationView = findViewById(R.id.nav_view);
+        topAppBar = findViewById(R.id.topAppBar);
+
+        Menu menu = navigationView.getMenu();
+        MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
+
         studentModal = new ViewModelProvider(this).get(StudentModal.class);
         groupModal = new ViewModelProvider(this).get(GroupModal.class);
         courseModal = new ViewModelProvider(this).get(CourseModal.class);
@@ -105,6 +149,12 @@ public class RegisterActivity extends AppCompatActivity {
         subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
         professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
         setariNotificariModal = new ViewModelProvider(this).get(SetariNotificariModal.class);
+
+        if (MainActivity.USER_TYPE != 1) {
+            creareContNouItem.setVisible(false);
+        } else {
+            creareContNouItem.setVisible(true);
+        }
 
         groupModal.getAllGroups().observe(this, new Observer<List<Group>>() {
             @Override
@@ -182,34 +232,6 @@ public class RegisterActivity extends AppCompatActivity {
                }
         });
 
-        /**
-         *  functie de obtinere obiect din baza dupa ID si delete dupa un ID
-         */
-
-//        long groupIdToDelete = 99;
-//        groupModal.getGroupById(groupIdToDelete).observe(this, new Observer<Group>() {
-//            @Override
-//            public void onChanged(Group group) {
-//                if (group != null) {
-//                    groupModal.delete(group);
-//                } else {
-//                }
-//            }
-//        });
-
-        /**
-         *  functie de obtinere obiect din baza dupa ID si update obiectului
-         */
-//        studentModal.getStudentById(21).observe(this, new Observer<Student>() {
-//            @Override
-//            public void onChanged(Student student) {
-//                if (student != null) {
-//                    student.setAn(2);
-//                    studentModal.update(student);
-//                } else {
-//                }
-//            }
-//        });
 
         subjectModal.getAllSubjects().observe(this, new Observer<List<Subject>>() {
             @Override
@@ -269,11 +291,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-        //spinnerStudentProfil = findViewById(R.id.spinnerStudentProfil);
 
         String[] tipContItems = {"STUDENT", "PROFESOR", "ADMIN"};
         ArrayAdapter<String> adaptertipCont = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, tipContItems);
@@ -544,6 +561,90 @@ public class RegisterActivity extends AppCompatActivity {
                 SQLiteTableBuild();
                 CheckEditTextStatus();
                 CheckingEmailAlreadyExistsOrNot();
+            }
+        });
+
+
+        drawerLayout = findViewById(R.id.activity_dashboard);
+        materialToolbar = findViewById(R.id.topAppBar);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, materialToolbar, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+        Menu menu2 = materialToolbar.getMenu();
+        MenuItem search = menu2.findItem(R.id.cautare);
+        search.setVisible(false);
+
+        MenuItem notificari = menu2.findItem(R.id.setari);
+        if(MainActivity.USER_TYPE == 1 || MainActivity.USER_TYPE == 3)
+            notificari.setVisible(false);
+        else notificari.setVisible(true);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.carnet) {
+                    Intent intent = new Intent(RegisterActivity.this, CarnetActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (itemId == R.id.orar) {
+                    Intent intent = new Intent(RegisterActivity.this, OrarActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (itemId == R.id.calendar) {
+                    Intent intent = new Intent(RegisterActivity.this, CalendarAcademicActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (itemId == R.id.activitiesAnnouncements) {
+                    Intent intent = new Intent(RegisterActivity.this, DashboardActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (itemId == R.id.internshipVoluntariat) {
+                    Intent intent = new Intent(RegisterActivity.this, ExtracurricularActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else if (itemId == R.id.informatii) {
+                    Intent intent = new Intent(RegisterActivity.this, InformatiiGeneraleActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(itemId == R.id.creareContNou) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }
+                return false;
+            }
+        });
+
+
+        materialToolbar.setOnMenuItemClickListener(new MaterialToolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                if(item.getItemId() == R.id.profil){
+                    Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
+                    intent.putExtra("previousActivity", "RegisterActivity");
+                    startActivity(intent);
+                    finish();
+                }
+                if(item.getItemId() == R.id.setari){
+                    Intent intent = new Intent(RegisterActivity.this, NotificationActivity.class);
+                    intent.putExtra("previousActivity", "RegisterActivity");
+                    startActivity(intent);
+                    finish();
+                }
+                if(item.getItemId() == R.id.deconectare){
+                    SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("name", "");
+                    editor.putString("emailConectat","");
+                    editor.apply();
+
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                return false;
             }
         });
     }

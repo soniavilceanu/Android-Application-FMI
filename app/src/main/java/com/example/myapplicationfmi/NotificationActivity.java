@@ -464,6 +464,11 @@ public class NotificationActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
+                else if(whereFrom.equals("RegisterActivity")) {
+                    Intent intent = new Intent(NotificationActivity.this, RegisterActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
