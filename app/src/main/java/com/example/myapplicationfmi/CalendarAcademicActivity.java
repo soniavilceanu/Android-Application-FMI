@@ -486,7 +486,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                 floatingActionButton.setVisibility(View.GONE);
                                 dashboardTabDelete.setVisibility(View.GONE);
                                 if (allCalendarsDinData.get(j).getOraFinal() != null && allCalendarsDinData.get(j).getOraInceput() != null) {
-                                    addEvenimentTab(allCalendarsDinData.get(j).getEveniment(), allCalendarsDinData.get(j).getValabilPentru(), finalI, allCalendarsDinData.get(j).getOraInceput(), allCalendarsDinData.get(j).getOraFinal());
+                                    addEvenimentTab(allCalendarsDinData.get(j).getEveniment(), allCalendarsDinData.get(j).getValabilPentru(), finalI, allCalendarsDinData.get(j).getOraInceput(), allCalendarsDinData.get(j).getOraFinal(), allCalendarsDinData.get(j).getMaterieId());
                                 }
                             }
 
@@ -632,7 +632,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                                         localTimeFinal = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker2.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker2.getValue()])), formatter);
                                                     }
                                                     parentLinearLayout.removeAllViews();
-                                                    addEvenimentTab("Examen", spinnerValabilPentru.getSelectedItem().toString(), finalI, localTimeInceput, localTimeFinal);
+                                                    addEvenimentTab("Examen", spinnerValabilPentru.getSelectedItem().toString(), finalI, localTimeInceput, localTimeFinal, subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
                                                     floatingActionButtonAdd.setVisibility(View.GONE);
                                                 }
                                             }
@@ -783,7 +783,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                                                 localTimeFinal = LocalTime.parse(String.format(Locale.US, "%02d", hourPicker2.getValue()) + ":" + String.format(Locale.US, "%02d", Integer.parseInt(minuteValues[minutePicker2.getValue()])), formatter);
                                                             }
                                                             parentLinearLayout.removeAllViews();
-                                                            addEvenimentTab("Examen", spinnerValabilPentru.getSelectedItem().toString(), finalI, localTimeInceput, localTimeFinal);
+                                                            addEvenimentTab("Examen", spinnerValabilPentru.getSelectedItem().toString(), finalI, localTimeInceput, localTimeFinal, subjectIds.get(spinnerMateriiPtProf.getSelectedItemPosition()));
                                                             floatingActionButtonAdd.setVisibility(View.GONE);
                                                         }
                                                     }
@@ -810,7 +810,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                     processCourseData(allCalendarsDinData.get(0), allCalendarsDinData.get(0).getValabilPentru(), allCalendarsDinData.get(0).getEveniment());
                                 } else for (int j = 0; j < allCalendarsDinData.size(); j++) {
                                     if (allCalendarsDinData.get(j).getOraFinal() != null && allCalendarsDinData.get(j).getOraInceput() != null) {
-                                        addEvenimentTab(allCalendarsDinData.get(j).getEveniment(), allCalendarsDinData.get(j).getValabilPentru(), finalI, allCalendarsDinData.get(j).getOraInceput(), allCalendarsDinData.get(j).getOraFinal());
+                                        addEvenimentTab(allCalendarsDinData.get(j).getEveniment(), allCalendarsDinData.get(j).getValabilPentru(), finalI, allCalendarsDinData.get(j).getOraInceput(), allCalendarsDinData.get(j).getOraFinal(), allCalendarsDinData.get(j).getMaterieId());
                                     }
                                 }
 
@@ -838,7 +838,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                                     if (allCalendarsDinData.get(j).getOraFinal() != null && allCalendarsDinData.get(j).getOraInceput() != null) {
                                         evenimenteScrollViewMultiple.setVisibility(View.VISIBLE);
                                         eventLinearAfisare.setVisibility(View.GONE);
-                                        addEvenimentTab(allCalendarsDinData.get(j).getEveniment(), allCalendarsDinData.get(j).getValabilPentru(), finalI, allCalendarsDinData.get(j).getOraInceput(), allCalendarsDinData.get(j).getOraFinal());
+                                        addEvenimentTab(allCalendarsDinData.get(j).getEveniment(), allCalendarsDinData.get(j).getValabilPentru(), finalI, allCalendarsDinData.get(j).getOraInceput(), allCalendarsDinData.get(j).getOraFinal(), allCalendarsDinData.get(j).getMaterieId());
                                     }
                                 }
 
@@ -1033,7 +1033,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
 
 
 
-    private void addEvenimentTab(String event, String valabilPentru, int finalI, LocalTime oraInceput, LocalTime oraFinal) {
+    private void addEvenimentTab(String event, String valabilPentru, int finalI, LocalTime oraInceput, LocalTime oraFinal, long subject) {
         LinearLayout evenimentTab = new LinearLayout(this);
         evenimentTab.setId(View.generateViewId());
 
@@ -1063,6 +1063,36 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         viewLayoutParams.setMargins(dpToPx(this,5), 0, 0, 0);
         view.setLayoutParams(viewLayoutParams);
         view.setBackgroundResource(R.color.original_lavender);
+
+        TextView subjectTextView = new TextView(this);
+        LinearLayout.LayoutParams subjectParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        subjectParams.rightMargin = 8;
+
+        subjectTextView.setLayoutParams(subjectParams);
+        subjectTextView.setPadding(dpToPx(this,0), dpToPx(CalendarAcademicActivity.this,20),dpToPx(CalendarAcademicActivity.this,0),dpToPx(CalendarAcademicActivity.this,10));
+        //evenimentParams.setMargins(0, 20, 8, 10);
+
+        subjectModal.getSubjectById(subject).observe(CalendarAcademicActivity.this, new Observer<Subject>() {
+            @Override
+            public void onChanged(Subject subject) {
+                if(subject != null)
+                    subjectTextView.setText("Materie: " + subject.getDenumire());
+            }
+        });
+
+
+        subjectTextView.setTextSize(18);
+        subjectTextView.setTextColor(getResources().getColor(R.color.black));
+        subjectTextView.setTypeface(Typeface.create("casual", Typeface.NORMAL));
+
+
+        View view1 = new View(this);
+        view1.setLayoutParams(viewLayoutParams);
+        view1.setBackgroundResource(R.color.original_lavender);
 
         TextView intervalOrarTextView = new TextView(this);
         LinearLayout.LayoutParams intervalParams = new LinearLayout.LayoutParams(
@@ -1355,6 +1385,8 @@ public class CalendarAcademicActivity extends AppCompatActivity {
 
         evenimentTab.addView(evenimentTextView);
         evenimentTab.addView(view);
+        evenimentTab.addView(subjectTextView);
+        evenimentTab.addView(view1);
         evenimentTab.addView(intervalOrarTextView);
         evenimentTab.addView(view2);
         valabilPentruLayout.addView(valabilPentruTextView);
