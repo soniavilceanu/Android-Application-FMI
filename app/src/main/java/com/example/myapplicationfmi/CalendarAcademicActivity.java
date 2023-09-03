@@ -874,6 +874,11 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         MenuItem search = menu2.findItem(R.id.cautare);
         search.setVisible(false);
 
+        MenuItem notificari = menu2.findItem(R.id.setari);
+        if(MainActivity.USER_TYPE == 1 || MainActivity.USER_TYPE == 3)
+            notificari.setVisible(false);
+        else notificari.setVisible(true);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

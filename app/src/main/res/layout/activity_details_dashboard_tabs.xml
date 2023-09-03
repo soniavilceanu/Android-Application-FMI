@@ -40,7 +40,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- textMarcheaza TextView -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +51,6 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"/>
 
-        <!-- CheckBox -->
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,7 +58,6 @@
             android:layout_toEndOf="@id/textMarcheaza"
             android:layout_centerVertical="true"/>
 
-        <!-- dateInformatii TextView -->
         <TextView
             android:id="@+id/dateInformatii"
             android:layout_width="wrap_content"

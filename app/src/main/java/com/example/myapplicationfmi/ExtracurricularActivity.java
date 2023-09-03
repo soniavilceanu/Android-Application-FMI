@@ -117,6 +117,12 @@ public class ExtracurricularActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
+        Menu menu2 = materialToolbar.getMenu();
+        MenuItem notificari = menu2.findItem(R.id.setari);
+        if(MainActivity.USER_TYPE == 1 || MainActivity.USER_TYPE == 3)
+            notificari.setVisible(false);
+        else notificari.setVisible(true);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
