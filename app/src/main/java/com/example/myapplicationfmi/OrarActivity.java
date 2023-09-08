@@ -524,6 +524,8 @@ public class OrarActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(View v) {
 
+                                                        CoursesSQLiteHelper dbHelper = new CoursesSQLiteHelper(getApplicationContext());
+
                                                         //actualizam curs
                                                         course.setSubjectId(materiiIds.get(spinnerMaterie.getSelectedItemPosition()));
                                                         course.setProfessorId(professorIds.get(spinnerProfesor.getSelectedItemPosition()));
@@ -539,7 +541,29 @@ public class OrarActivity extends AppCompatActivity {
                                                         notification.setCauseId(Math.toIntExact(course.getGroupId()));
                                                         notificationModal.insert(notification);
 
-                                                        courseModal.update(course);
+                                                        //courseModal.update(course);
+
+                                                        dbHelper.updateCourse(course);
+
+                                                        dbHelper.close();
+
+                                                        professorModal.getProfessorById(course.getProfessorId()).observe(OrarActivity.this, new Observer<Professor>() {
+                                                            @Override
+                                                            public void onChanged(Professor professor) {
+                                                                if (professor != null && finalI == clickedCellIndex) {
+                                                                    final String professorNume = professor.getNume() + " " + professor.getPrenume();
+                                                                    subjectModal.getSubjectById(course.getSubjectId()).observe(OrarActivity.this, new Observer<Subject>() {
+                                                                        @Override
+                                                                        public void onChanged(Subject subject) {
+                                                                            if (subject != null && finalI == clickedCellIndex) {
+                                                                                final String subjectDenumire = subject.getDenumire();
+                                                                                processCourseData(course, professorNume, subjectDenumire);
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                        });
 
                                                         editOrarInfoTab.setVisibility(View.GONE);
                                                     }
