@@ -308,6 +308,7 @@ public class OrarActivity extends AppCompatActivity {
                     if (MainActivity.USER_TYPE == 1) {
                         if (tableCells.get(finalI).getBackground().getConstantState() == getResources().getDrawable(R.drawable.lavender_border_v3).getConstantState()) {
                             editOrarInfoTab.setVisibility(View.VISIBLE);
+                            floatingActionButton.setVisibility(View.GONE);
                             titluOrarInfoUpdate.setText("ADAUGĂ CURS");
                             addOrarInfo.setText("Adaugă");
 
@@ -480,6 +481,7 @@ public class OrarActivity extends AppCompatActivity {
                                                                             .collect(Collectors.toList());
                                                                     ArrayAdapter<String> adapterProfessorItems = new ArrayAdapter<>(OrarActivity.this, android.R.layout.simple_spinner_dropdown_item, profesori);
                                                                     spinnerProfesor.setAdapter(adapterProfessorItems);
+                                                                    spinnerProfesor.setSelection(professorIds.indexOf(course.getProfessorId()));
                                                                 }
                                                             }
                                                         });
