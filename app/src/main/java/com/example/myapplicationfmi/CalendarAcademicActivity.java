@@ -107,6 +107,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
     private  String emailHolder;
     private List<TextView> tableCells;
     private Long profId;
+    private boolean deleteCheck;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -182,6 +183,8 @@ public class CalendarAcademicActivity extends AppCompatActivity {
 
         Menu menu = navigationView.getMenu();
         MenuItem creareContNouItem = menu.findItem(R.id.creareContNou);
+
+        deleteCheck = false;
 
         tableCells = Arrays.asList(findViewById(R.id.cell_1_0), findViewById(R.id.cell_1_1), findViewById(R.id.cell_1_2), findViewById(R.id.cell_1_3), findViewById(R.id.cell_1_4), findViewById(R.id.cell_1_5), findViewById(R.id.cell_1_6), findViewById(R.id.cell_2_0), findViewById(R.id.cell_2_1),
                 findViewById(R.id.cell_2_2), findViewById(R.id.cell_2_3), findViewById(R.id.cell_2_4), findViewById(R.id.cell_2_5), findViewById(R.id.cell_2_6), findViewById(R.id.cell_3_0), findViewById(R.id.cell_3_1), findViewById(R.id.cell_3_2), findViewById(R.id.cell_3_3),
@@ -353,23 +356,6 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                             addOrarInfo.setText("Adaugă");
 
 
-                            dashboardTabDelete.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    calendarModal.getCalendarByLunaIdSaptamanaAndZiuaSaptamaniiForAdmin(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
-                                        @Override
-                                        public void onChanged(Calendar calendar) {
-                                            if (calendar != null) {
-                                                calendarModal.delete(calendar);
-                                                parentLinearLayout.removeView((View) v.getParent().getParent());
-                                                tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v3);
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-
-
                             addOrarInfo.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -410,6 +396,26 @@ public class CalendarAcademicActivity extends AppCompatActivity {
                             addOrarInfo.setText("Editează");
                             floatingActionButton.setVisibility(View.VISIBLE);
                             dashboardTabDelete.setVisibility(View.VISIBLE);
+
+                            dashboardTabDelete.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    deleteCheck = true;
+                                    calendarModal.getCalendarByLunaIdSaptamanaAndZiuaSaptamaniiForAdmin(luniIds.get(spinnerSelecteazaLuna.getSelectedItemPosition()), String.valueOf(finalI / 6), finalI % 6).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
+                                        @Override
+                                        public void onChanged(Calendar calendar) {
+                                            if (calendar != null && deleteCheck == true) {
+                                                deleteCheck = false;
+                                                calendarModal.delete(calendar);
+                                                evenimentTextView.setText("Eveniment: ");
+                                                valabilPentruTextView.setText("Valabil pentru: ");
+                                                tableCells.get(finalI).setBackgroundResource(R.drawable.lavender_border_v3);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+
                             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
