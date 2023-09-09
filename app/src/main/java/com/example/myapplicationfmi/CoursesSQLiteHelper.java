@@ -15,7 +15,6 @@ public class CoursesSQLiteHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_NAME = "Courses";
 
-    // Column names
     public static final String COLUMN_NAME_GROUP_ID = "groupId";
     public static final String COLUMN_NAME_PROFESSOR_ID = "professorId";
     public static final String COLUMN_NAME_ZI = "zi";
@@ -36,7 +35,6 @@ public class CoursesSQLiteHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
-    // Update the course in the Courses table
     public void updateCourse(Course course) {
         SQLiteDatabase db = this.getWritableDatabase();
 
