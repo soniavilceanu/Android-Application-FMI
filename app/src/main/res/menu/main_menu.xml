@@ -45,7 +45,7 @@
                     android:icon="@drawable/baseline_perm_device_information_24"
                     android:title="Informații generale"/>
                 <item android:id="@+id/creareContNou"
-                    android:icon="@drawable/baseline_supervisor_account_24"
+                    android:icon="@drawable/baseline_group_add_24"
                     android:title="Adăugare cont nou"/>
             </group>
         </menu>
