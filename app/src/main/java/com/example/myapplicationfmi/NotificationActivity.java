@@ -74,7 +74,7 @@ public class NotificationActivity extends AppCompatActivity {
     private LinearLayout parentLinearLayout, notificariDisplay, setariDisplay, voluntariSetari;
     private DateTimeFormatter formatter;
     private boolean amStersSauPlecat;
-    private boolean avemNotificari;
+    private boolean avemNotificari, okExamen, okActivitate, okAnunt, okOrarActualizat, okVoluntariat, okInternship, okNoteActualizate, okNoteNoi, okCalendar;
     private TextView textAvemNotificari;
     private List<Long> studentiVoluntari;
     private Button buttonSalveazaSetari;
@@ -120,6 +120,15 @@ public class NotificationActivity extends AppCompatActivity {
         amStersSauPlecat = false;
         avemNotificari = false;
         studentiVoluntari = new ArrayList<>();
+        okExamen = false;
+        okActivitate = false;
+        okAnunt = false;
+        okOrarActualizat = false;
+        okVoluntariat  = false;
+        okInternship  = false;
+        okNoteActualizate = false;
+        okNoteNoi  = false;
+        okCalendar  = false;
 
         Intent intent = getIntent();
         String whereFrom = intent.getStringExtra("previousActivity");
@@ -212,134 +221,143 @@ public class NotificationActivity extends AppCompatActivity {
                     evidentaNotificariModal.getAllEvidentaNotificariByStudentId(student.getStudentId()).observe(NotificationActivity.this, new Observer<List<EvidentaNotificari>>() {
                         @Override
                         public void onChanged(List<EvidentaNotificari> evidentaNotificaris) {
-                            if(evidentaNotificaris != null && evidentaNotificaris.size() > 0){
+                            if(evidentaNotificaris != null){
 
                                 notificationModal.getAllNotifications().observe(NotificationActivity.this, new Observer<List<Notification>>() {
                                     @Override
                                     public void onChanged(List<Notification> notifications) {
                                         if(notifications != null && notifications.size() > 0) {
                                             if(amStersSauPlecat == false){
-                                            for (int i = 0; i < notifications.size(); i++) {
+                                                for (int i = 0; i < notifications.size(); i++) {
 
-                                                boolean gasit = false;
-                                                for (int j = 0; j < evidentaNotificaris.size(); j++) {
-                                                    if (evidentaNotificaris.get(j).getNotificationId() == notifications.get(i).getNotificationId()) {
-                                                        gasit = true;
-                                                        break;
+                                                    boolean gasit = false;
+                                                    for (int j = 0; j < evidentaNotificaris.size(); j++) {
+                                                        if (evidentaNotificaris.get(j).getNotificationId() == notifications.get(i).getNotificationId()) {
+                                                            gasit = true;
+                                                            break;
+                                                        }
                                                     }
-                                                }
 
-                                                if (!gasit) {
+                                                    if (!gasit) {
 
-                                                    if (notifications.get(i).getType().equals("voluntariatInscris") && checkboxVoluntariInscrisi.isChecked()) {
+                                                        if (notifications.get(i).getType().equals("voluntariatInscris") && checkboxVoluntariInscrisi.isChecked()) {
 
-                                                        boolean gasit2 = false;
-                                                        for(int ll = 0; ll < studentiVoluntari.size(); ll ++)
-                                                            if(studentiVoluntari.get(ll) == Long.valueOf(notifications.get(i).getCauseId())){
-                                                                gasit2 = true;
-                                                                break;
-                                                            }
-                                                        if(!gasit2){
-                                                            studentiVoluntari.add(Long.valueOf(notifications.get(i).getCauseId()));
+                                                            boolean gasit2 = false;
+                                                            for(int ll = 0; ll < studentiVoluntari.size(); ll ++)
+                                                                if(studentiVoluntari.get(ll) == Long.valueOf(notifications.get(i).getCauseId())){
+                                                                    gasit2 = true;
+                                                                    break;
+                                                                }
+                                                            if(!gasit2){
+                                                                studentiVoluntari.add(Long.valueOf(notifications.get(i).getCauseId()));
 
-                                                            SQLiteHelperVolunteerings dbHelper = new SQLiteHelperVolunteerings(NotificationActivity.this);
+                                                                SQLiteHelperVolunteerings dbHelper = new SQLiteHelperVolunteerings(NotificationActivity.this);
 
-                                                            List<String> voluntariateleMele = dbHelper.getDashboardTabIdsByDashboardTabEmail(emailHolder);
+                                                                List<String> voluntariateleMele = dbHelper.getDashboardTabIdsByDashboardTabEmail(emailHolder);
 
-                                                            int finalI3 = i;
-                                                            evidentaVoluntariatModal.getAllEvidentaVoluntariatByStudentId(notifications.get(i).getCauseId().longValue()).observe(NotificationActivity.this, new Observer<List<EvidentaVoluntariat>>() {
-                                                                @Override
-                                                                public void onChanged(List<EvidentaVoluntariat> evidentaVoluntariats) {
-                                                                    if (evidentaVoluntariats != null && evidentaVoluntariats.size() > 0) {
-                                                                        for (int j = 0; j < evidentaVoluntariats.size(); j++) {
+                                                                int finalI3 = i;
+                                                                evidentaVoluntariatModal.getAllEvidentaVoluntariatByStudentId(notifications.get(i).getCauseId().longValue()).observe(NotificationActivity.this, new Observer<List<EvidentaVoluntariat>>() {
+                                                                    @Override
+                                                                    public void onChanged(List<EvidentaVoluntariat> evidentaVoluntariats) {
+                                                                        if (evidentaVoluntariats != null && evidentaVoluntariats.size() > 0) {
+                                                                            for (int j = 0; j < evidentaVoluntariats.size(); j++) {
 
-                                                                            for (int k = 0; k < voluntariateleMele.size(); k++) {
-                                                                                if (evidentaVoluntariats.get(j).getVoluntariatId() == Integer.valueOf(voluntariateleMele.get(k)).longValue()) {
-                                                                                    avemNotificari = true;
-                                                                                    addEvenimentTab("Un student s-a inscris la un voluntariat administrat de tine!", notifications.get(finalI3), student.getStudentId());
+                                                                                for (int k = 0; k < voluntariateleMele.size(); k++) {
+                                                                                    if (evidentaVoluntariats.get(j).getVoluntariatId() == Integer.valueOf(voluntariateleMele.get(k)).longValue()) {
+                                                                                        avemNotificari = true;
+                                                                                        addEvenimentTab("Un student s-a inscris la un voluntariat administrat de tine!", notifications.get(finalI3), student.getStudentId());
+                                                                                    }
                                                                                 }
                                                                             }
+                                                                            if(avemNotificari == false)
+                                                                                textAvemNotificari.setVisibility(View.VISIBLE);
+                                                                            else textAvemNotificari.setVisibility(View.GONE);
                                                                         }
-                                                                        if(avemNotificari == false)
-                                                                            textAvemNotificari.setVisibility(View.VISIBLE);
-                                                                        else textAvemNotificari.setVisibility(View.GONE);
                                                                     }
-                                                                }
-                                                            });
+                                                                });
+                                                            }
                                                         }
-                                                    }
-                                                    if (notifications.get(i).getType().equals("orar") && checkboxOrar.isChecked()) {
-                                                        //vrem sa fim notificati de orar actualizat doar pt grupa noastra
-                                                        if (student.getGrupaId() == notifications.get(i).getCauseId().longValue()){
-                                                            avemNotificari = true;
-                                                            addEvenimentTab("Orarul a fost actualizat!", notifications.get(i), student.getStudentId());
+                                                        if (notifications.get(i).getType().equals("orar") && checkboxOrar.isChecked()) {
+                                                            //vrem sa fim notificati de orar actualizat doar pt grupa noastra
+                                                            if (student.getGrupaId() == notifications.get(i).getCauseId().longValue() && !okOrarActualizat){
+                                                                avemNotificari = true;
+                                                                okOrarActualizat = true;
+                                                                addEvenimentTab("Orarul a fost actualizat!", notifications.get(i), student.getStudentId());
+                                                            }
                                                         }
-                                                    }
 
-                                                    int finalI = i;
-                                                    int finalI1 = i;
-                                                    noteModal.getNoteByNoteId(notifications.get(i).getCauseId()).observe(NotificationActivity.this, new Observer<Note>() {
-                                                        @Override
-                                                        public void onChanged(Note note) {
-                                                            if (note != null)
-                                                                if (note.getStudentId() == student.getStudentId()) {
-                                                                    if (notifications.get(finalI).getType().equals("nota actualizata") && checkboxNote.isChecked()){
-                                                                        avemNotificari = true;
-                                                                        addEvenimentTab("Notele au fost actualizate!", notifications.get(finalI1), student.getStudentId());
-                                                                    }
-                                                                    else if (notifications.get(finalI).getType().equals("nota noua") && checkboxNote.isChecked()){
-                                                                        avemNotificari = true;
-                                                                        addEvenimentTab("Note noi adaugate!", notifications.get(finalI1), student.getStudentId());
-                                                                    }
-                                                                }
-                                                        }
-                                                    });
-
-                                                    // pt toata lumea
-                                                    if (notifications.get(i).getType().equals("activitate")  && checkboxActivitati.isChecked()){
-                                                        avemNotificari = true;
-                                                        addEvenimentTab("Activitate nou adăugată", notifications.get(i), student.getStudentId());
-                                                    }
-                                                    if (notifications.get(i).getType().equals("anunt")  && checkboxAnunturi.isChecked()){
-                                                        avemNotificari = true;
-                                                        addEvenimentTab("Anunț nou adăugat!", notifications.get(i), student.getStudentId());
-                                                    }
-                                                    if (notifications.get(i).getType().equals("voluntariat")  && checkboxVoluntariat.isChecked()){
-                                                        avemNotificari = true;
-                                                        addEvenimentTab("Oportunitate nouă voluntariat ASMI!", notifications.get(i), student.getStudentId());
-                                                    }
-                                                    if (notifications.get(i).getType().equals("internship")  && checkboxInternshipuri.isChecked()){
-                                                        avemNotificari = true;
-                                                        addEvenimentTab("Oportunitate nouă internship!", notifications.get(i), student.getStudentId());
-                                                    }
-
-                                                    if (notifications.get(i).getType().equals("calendar")  && checkboxCalendar.isChecked()) {
-                                                        int finalI2 = i;
-                                                        calendarModal.getCalendarById(notifications.get(i).getCauseId()).observe(NotificationActivity.this, new Observer<Calendar>() {
+                                                        int finalI = i;
+                                                        int finalI1 = i;
+                                                        noteModal.getNoteByNoteId(notifications.get(i).getCauseId()).observe(NotificationActivity.this, new Observer<Note>() {
                                                             @Override
-                                                            public void onChanged(Calendar calendar) {
-                                                                if (calendar != null)
-                                                                    if (calendar.getValabilPentru().equals(student.getTipStudii())){
-                                                                        avemNotificari = true;
-                                                                        addEvenimentTab("Eveniment nou în calendar!", notifications.get(finalI2), student.getStudentId());
+                                                            public void onChanged(Note note) {
+                                                                if (note != null)
+                                                                    if (note.getStudentId() == student.getStudentId()) {
+                                                                        if (notifications.get(finalI).getType().equals("nota actualizata") && checkboxNote.isChecked() && !okNoteActualizate){
+                                                                            okNoteActualizate = true;
+                                                                            avemNotificari = true;
+                                                                            addEvenimentTab("Notele au fost actualizate!", notifications.get(finalI1), student.getStudentId());
+                                                                        }
+                                                                        else if (notifications.get(finalI).getType().equals("nota noua") && checkboxNote.isChecked() && !okNoteNoi){
+                                                                            okNoteNoi = true;
+                                                                            avemNotificari = true;
+                                                                            addEvenimentTab("Note noi adaugate!", notifications.get(finalI1), student.getStudentId());
+                                                                        }
                                                                     }
                                                             }
                                                         });
+
+                                                        // pt toata lumea
+                                                        if (notifications.get(i).getType().equals("activitate")  && checkboxActivitati.isChecked() && !okActivitate){
+                                                            okActivitate = true;
+                                                            avemNotificari = true;
+                                                            addEvenimentTab("Activitate nou adăugată!", notifications.get(i), student.getStudentId());
+                                                        }
+                                                        if (notifications.get(i).getType().equals("anunt")  && checkboxAnunturi.isChecked() && !okAnunt){
+                                                            okAnunt = true;
+                                                            avemNotificari = true;
+                                                            addEvenimentTab("Anunț nou adăugat!", notifications.get(i), student.getStudentId());
+                                                        }
+                                                        if (notifications.get(i).getType().equals("voluntariat")  && checkboxVoluntariat.isChecked() && !okVoluntariat){
+                                                            okVoluntariat = true;
+                                                            avemNotificari = true;
+                                                            addEvenimentTab("Oportunitate nouă voluntariat ASMI!", notifications.get(i), student.getStudentId());
+                                                        }
+                                                        if (notifications.get(i).getType().equals("internship")  && checkboxInternshipuri.isChecked() && !okInternship){
+                                                            okInternship = true;
+                                                            avemNotificari = true;
+                                                            addEvenimentTab("Oportunitate nouă internship!", notifications.get(i), student.getStudentId());
+                                                        }
+
+                                                        if (notifications.get(i).getType().equals("calendar")  && checkboxCalendar.isChecked()) {
+                                                            int finalI2 = i;
+                                                            calendarModal.getCalendarById(notifications.get(i).getCauseId()).observe(NotificationActivity.this, new Observer<Calendar>() {
+                                                                @Override
+                                                                public void onChanged(Calendar calendar) {
+                                                                    if (calendar != null)
+                                                                        if (calendar.getValabilPentru().equals(student.getTipStudii()) && !okCalendar){
+                                                                            okCalendar = true;
+                                                                            avemNotificari = true;
+                                                                            addEvenimentTab("Eveniment nou în calendar!", notifications.get(finalI2), student.getStudentId());
+                                                                        }
+                                                                }
+                                                            });
+                                                        }
+
+                                                        //eventual doar seria/grupa
+                                                        if (notifications.get(i).getType().equals("examen")  && checkboxExamene.isChecked() && !okExamen){
+                                                            okExamen = true;
+                                                            avemNotificari = true;
+                                                            addEvenimentTab("Dată nouă examen a fost stabilită!", notifications.get(i), student.getStudentId());
+                                                        }
                                                     }
 
-                                                    //eventual doar seria/grupa
-                                                    if (notifications.get(i).getType().equals("examen")  && checkboxExamene.isChecked()){
-                                                        avemNotificari = true;
-                                                        addEvenimentTab("Dată nouă examen a fost stabilită!", notifications.get(i), student.getStudentId());
-                                                    }
+                                                    if(avemNotificari == false)
+                                                        textAvemNotificari.setVisibility(View.VISIBLE);
+                                                    else textAvemNotificari.setVisibility(View.GONE);
+
                                                 }
-
-                                                if(avemNotificari == false)
-                                                    textAvemNotificari.setVisibility(View.VISIBLE);
-                                                else textAvemNotificari.setVisibility(View.GONE);
-
                                             }
-                                        }
                                         }
                                     }
                                 });

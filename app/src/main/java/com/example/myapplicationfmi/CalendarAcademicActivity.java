@@ -35,6 +35,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplicationfmi.Modals.CalendarModal;
 import com.example.myapplicationfmi.Modals.CourseModal;
+import com.example.myapplicationfmi.Modals.EvidentaNotificariModal;
 import com.example.myapplicationfmi.Modals.GroupModal;
 import com.example.myapplicationfmi.Modals.NotificationModal;
 import com.example.myapplicationfmi.Modals.ProfessorModal;
@@ -42,6 +43,7 @@ import com.example.myapplicationfmi.Modals.ProfessorSubjectModal;
 import com.example.myapplicationfmi.Modals.StudentModal;
 import com.example.myapplicationfmi.Modals.SubjectModal;
 import com.example.myapplicationfmi.beans.Calendar;
+import com.example.myapplicationfmi.beans.EvidentaNotificari;
 import com.example.myapplicationfmi.beans.Group;
 import com.example.myapplicationfmi.beans.Notification;
 import com.example.myapplicationfmi.beans.Student;
@@ -88,6 +90,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
     private SubjectModal subjectModal;
     private ProfessorSubjectModal professorSubjectModal;
     private CalendarModal calendarModal;
+    private EvidentaNotificariModal evidentaNotificariModal;
     private int clickedCellIndex = -1;
     private List<Calendar> allCalendars;
     private List<Long> luniIds;
@@ -149,6 +152,7 @@ public class CalendarAcademicActivity extends AppCompatActivity {
         subjectModal = new ViewModelProvider(this).get(SubjectModal.class);
         professorSubjectModal = new ViewModelProvider(this).get(ProfessorSubjectModal.class);
         calendarModal = new ViewModelProvider(this).get(CalendarModal.class);
+        evidentaNotificariModal = new ViewModelProvider(this).get(EvidentaNotificariModal.class);
 
 
         calendarModal.getCalendarById(75).observe(CalendarAcademicActivity.this, new Observer<Calendar>() {
