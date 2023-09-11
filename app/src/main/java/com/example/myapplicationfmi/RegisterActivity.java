@@ -75,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
 //    Spinner spinnerStudentProfil;
     CheckBox checkboxLicenta, checkboxMaster, checkboxIF, checkboxIFR, checkboxID, checkboxTaxa, checkboxBursa;
     LinearLayout layoutStudent, layoutProfesor;
-    MaterialCardView materialCardProfesorDisciplina, materialCardProfesorGrupe;
+    MaterialCardView materialCardProfesorDisciplina;
     TextView profDisciplineTextView;
     boolean [] disciplineSelectate;
     ArrayList<Integer> listDiscipline = new ArrayList<>();
@@ -266,8 +266,6 @@ public class RegisterActivity extends AppCompatActivity {
         materialCardProfesorDisciplina = findViewById(R.id.materialCardProfesorDisciplina);
         profDisciplineTextView = findViewById(R.id.profDisciplineTextView);
 
-        materialCardProfesorGrupe = findViewById(R.id.materialCardProfesorGrupe);
-        profGrupeTextView = findViewById(R.id.profGrupeTextView);
 
         checkboxLicenta = findViewById(R.id.checkboxLicenta);
         checkboxMaster = findViewById(R.id.checkboxMaster);
@@ -549,10 +547,6 @@ public class RegisterActivity extends AppCompatActivity {
             displayDiscipline();
         });
 
-        materialCardProfesorGrupe.setOnClickListener(v -> {
-            displayGrupe();
-        });
-
         sqLiteHelper = new SQLiteHelper(this);
         Register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -694,50 +688,50 @@ public class RegisterActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void displayGrupe(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-        builder.setTitle("Selectează grupe");
-        builder.setCancelable(false);
-
-        builder.setMultiChoiceItems(grupe, grupeSelectate, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                if (isChecked) {
-                    listGrupe.add(which);
-                } else {
-                    if (listGrupe.contains(which)) {
-                        listGrupe.remove(Integer.valueOf(which));
-                    }
-                }
-            }
-        }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int i = 0; i < listGrupe.size(); i++) {
-                    stringBuilder.append(grupe[listGrupe.get(i)]);
-                    if (i != listGrupe.size() - 1)
-                        stringBuilder.append(", ");
-                }
-                profGrupeTextView.setText(stringBuilder.toString());
-            }
-        }).setNegativeButton("Anulează", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).setNeutralButton("Ștergere", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                for (int i = 0; i < grupeSelectate.length; i++) {
-                    grupeSelectate[i] = false;
-                }
-                listGrupe.clear();
-                profGrupeTextView.setText("");
-            }
-        });
-        builder.show();
-    }
+//    private void displayGrupe(){
+//        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+//        builder.setTitle("Selectează grupe");
+//        builder.setCancelable(false);
+//
+//        builder.setMultiChoiceItems(grupe, grupeSelectate, new DialogInterface.OnMultiChoiceClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+//                if (isChecked) {
+//                    listGrupe.add(which);
+//                } else {
+//                    if (listGrupe.contains(which)) {
+//                        listGrupe.remove(Integer.valueOf(which));
+//                    }
+//                }
+//            }
+//        }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                StringBuilder stringBuilder = new StringBuilder();
+//                for (int i = 0; i < listGrupe.size(); i++) {
+//                    stringBuilder.append(grupe[listGrupe.get(i)]);
+//                    if (i != listGrupe.size() - 1)
+//                        stringBuilder.append(", ");
+//                }
+//                profGrupeTextView.setText(stringBuilder.toString());
+//            }
+//        }).setNegativeButton("Anulează", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        }).setNeutralButton("Ștergere", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                for (int i = 0; i < grupeSelectate.length; i++) {
+//                    grupeSelectate[i] = false;
+//                }
+//                listGrupe.clear();
+//                profGrupeTextView.setText("");
+//            }
+//        });
+//        builder.show();
+//    }
 
     public void SQLiteDataBaseBuild(){
         sqLiteDatabaseObj = openOrCreateDatabase(SQLiteHelper.DATABASE_NAME, Context.MODE_PRIVATE, null);
@@ -864,34 +858,34 @@ public class RegisterActivity extends AppCompatActivity {
         else if(EditTextEmptyHolder == true && (int)spinnerTipCont.getSelectedItemPosition() == 1)
         {
             List<String> subjectsNames = new ArrayList();
-            List<Integer> groupsNrs = new ArrayList();
-            List<String> formaDeInvatamant = new ArrayList();
+            //List<Integer> groupsNrs = new ArrayList();
+            //List<String> formaDeInvatamant = new ArrayList();
 
-            StringBuilder stringBuilderGrupe = new StringBuilder();
-            for(int i = 0; i < listGrupe.size() - 1; i ++){
-                stringBuilderGrupe.append(grupe[listGrupe.get(i)]). append("; ");
-                if(String.valueOf(grupe[listGrupe.get(i)].charAt(grupe[listGrupe.get(i)].length() - 1)).equals("D")) {
-                    grupe[listGrupe.get(i)] = grupe[listGrupe.get(i)].substring(0, grupe[listGrupe.get(i)].length() - 3);
-                    formaDeInvatamant.add("ID");
-                }
-                else  if(String.valueOf(grupe[listGrupe.get(i)].charAt(grupe[listGrupe.get(i)].length() - 1)).equals("R")){
-                    grupe[listGrupe.get(i)] = grupe[listGrupe.get(i)].substring(0, grupe[listGrupe.get(i)].length() - 4);
-                    formaDeInvatamant.add("IFR");
-                }
-                else formaDeInvatamant.add("IF");
-                groupsNrs.add(Integer.valueOf(grupe[listGrupe.get(i)]));
-            }
-            groupsNrs.add(Integer.valueOf(grupe[listGrupe.get(listGrupe.size() - 1)]));
-            if(String.valueOf(grupe[listGrupe.size() - 1].charAt(grupe[listGrupe.size() - 1].length() - 1)).equals("D")) {
-                grupe[listGrupe.size() - 1] = grupe[listGrupe.size() - 1].substring(0, grupe[listGrupe.size() - 1].length() - 3);
-                formaDeInvatamant.add("ID");
-            }
-            else  if(String.valueOf(grupe[listGrupe.size() - 1].charAt(grupe[listGrupe.size() - 1].length() - 1)).equals("R")){
-                grupe[listGrupe.size() - 1] = grupe[listGrupe.size() - 1].substring(0, grupe[listGrupe.size() - 1].length() - 4);
-                formaDeInvatamant.add("IFR");
-            }
-            else formaDeInvatamant.add("IF");
-            stringBuilderGrupe.append(grupe[listGrupe.get(listGrupe.size() - 1)]);
+//            StringBuilder stringBuilderGrupe = new StringBuilder();
+//            for(int i = 0; i < listGrupe.size() - 1; i ++){
+//                stringBuilderGrupe.append(grupe[listGrupe.get(i)]). append("; ");
+//                if(String.valueOf(grupe[listGrupe.get(i)].charAt(grupe[listGrupe.get(i)].length() - 1)).equals("D")) {
+//                    grupe[listGrupe.get(i)] = grupe[listGrupe.get(i)].substring(0, grupe[listGrupe.get(i)].length() - 3);
+//                    formaDeInvatamant.add("ID");
+//                }
+//                else  if(String.valueOf(grupe[listGrupe.get(i)].charAt(grupe[listGrupe.get(i)].length() - 1)).equals("R")){
+//                    grupe[listGrupe.get(i)] = grupe[listGrupe.get(i)].substring(0, grupe[listGrupe.get(i)].length() - 4);
+//                    formaDeInvatamant.add("IFR");
+//                }
+//                else formaDeInvatamant.add("IF");
+//                groupsNrs.add(Integer.valueOf(grupe[listGrupe.get(i)]));
+//            }
+//            groupsNrs.add(Integer.valueOf(grupe[listGrupe.get(listGrupe.size() - 1)]));
+//            if(String.valueOf(grupe[listGrupe.size() - 1].charAt(grupe[listGrupe.size() - 1].length() - 1)).equals("D")) {
+//                grupe[listGrupe.size() - 1] = grupe[listGrupe.size() - 1].substring(0, grupe[listGrupe.size() - 1].length() - 3);
+//                formaDeInvatamant.add("ID");
+//            }
+//            else  if(String.valueOf(grupe[listGrupe.size() - 1].charAt(grupe[listGrupe.size() - 1].length() - 1)).equals("R")){
+//                grupe[listGrupe.size() - 1] = grupe[listGrupe.size() - 1].substring(0, grupe[listGrupe.size() - 1].length() - 4);
+//                formaDeInvatamant.add("IFR");
+//            }
+//            else formaDeInvatamant.add("IF");
+//            stringBuilderGrupe.append(grupe[listGrupe.get(listGrupe.size() - 1)]);
 
             StringBuilder stringBuilderDiscipline = new StringBuilder();
             for(int i = 0; i < listDiscipline.size() - 1; i ++){
@@ -949,7 +943,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
             SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelper.TABLE_NAME+" (nume,prenume,email,password,an,serie,grupa,taxa,bursa,an_inscriere,forma_de_invatamant,tip_studii)" +
-                    " VALUES('"+NumeHolder+"', '"+PrenumeHolder+"', '"+EmailHolder+"', '"+PasswordHolder+"', '"+null+"', '"+null+"', '"+stringBuilderGrupe+"', '"+null+"'," +
+                    " VALUES('"+NumeHolder+"', '"+PrenumeHolder+"', '"+EmailHolder+"', '"+PasswordHolder+"', '"+null+"', '"+null+"', '"+null+"', '"+null+"'," +
                     "'"+null+"', '"+spinnerProfesorPozitie.getSelectedItem()+"', '"+null+"', '"+stringBuilderDiscipline+"');";
 
             sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
@@ -993,7 +987,7 @@ public class RegisterActivity extends AppCompatActivity {
         else if(((int)spinnerTipCont.getSelectedItemPosition()) == 2 && (TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)))
                 EditTextEmptyHolder = false;
             else if(((int)spinnerTipCont.getSelectedItemPosition()) == 1 && (TextUtils.isEmpty(NumeHolder) || TextUtils.isEmpty(PrenumeHolder) || TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)
-                || profDisciplineTextView.getText().toString().isEmpty() || profDisciplineTextView.getText().toString().equals("Selectează discipline") || profGrupeTextView.getText().toString().isEmpty() || profGrupeTextView.getText().toString().equals("Selectează grupe")))
+                || profDisciplineTextView.getText().toString().isEmpty() || profDisciplineTextView.getText().toString().equals("Selectează discipline")))
                     EditTextEmptyHolder = false;
                 else EditTextEmptyHolder = true;
     }

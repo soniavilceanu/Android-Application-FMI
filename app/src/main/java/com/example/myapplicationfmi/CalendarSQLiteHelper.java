@@ -36,7 +36,6 @@ public class CalendarSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Define the table schema and create the table
         String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ("
                 + COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_NAME_LUNA_ID + " INTEGER, "
